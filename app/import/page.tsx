@@ -4,12 +4,12 @@ import Image from "next/image";
 import { ChangeEvent, DragEvent, useEffect, useMemo, useState } from "react";
 import { isBlockedGoldenSpatulaText, metaSources, type MetaSourceId } from "@/data/meta-sources";
 import type { UnifiedMetaComp } from "@/data/meta";
+import { BUILDER_KEY, LOCAL_IMPORT_KEY, markWorkspaceChanged } from "@/lib/workspace";
+import { useLocale } from "../components/LocaleProvider";
 import CompCorrectionEditor from "./CompCorrectionEditor";
 import type { AnalysisComp, AnalysisResult } from "./types";
 import styles from "./import.module.css";
 
-const LOCAL_KEY = "tft-cn-companion-image-imports-v1";
-const BUILDER_KEY = "tft-cn-companion-builder-v2";
 const ALLOWED_SOURCES = metaSources.filter((source) => source.id !== "tft-academy");
 
 type PreviewImage = {
@@ -91,6 +91,7 @@ function validateComp(comp: AnalysisComp) {
 }
 
 export default function ImportPage() {
+  const { tr } = useLocale();
   const [sourceId, setSourceId] = useState<MetaSourceId>("tuding");
   const [patch, setPatch] = useState("18.1");
   const [images, setImages] = useState<PreviewImage[]>([]);
@@ -119,19 +120,19 @@ export default function ImportPage() {
     setSaved({});
     const list = Array.from(files).filter((file) => file.type.startsWith("image/")).slice(0, 3);
     if (!list.length) {
-      setError("请选择图片文件。 ");
+      setError(tr("请选择图片文件。", "Please choose an image file."));
       return;
     }
     try {
       const compressed = await Promise.all(list.map(async (file) => ({ name: file.name, dataUrl: await fileToCompressedDataUrl(file) })));
       const totalChars = compressed.reduce((sum, image) => sum + image.dataUrl.length, 0);
       if (totalChars > 3_700_000) {
-        setError("图片压缩后仍然过大。建议只上传一张一图流，或先裁掉公众号页面空白区域。 ");
+        setError(tr("图片压缩后仍然过大。建议只上传一张一图流，或先裁掉空白区域。", "The compressed upload is still too large. Upload one infographic or crop empty margins first."));
         return;
       }
       setImages(compressed);
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "图片处理失败。 ");
+      setError(reason instanceof Error ? reason.message : tr("图片处理失败。", "Image processing failed."));
     }
   }
 
@@ -156,20 +157,15 @@ export default function ImportPage() {
       const response = await fetch("/api/analyze-comp-image", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          images: images.map((image) => image.dataUrl),
-          sourceId,
-          sourceName: source?.name ?? sourceId,
-          patch,
-        }),
+        body: JSON.stringify({ images: images.map((image) => image.dataUrl), sourceId, sourceName: source?.name ?? sourceId, patch }),
       });
       const payload = await response.json();
-      if (!response.ok) throw new Error(payload?.error || "图片分析失败。 ");
+      if (!response.ok) throw new Error(payload?.error || tr("图片分析失败。", "Image analysis failed."));
       const nextResult = payload.result as AnalysisResult;
       setResult(nextResult);
       setDrafts(nextResult.comps.map(cloneComp));
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "图片分析失败。 ");
+      setError(reason instanceof Error ? reason.message : tr("图片分析失败。", "Image analysis failed."));
     } finally {
       setBusy(false);
     }
@@ -229,13 +225,14 @@ export default function ImportPage() {
     }
     const record = toUnified(comp, index);
     try {
-      const existing = JSON.parse(window.localStorage.getItem(LOCAL_KEY) || "[]") as UnifiedMetaComp[];
+      const existing = JSON.parse(window.localStorage.getItem(LOCAL_IMPORT_KEY) || "[]") as UnifiedMetaComp[];
       const next = [record, ...existing].slice(0, 100);
-      window.localStorage.setItem(LOCAL_KEY, JSON.stringify(next));
+      window.localStorage.setItem(LOCAL_IMPORT_KEY, JSON.stringify(next));
+      markWorkspaceChanged();
       setSaved((current) => ({ ...current, [index]: true }));
       setError("");
     } catch {
-      setError("浏览器本地阵容库保存失败。 ");
+      setError(tr("浏览器本地阵容库保存失败。", "Failed to save to the local comp library."));
     }
   }
 
@@ -246,15 +243,20 @@ export default function ImportPage() {
       return;
     }
     try {
+      const itemsByName = Object.fromEntries(comp.carries.filter((carry) => carry.items.length).map((carry) => [carry.unit, carry.items.slice(0, 3)]));
+      const rolesByName = Object.fromEntries(comp.carries.map((carry) => [carry.unit, carry.role]));
       window.localStorage.setItem(BUILDER_KEY, JSON.stringify({
         name: comp.nameZh || comp.nameEn,
         champions: [...comp.coreUnits, ...comp.flexUnits],
         board: clampBoard(comp.board),
+        itemsByName,
+        rolesByName,
         updatedAt: Date.now(),
       }));
+      markWorkspaceChanged();
       window.location.href = "/builder";
     } catch {
-      setError("无法写入 Team Builder。 ");
+      setError(tr("无法写入 Team Builder。", "Unable to load Team Builder."));
     }
   }
 
@@ -263,7 +265,7 @@ export default function ImportPage() {
     try {
       await navigator.clipboard.writeText(JSON.stringify({ ...result, comps: drafts }, null, 2));
     } catch {
-      setError("复制 JSON 失败。 ");
+      setError(tr("复制 JSON 失败。", "Failed to copy JSON."));
     }
   }
 
@@ -271,57 +273,30 @@ export default function ImportPage() {
     <div className={styles.page}>
       <header className={styles.heading}>
         <div>
-          <h1>一图流导入</h1>
-          <p>上传兔顶之弈、神超不做人或林小北Lindo的云顶一图流，AI提取后先人工校正，再保存阵容、装备、强化、站位和阵容码。</p>
+          <h1>{tr("一图流导入", "Infographic Import")}</h1>
+          <p>{tr("上传兔顶之弈、神超不做人或林小北Lindo的云顶一图流，AI提取后先人工校正，再保存阵容、装备、强化、站位和阵容码。", "Upload a TFT infographic, review the AI extraction, then save champions, items, augments, positioning and comp code.")}</p>
         </div>
         <div className={styles.headerBadges}>
-          <span className={styles.rule}>TFT ONLY · 金铲铲内容拒绝导入</span>
-          <span className={analyzerConfigured ? styles.aiReady : styles.aiMissing}>
-            {analyzerConfigured === null ? "AI 检查中" : analyzerConfigured ? "AI 已配置" : "AI 未配置"}
-          </span>
+          <span className={styles.rule}>TFT ONLY · {tr("金铲铲内容拒绝导入", "Golden Spatula content blocked")}</span>
+          <span className={analyzerConfigured ? styles.aiReady : styles.aiMissing}>{analyzerConfigured === null ? tr("AI 检查中", "Checking AI") : analyzerConfigured ? tr("AI 已配置", "AI ready") : tr("AI 未配置", "AI not configured")}</span>
         </div>
       </header>
 
       <section className={styles.config}>
-        <label>
-          <span>来源</span>
-          <select value={sourceId} onChange={(event) => setSourceId(event.target.value as MetaSourceId)}>
-            {ALLOWED_SOURCES.map((entry) => <option value={entry.id} key={entry.id}>{entry.name}</option>)}
-          </select>
-        </label>
-        <label>
-          <span>Patch</span>
-          <input value={patch} onChange={(event) => setPatch(event.target.value)} placeholder="18.1" />
-        </label>
-        <div className={styles.hint}>图片只在点击“AI 分析”时发送到服务端；浏览器会先压缩，原图不会写进阵容库。识别结果必须经人工确认。</div>
+        <label><span>{tr("来源", "Source")}</span><select value={sourceId} onChange={(event) => setSourceId(event.target.value as MetaSourceId)}>{ALLOWED_SOURCES.map((entry) => <option value={entry.id} key={entry.id}>{entry.name}</option>)}</select></label>
+        <label><span>Patch</span><input value={patch} onChange={(event) => setPatch(event.target.value)} placeholder="18.1" /></label>
+        <div className={styles.hint}>{tr("图片只在点击 AI 分析时发送到服务端；浏览器会先压缩，原图不会写进阵容库。识别结果必须经人工确认。", "Images are compressed in-browser and sent only when you click AI Analyze. Original images are not stored in the comp library; review is required.")}</div>
       </section>
 
       <section className={styles.dropzone} onDragOver={(event) => event.preventDefault()} onDrop={onDrop}>
         <input id="comp-images" type="file" accept="image/png,image/jpeg,image/webp" multiple onChange={onFileChange} />
-        <label htmlFor="comp-images">
-          <strong>拖入一图流，或点击选择图片</strong>
-          <span>支持 JPG / PNG / WebP · 最多 3 张 · 建议一张完整攻略图</span>
-        </label>
+        <label htmlFor="comp-images"><strong>{tr("拖入一图流，或点击选择图片", "Drop an infographic or choose images")}</strong><span>{tr("支持 JPG / PNG / WebP · 最多 3 张 · 建议一张完整攻略图", "JPG / PNG / WebP · up to 3 images · one full infographic works best")}</span></label>
       </section>
 
       {images.length > 0 && (
         <section className={styles.previewSection}>
-          <div className={styles.previewGrid}>
-            {images.map((image) => (
-              <figure key={image.name}>
-                <div className={styles.previewImageWrap}>
-                  <Image src={image.dataUrl} alt={image.name} fill sizes="(max-width: 620px) 100vw, 420px" unoptimized />
-                </div>
-                <figcaption>{image.name}</figcaption>
-              </figure>
-            ))}
-          </div>
-          <div className={styles.previewActions}>
-            <button className={styles.secondary} onClick={() => { setImages([]); setResult(null); setDrafts([]); }}>清空</button>
-            <button className={styles.primary} onClick={analyze} disabled={busy || analyzerConfigured === false}>
-              {busy ? "正在识别阵容…" : analyzerConfigured === false ? "请先配置 AI" : "AI 分析图片"}
-            </button>
-          </div>
+          <div className={styles.previewGrid}>{images.map((image) => <figure key={image.name}><div className={styles.previewImageWrap}><Image src={image.dataUrl} alt={image.name} fill sizes="(max-width: 620px) 100vw, 420px" unoptimized /></div><figcaption>{image.name}</figcaption></figure>)}</div>
+          <div className={styles.previewActions}><button className={styles.secondary} onClick={() => { setImages([]); setResult(null); setDrafts([]); }}>{tr("清空", "Clear")}</button><button className={styles.primary} onClick={analyze} disabled={busy || analyzerConfigured === false}>{busy ? tr("正在识别阵容…", "Analyzing…") : analyzerConfigured === false ? tr("请先配置 AI", "Configure AI first") : tr("AI 分析图片", "AI Analyze")}</button></div>
         </section>
       )}
 
@@ -329,20 +304,10 @@ export default function ImportPage() {
 
       {result && (
         <section className={styles.result}>
-          <div className={styles.resultHead}>
-            <div>
-              <strong>{result.articleTitle || "图片分析结果"}</strong>
-              <span>{result.sourceName} · Patch {result.patch || patch} · {drafts.length} 套阵容 · 先校正再保存</span>
-            </div>
-            <button className={styles.secondary} onClick={copyJson}>复制校正后 JSON</button>
-          </div>
+          <div className={styles.resultHead}><div><strong>{result.articleTitle || tr("图片分析结果", "Image analysis result")}</strong><span>{result.sourceName} · Patch {result.patch || patch} · {drafts.length} {tr("套阵容 · 先校正再保存", "comps · review before save")}</span></div><button className={styles.secondary} onClick={copyJson}>{tr("复制校正后 JSON", "Copy reviewed JSON")}</button></div>
 
           {result.gameMode !== "TFT" ? (
-            <div className={styles.rejected}>
-              <strong>{result.gameMode === "GOLDEN_SPATULA" ? "检测到金铲铲内容，已拒绝导入" : "无法确认这是 TFT 内容"}</strong>
-              <span>{result.summary}</span>
-              {result.warnings.map((warning) => <em key={warning}>{warning}</em>)}
-            </div>
+            <div className={styles.rejected}><strong>{result.gameMode === "GOLDEN_SPATULA" ? tr("检测到金铲铲内容，已拒绝导入", "Golden Spatula content detected and blocked") : tr("无法确认这是 TFT 内容", "Unable to confirm TFT content")}</strong><span>{result.summary}</span>{result.warnings.map((warning) => <em key={warning}>{warning}</em>)}</div>
           ) : (
             <>
               {result.summary && <p className={styles.summary}>{result.summary}</p>}
@@ -350,47 +315,23 @@ export default function ImportPage() {
               <div className={styles.compGrid}>
                 {drafts.map((comp, index) => (
                   <article className={`${styles.compCard} ${editingIndex === index ? styles.compCardEditing : ""}`} key={`${index}-${comp.nameZh}`}>
-                    <div className={styles.compTop}>
-                      <span className={styles.tier}>{comp.tier}</span>
-                      <div>
-                        <strong>{comp.nameZh || comp.nameEn}</strong>
-                        <span>{comp.nameEn} · {comp.playstyle}</span>
-                      </div>
-                      <b>{Math.round(comp.confidence * 100)}%</b>
-                    </div>
-
+                    <div className={styles.compTop}><span className={styles.tier}>{comp.tier}</span><div><strong>{comp.nameZh || comp.nameEn}</strong><span>{comp.nameEn} · {comp.playstyle}</span></div><b>{Math.round(comp.confidence * 100)}%</b></div>
                     {editingIndex === index ? (
-                      <CompCorrectionEditor
-                        comp={comp}
-                        activeBoardUnit={boardTools[index] ?? ""}
-                        onActiveBoardUnitChange={(unit) => setBoardTools((current) => ({ ...current, [index]: unit }))}
-                        onChange={(nextComp) => updateDraft(index, nextComp)}
-                        onDone={() => setEditingIndex(null)}
-                        onReset={() => restoreDraft(index)}
-                      />
+                      <CompCorrectionEditor comp={comp} activeBoardUnit={boardTools[index] ?? ""} onActiveBoardUnitChange={(unit) => setBoardTools((current) => ({ ...current, [index]: unit }))} onChange={(nextComp) => updateDraft(index, nextComp)} onDone={() => setEditingIndex(null)} onReset={() => restoreDraft(index)} />
                     ) : (
                       <>
-                        <div className={styles.block}><span>核心</span><p>{comp.coreUnits.join(" / ") || "—"}</p></div>
-                        <div className={styles.block}><span>补充英雄</span><p>{comp.flexUnits.join(" / ") || "—"}</p></div>
-                        <div className={styles.block}><span>主 C / 主坦</span><p>{comp.carries.map((carry) => `${carry.role}: ${carry.unit}${carry.items.length ? ` · ${carry.items.join(" / ")}` : ""}`).join("；") || "—"}</p></div>
-                        <div className={styles.block}><span>装备</span><p>{comp.itemFocus.join(" · ") || "—"}</p></div>
-                        <div className={styles.block}><span>强化</span><p>{comp.augments.join(" / ") || "—"}</p></div>
-                        <div className={styles.block}><span>羁绊</span><p>{comp.traits.join(" / ") || "—"}</p></div>
-                        <div className={styles.block}><span>站位</span><p>{comp.board.length ? `${clampBoard(comp.board).length} 个棋子已定位到 4×7 棋盘` : "图片无法可靠识别站位，可点“编辑校正”手动补齐"}</p></div>
+                        <div className={styles.block}><span>{tr("核心", "Core")}</span><p>{comp.coreUnits.join(" / ") || "—"}</p></div>
+                        <div className={styles.block}><span>{tr("补充英雄", "Flex units")}</span><p>{comp.flexUnits.join(" / ") || "—"}</p></div>
+                        <div className={styles.block}><span>{tr("主 C / 主坦", "Carry / Tank")}</span><p>{comp.carries.map((carry) => `${carry.role}: ${carry.unit}${carry.items.length ? ` · ${carry.items.join(" / ")}` : ""}`).join("；") || "—"}</p></div>
+                        <div className={styles.block}><span>{tr("装备", "Items")}</span><p>{comp.itemFocus.join(" · ") || "—"}</p></div>
+                        <div className={styles.block}><span>{tr("强化", "Augments")}</span><p>{comp.augments.join(" / ") || "—"}</p></div>
+                        <div className={styles.block}><span>{tr("羁绊", "Traits")}</span><p>{comp.traits.join(" / ") || "—"}</p></div>
+                        <div className={styles.block}><span>{tr("站位", "Positioning")}</span><p>{comp.board.length ? tr(`${clampBoard(comp.board).length} 个棋子已定位到 4×7 棋盘`, `${clampBoard(comp.board).length} units positioned on the 4×7 board`) : tr("图片无法可靠识别站位，可点“编辑校正”手动补齐", "Positioning was uncertain; use Edit to correct it manually")}</p></div>
                         {comp.compCode && <div className={styles.code}>{comp.compCode}</div>}
                         {comp.warnings.length > 0 && <div className={styles.warnings}>{comp.warnings.join("；")}</div>}
                       </>
                     )}
-
-                    <div className={styles.cardActions}>
-                      <button className={styles.secondary} onClick={() => setEditingIndex(editingIndex === index ? null : index)}>
-                        {editingIndex === index ? "收起校正" : "编辑校正"}
-                      </button>
-                      <button className={styles.secondary} onClick={() => sendToBuilder(comp)}>载入 Builder</button>
-                      <button className={styles.primary} onClick={() => saveComp(comp, index)} disabled={saved[index]}>
-                        {saved[index] ? "已保存到阵容库" : "确认并保存"}
-                      </button>
-                    </div>
+                    <div className={styles.cardActions}><button className={styles.secondary} onClick={() => setEditingIndex(editingIndex === index ? null : index)}>{editingIndex === index ? tr("收起校正", "Close editor") : tr("编辑校正", "Edit")}</button><button className={styles.secondary} onClick={() => sendToBuilder(comp)}>{tr("载入 Builder", "Load Builder")}</button><button className={styles.primary} onClick={() => saveComp(comp, index)} disabled={saved[index]}>{saved[index] ? tr("已保存到阵容库", "Saved") : tr("确认并保存", "Confirm & Save")}</button></div>
                   </article>
                 ))}
               </div>
