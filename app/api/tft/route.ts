@@ -47,6 +47,10 @@ function isSet18TraitId(id: string) {
   return /^DA(?:_|$)/i.test(id) || /^TFT18[_-]/i.test(id) || /^TFTSet18[_-]/i.test(id);
 }
 
+function isSet18AugmentId(id: string) {
+  return /^DA_18_/i.test(id);
+}
+
 function imageUrl(version: string, group: string, image?: DragonImage) {
   if (!image?.full) return undefined;
   return `${DDRAGON}/cdn/${version}/img/${group}/${image.full}`;
@@ -136,13 +140,24 @@ export async function GET() {
     const version = realm.v || realm.n?.item || FALLBACK_VERSION;
     const base = `${DDRAGON}/cdn/${version}/data`;
 
-    const [enChampions, zhChampions, enItems, zhItems, enTraits, zhTraits] = await Promise.all([
+    const [
+      enChampions,
+      zhChampions,
+      enItems,
+      zhItems,
+      enTraits,
+      zhTraits,
+      enAugments,
+      zhAugments,
+    ] = await Promise.all([
       getJson<DragonPayload>(`${base}/en_US/tft-champion.json`),
       getJson<DragonPayload>(`${base}/zh_CN/tft-champion.json`),
       getJson<DragonPayload>(`${base}/en_US/tft-item.json`),
       getJson<DragonPayload>(`${base}/zh_CN/tft-item.json`),
       getJson<DragonPayload>(`${base}/en_US/tft-trait.json`),
       getJson<DragonPayload>(`${base}/zh_CN/tft-trait.json`),
+      getJson<DragonPayload>(`${base}/en_US/tft-augments.json`),
+      getJson<DragonPayload>(`${base}/zh_CN/tft-augments.json`),
     ]);
 
     const champions = pairLocalizedEntries(
@@ -163,14 +178,23 @@ export async function GET() {
       (entry) => Boolean(entry.id && isSet18TraitId(entry.id)),
     );
 
+    const augments = pairLocalizedEntries(
+      version,
+      "强化",
+      enAugments,
+      zhAugments,
+      "tft-augment",
+      (entry) => Boolean(entry.id && isSet18AugmentId(entry.id)),
+    );
+
     const items = normalizeItems(version, enItems, zhItems);
     const components = componentNames
       .map((name) => items.find((item) => normalizeName(item.nameEn) === normalizeName(name)))
       .filter((item): item is CatalogEntry => Boolean(item));
 
-    if (champions.length < 20 || traits.length < 5 || components.length < 8) {
+    if (champions.length < 20 || traits.length < 5 || augments.length < 30 || components.length < 8) {
       throw new Error(
-        `Incomplete TFT catalog: champions=${champions.length}, traits=${traits.length}, components=${components.length}`,
+        `Incomplete TFT catalog: champions=${champions.length}, traits=${traits.length}, augments=${augments.length}, components=${components.length}`,
       );
     }
 
@@ -184,6 +208,7 @@ export async function GET() {
         champions,
         items,
         traits,
+        augments,
         components,
         recipes,
       },
