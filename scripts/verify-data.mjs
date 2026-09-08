@@ -1,4 +1,5 @@
 const DDRAGON = "https://ddragon.leagueoflegends.com";
+const CDRAGON = "https://raw.communitydragon.org/latest";
 
 const componentNames = [
   "B.F. Sword", "Recurve Bow", "Needlessly Large Rod", "Tear of the Goddess",
@@ -29,6 +30,19 @@ function isSet18Trait(id) {
 
 function isSet18Augment(id) {
   return /^DA_18_/i.test(id);
+}
+
+function tftShopPortraitUrl(image) {
+  const full = image?.full;
+  if (!full) return null;
+
+  const lower = full.toLocaleLowerCase("en-US");
+  const splashIndex = lower.indexOf("_splash");
+  const stem = (splashIndex > 0 ? full.slice(0, splashIndex) : full.replace(/\.[^.]+$/, ""))
+    .toLocaleLowerCase("en-US");
+
+  if (!stem.startsWith("tft18_")) return null;
+  return `${CDRAGON}/game/assets/characters/${stem}/${stem}_square.png`;
 }
 
 function dedupeVisibleNames(entries, zhData) {
@@ -74,6 +88,8 @@ const augmentEntries = dedupeVisibleNames(rawAugmentEntries, zhAugments.data || 
 const championIds = championEntries.map(([id]) => id);
 const traitIds = traitEntries.map(([id]) => id);
 const augmentIds = augmentEntries.map(([id]) => id);
+const shopPortraitUrls = championEntries.map(([, entry]) => tftShopPortraitUrl(entry.image));
+const missingShopPortraitMappings = shopPortraitUrls.filter((url) => !url).length;
 const zhChampionIds = new Set(Object.keys(zhChampions.data || {}));
 const zhTraitIds = new Set(Object.keys(zhTraits.data || {}));
 const zhAugmentIds = new Set(Object.keys(zhAugments.data || {}));
@@ -93,6 +109,7 @@ const missingZhItemIds = Object.entries(enItems.data || {})
 
 console.log(`Data Dragon: ${version}`);
 console.log(`Display champions: ${championIds.length}`);
+console.log(`TFT shop portrait mappings: ${shopPortraitUrls.length - missingShopPortraitMappings}/${shopPortraitUrls.length}`);
 console.log(`Display traits: ${traitIds.length}`);
 console.log(`Display augments: ${augmentIds.length} (raw ${rawAugmentEntries.length})`);
 console.log(`Standard components found: ${componentNames.length - missingComponents.length}/${componentNames.length}`);
@@ -100,6 +117,7 @@ console.log(`Completed items found: ${expectedCompletedItems.length - missingCom
 
 if (championIds.length < 50) throw new Error(`Too few display champions: ${championIds.length}`);
 if (championEntries.some(([, entry]) => /^Lux \(/i.test(entry.name || ""))) throw new Error("Lux form variants leaked into display catalog");
+if (missingShopPortraitMappings) throw new Error(`Missing TFT shop portrait mappings: ${missingShopPortraitMappings}`);
 if (traitIds.length < 5) throw new Error(`Too few display traits: ${traitIds.length}`);
 if (augmentIds.length < 30) throw new Error(`Too few display augments: ${augmentIds.length}`);
 if (augmentIds.length >= rawAugmentEntries.length) throw new Error("Expected duplicate augment cleanup did not occur");
@@ -110,4 +128,10 @@ if (missingComponents.length) throw new Error(`Missing components: ${missingComp
 if (missingCompletedItems.length) throw new Error(`Missing completed items: ${missingCompletedItems.join(", ")}`);
 if (missingZhItemIds.length) throw new Error(`Missing zh_CN item IDs: ${missingZhItemIds.join(", ")}`);
 
+const portraitSamples = shopPortraitUrls.filter(Boolean).slice(0, 3);
+for (const url of portraitSamples) {
+  const response = await fetch(url, { method: "HEAD" });
+  if (!response.ok) throw new Error(`Missing TFT shop portrait: ${response.status} ${url}`);
+}
+console.log(`TFT shop portrait samples verified: ${portraitSamples.length}/${portraitSamples.length}`);
 console.log("Riot TFT cleaned catalog verification passed.");
