@@ -1,60 +1,96 @@
-export type EntryType = "阵容" | "英雄" | "装备" | "羁绊";
+export type EntryType = "英雄" | "装备" | "羁绊";
 
-export type TftEntry = {
+export type CatalogEntry = {
+  id: string;
   type: EntryType;
   nameZh: string;
   nameEn: string;
-  summary: string;
-  tags: string[];
+  imageUrl?: string;
+  tier?: number;
+  subtype?: "component" | "completed";
+};
+
+export type Recipe = {
+  a: string;
+  b: string;
+  result: string;
+};
+
+export type TftCatalogPayload = {
+  source: string;
+  dataDragonVersion: string;
+  tftPatch: string;
+  set: string;
+  updated: string;
+  champions: CatalogEntry[];
+  items: CatalogEntry[];
+  traits: CatalogEntry[];
+  components: CatalogEntry[];
+  recipes: Recipe[];
 };
 
 export const patchInfo = {
-  set: "Set 18 · Enchanted Wilds",
+  set: "Set 18 · Enchanted Wilds / 自然之力",
   patch: "18.1",
   updated: "2026-09-08",
 };
 
-export const entries: TftEntry[] = [
-  {
-    type: "装备",
-    nameZh: "朔极之矛",
-    nameEn: "Spear of Shojin",
-    summary: "常见法系/技能启动装备。适合依赖频繁施法的后排主C或功能型单位。",
-    tags: ["暴风大剑", "女神之泪", "回蓝"],
-  },
-  {
-    type: "装备",
-    nameZh: "鬼索的狂暴之刃",
-    nameEn: "Guinsoo's Rageblade",
-    summary: "持续作战型攻速装备，适合依赖普攻叠加输出的主C。",
-    tags: ["无用大棒", "反曲之弓", "攻速"],
-  },
-  {
-    type: "装备",
-    nameZh: "无尽之刃",
-    nameEn: "Infinity Edge",
-    summary: "物理爆发型装备，通常用于AD主C。",
-    tags: ["暴风大剑", "拳套", "暴击"],
-  },
-  {
-    type: "英雄",
-    nameZh: "金克丝",
-    nameEn: "Jinx",
-    summary: "示例英雄条目。后续会接入当前版本完整英雄数据和中英名称。",
-    tags: ["AD", "后排", "示例"],
-  },
-  {
-    type: "羁绊",
-    nameZh: "版本羁绊资料",
-    nameEn: "Trait Library",
-    summary: "V0.1 先完成检索框架；下一步自动接入当前 Set 18 完整羁绊列表。",
-    tags: ["Set 18", "中英对照"],
-  },
-  {
-    type: "阵容",
-    nameZh: "收藏阵容工作区",
-    nameEn: "Comp Planner",
-    summary: "用于开局前锁定 2–4 套目标阵容，并快速查看装备、关键单位和运营节点。",
-    tags: ["规划", "收藏", "副屏"],
-  },
+export const componentNames = [
+  "B.F. Sword",
+  "Recurve Bow",
+  "Needlessly Large Rod",
+  "Tear of the Goddess",
+  "Chain Vest",
+  "Negatron Cloak",
+  "Giant's Belt",
+  "Sparring Gloves",
+] as const;
+
+export const recipes: Recipe[] = [
+  { a: "B.F. Sword", b: "B.F. Sword", result: "Deathblade" },
+  { a: "B.F. Sword", b: "Recurve Bow", result: "Giant Slayer" },
+  { a: "B.F. Sword", b: "Needlessly Large Rod", result: "Hextech Gunblade" },
+  { a: "B.F. Sword", b: "Tear of the Goddess", result: "Spear of Shojin" },
+  { a: "B.F. Sword", b: "Chain Vest", result: "Edge of Night" },
+  { a: "B.F. Sword", b: "Negatron Cloak", result: "Bloodthirster" },
+  { a: "B.F. Sword", b: "Giant's Belt", result: "Sterak's Gage" },
+  { a: "B.F. Sword", b: "Sparring Gloves", result: "Infinity Edge" },
+  { a: "Recurve Bow", b: "Recurve Bow", result: "Red Buff" },
+  { a: "Recurve Bow", b: "Needlessly Large Rod", result: "Guinsoo's Rageblade" },
+  { a: "Recurve Bow", b: "Tear of the Goddess", result: "Statikk Shiv" },
+  { a: "Recurve Bow", b: "Chain Vest", result: "Titan's Resolve" },
+  { a: "Recurve Bow", b: "Negatron Cloak", result: "Runaan's Hurricane" },
+  { a: "Recurve Bow", b: "Giant's Belt", result: "Nashor's Tooth" },
+  { a: "Recurve Bow", b: "Sparring Gloves", result: "Last Whisper" },
+  { a: "Needlessly Large Rod", b: "Needlessly Large Rod", result: "Rabadon's Deathcap" },
+  { a: "Needlessly Large Rod", b: "Tear of the Goddess", result: "Archangel's Staff" },
+  { a: "Needlessly Large Rod", b: "Chain Vest", result: "Crownguard" },
+  { a: "Needlessly Large Rod", b: "Negatron Cloak", result: "Ionic Spark" },
+  { a: "Needlessly Large Rod", b: "Giant's Belt", result: "Morellonomicon" },
+  { a: "Needlessly Large Rod", b: "Sparring Gloves", result: "Jeweled Gauntlet" },
+  { a: "Tear of the Goddess", b: "Tear of the Goddess", result: "Blue Buff" },
+  { a: "Tear of the Goddess", b: "Chain Vest", result: "Protector's Vow" },
+  { a: "Tear of the Goddess", b: "Negatron Cloak", result: "Adaptive Helm" },
+  { a: "Tear of the Goddess", b: "Giant's Belt", result: "Redemption" },
+  { a: "Tear of the Goddess", b: "Sparring Gloves", result: "Hand of Justice" },
+  { a: "Chain Vest", b: "Chain Vest", result: "Bramble Vest" },
+  { a: "Chain Vest", b: "Negatron Cloak", result: "Gargoyle Stoneplate" },
+  { a: "Chain Vest", b: "Giant's Belt", result: "Sunfire Cape" },
+  { a: "Chain Vest", b: "Sparring Gloves", result: "Steadfast Heart" },
+  { a: "Negatron Cloak", b: "Negatron Cloak", result: "Dragon's Claw" },
+  { a: "Negatron Cloak", b: "Giant's Belt", result: "Evenshroud" },
+  { a: "Negatron Cloak", b: "Sparring Gloves", result: "Quicksilver" },
+  { a: "Giant's Belt", b: "Giant's Belt", result: "Warmog's Armor" },
+  { a: "Giant's Belt", b: "Sparring Gloves", result: "Guardbreaker" },
+  { a: "Sparring Gloves", b: "Sparring Gloves", result: "Thief's Gloves" },
+];
+
+export const standardItemNames = Array.from(
+  new Set([...componentNames, ...recipes.map((recipe) => recipe.result)]),
+);
+
+export const fallbackEntries: CatalogEntry[] = [
+  { id: "fallback-shojin", type: "装备", nameZh: "朔极之矛", nameEn: "Spear of Shojin", subtype: "completed" },
+  { id: "fallback-rageblade", type: "装备", nameZh: "鬼索的狂暴之刃", nameEn: "Guinsoo's Rageblade", subtype: "completed" },
+  { id: "fallback-ie", type: "装备", nameZh: "无尽之刃", nameEn: "Infinity Edge", subtype: "completed" },
 ];
