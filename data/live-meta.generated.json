@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": null,
+  "sourceStates": [
+    { "sourceId": "tuding", "status": "awaiting_feed", "lastCheckedAt": null, "lastChangedAt": null, "message": "等待配置公众号 Feed/API" },
+    { "sourceId": "shenchao", "status": "awaiting_feed", "lastCheckedAt": null, "lastChangedAt": null, "message": "等待配置公众号 Feed/API" },
+    { "sourceId": "lindo", "status": "awaiting_feed", "lastCheckedAt": null, "lastChangedAt": null, "message": "等待配置公众号 Feed/API" },
+    { "sourceId": "tft-academy", "status": "curated", "lastCheckedAt": null, "lastChangedAt": null, "message": "当前阵容库为人工审核版本" }
+  ],
+  "articles": [],
+  "records": []
+}
