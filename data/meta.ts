@@ -11,7 +11,7 @@ export type UnifiedMetaComp = Omit<MetaComp, "tier"> & {
   sourceUpdatedAt: string;
   sourceArticleTitle: string;
   gameMode: "TFT";
-  syncOrigin: "curated" | "feed";
+  syncOrigin: "curated" | "feed" | "manual";
 };
 
 function normalizeBoard(positions: Array<{ unit: string; row: number; col: number }>): BoardPosition[] {
