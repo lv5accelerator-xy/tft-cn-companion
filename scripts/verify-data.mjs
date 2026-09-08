@@ -3,21 +3,36 @@ const CDRAGON = "https://raw.communitydragon.org/latest";
 
 const componentNames = [
   "B.F. Sword", "Recurve Bow", "Needlessly Large Rod", "Tear of the Goddess",
-  "Chain Vest", "Negatron Cloak", "Giant's Belt", "Sparring Gloves",
+  "Chain Vest", "Negatron Cloak", "Giant's Belt", "Sparring Gloves", "Spatula", "Frying Pan",
 ];
 
 const expectedCompletedItems = [
   "Deathblade", "Giant Slayer", "Hextech Gunblade", "Spear of Shojin", "Edge of Night",
   "Bloodthirster", "Sterak's Gage", "Infinity Edge", "Red Buff", "Guinsoo's Rageblade",
-  "Statikk Shiv", "Titan's Resolve", "Kraken's Fury", "Nashor's Tooth", "Last Whisper",
+  "Void Staff", "Titan's Resolve", "Kraken's Fury", "Nashor's Tooth", "Last Whisper",
   "Rabadon's Deathcap", "Archangel's Staff", "Crownguard", "Ionic Spark", "Morellonomicon",
   "Jeweled Gauntlet", "Blue Buff", "Protector's Vow", "Adaptive Helm", "Spirit Visage",
   "Hand of Justice", "Bramble Vest", "Gargoyle Stoneplate", "Sunfire Cape", "Steadfast Heart",
   "Dragon's Claw", "Evenshroud", "Quicksilver", "Warmog's Armor", "Striker's Flail", "Thief's Gloves",
 ];
 
+const expectedEmblems = [
+  "Fae Emblem", "Inferno Emblem", "Blossom Emblem", "Lunar Emblem",
+  "Elderwood Emblem", "Sprykin Emblem", "Blackthorn Emblem", "Primal Emblem",
+  "Hunter Emblem", "Rapidfire Emblem", "Spellweaver Emblem", "Invoker Emblem",
+  "Vanguard Emblem", "Ravager Emblem", "Brawler Emblem", "Executioner Emblem",
+];
+
+const expectedTacticianItems = [
+  "Tactician's Crown", "Tactician's Cape", "Tactician's Shield",
+];
+
 function normalize(value) {
-  return value.trim().toLocaleLowerCase("en-US");
+  return value
+    .trim()
+    .toLocaleLowerCase("en-US")
+    .replace(/[’']/g, "")
+    .replace(/\s+/g, " ");
 }
 
 function isSet18Champion(id) {
@@ -30,6 +45,10 @@ function isSet18Trait(id) {
 
 function isSet18Augment(id) {
   return /^DA_18_/i.test(id);
+}
+
+function isArtifactItem(id) {
+  return /(?:ornn|artifact)/i.test(id) && !/(radiant|support|augment)/i.test(id);
 }
 
 function tftShopPortraitUrl(image) {
@@ -84,6 +103,7 @@ const championEntries = Object.entries(enChampions.data || {}).filter(
 const traitEntries = Object.entries(enTraits.data || {}).filter(([id, entry]) => isSet18Trait(id) && entry.name);
 const rawAugmentEntries = Object.entries(enAugments.data || {}).filter(([id, entry]) => isSet18Augment(id) && entry.name);
 const augmentEntries = dedupeVisibleNames(rawAugmentEntries, zhAugments.data || {});
+const artifactEntries = Object.entries(enItems.data || {}).filter(([id, entry]) => isArtifactItem(id) && entry.name);
 
 const championIds = championEntries.map(([id]) => id);
 const traitIds = traitEntries.map(([id]) => id);
@@ -101,7 +121,14 @@ const missingTraitTranslations = traitIds.filter((id) => !zhTraitIds.has(id));
 const missingAugmentTranslations = augmentIds.filter((id) => !zhAugmentIds.has(id));
 const missingComponents = componentNames.filter((name) => !enItemNames.has(normalize(name)));
 const missingCompletedItems = expectedCompletedItems.filter((name) => !enItemNames.has(normalize(name)));
-const wantedItemNames = new Set([...componentNames, ...expectedCompletedItems].map(normalize));
+const missingEmblems = expectedEmblems.filter((name) => !enItemNames.has(normalize(name)));
+const missingTacticianItems = expectedTacticianItems.filter((name) => !enItemNames.has(normalize(name)));
+const wantedItemNames = new Set([
+  ...componentNames,
+  ...expectedCompletedItems,
+  ...expectedEmblems,
+  ...expectedTacticianItems,
+].map(normalize));
 const missingZhItemIds = Object.entries(enItems.data || {})
   .filter(([, item]) => wantedItemNames.has(normalize(item.name || "")))
   .map(([id]) => id)
@@ -112,8 +139,11 @@ console.log(`Display champions: ${championIds.length}`);
 console.log(`TFT shop portrait mappings: ${shopPortraitUrls.length - missingShopPortraitMappings}/${shopPortraitUrls.length}`);
 console.log(`Display traits: ${traitIds.length}`);
 console.log(`Display augments: ${augmentIds.length} (raw ${rawAugmentEntries.length})`);
-console.log(`Standard components found: ${componentNames.length - missingComponents.length}/${componentNames.length}`);
+console.log(`Components found: ${componentNames.length - missingComponents.length}/${componentNames.length}`);
 console.log(`Completed items found: ${expectedCompletedItems.length - missingCompletedItems.length}/${expectedCompletedItems.length}`);
+console.log(`Craftable emblems found: ${expectedEmblems.length - missingEmblems.length}/${expectedEmblems.length}`);
+console.log(`Tactician items found: ${expectedTacticianItems.length - missingTacticianItems.length}/${expectedTacticianItems.length}`);
+console.log(`Artifact item records found: ${artifactEntries.length}`);
 
 if (championIds.length < 50) throw new Error(`Too few display champions: ${championIds.length}`);
 if (championEntries.some(([, entry]) => /^Lux \(/i.test(entry.name || ""))) throw new Error("Lux form variants leaked into display catalog");
@@ -126,6 +156,9 @@ if (missingTraitTranslations.length) throw new Error(`Missing zh_CN traits: ${mi
 if (missingAugmentTranslations.length) throw new Error(`Missing zh_CN augments: ${missingAugmentTranslations.join(", ")}`);
 if (missingComponents.length) throw new Error(`Missing components: ${missingComponents.join(", ")}`);
 if (missingCompletedItems.length) throw new Error(`Missing completed items: ${missingCompletedItems.join(", ")}`);
+if (missingEmblems.length) throw new Error(`Missing Set 18 craftable emblems: ${missingEmblems.join(", ")}`);
+if (missingTacticianItems.length) throw new Error(`Missing tactician items: ${missingTacticianItems.join(", ")}`);
+if (artifactEntries.length < 15) throw new Error(`Too few artifact item records: ${artifactEntries.length}`);
 if (missingZhItemIds.length) throw new Error(`Missing zh_CN item IDs: ${missingZhItemIds.join(", ")}`);
 
 const portraitSamples = shopPortraitUrls.filter(Boolean).slice(0, 3);
