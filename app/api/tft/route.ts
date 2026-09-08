@@ -29,6 +29,7 @@ type RealmPayload = {
 };
 
 const DDRAGON = "https://ddragon.leagueoflegends.com";
+const CDRAGON = "https://raw.communitydragon.org/latest";
 const FALLBACK_VERSION = "16.17.1";
 
 async function getJson<T>(url: string): Promise<T> {
@@ -56,6 +57,19 @@ function imageUrl(version: string, group: string, image?: DragonImage) {
   return `${DDRAGON}/cdn/${version}/img/${group}/${image.full}`;
 }
 
+function tftShopPortraitUrl(image?: DragonImage) {
+  const full = image?.full;
+  if (!full) return undefined;
+
+  const lower = full.toLocaleLowerCase("en-US");
+  const splashIndex = lower.indexOf("_splash");
+  const stem = (splashIndex > 0 ? full.slice(0, splashIndex) : full.replace(/\.[^.]+$/, ""))
+    .toLocaleLowerCase("en-US");
+
+  if (!stem.startsWith("tft18_")) return undefined;
+  return `${CDRAGON}/game/assets/characters/${stem}/${stem}_square.png`;
+}
+
 function normalizeName(value: string) {
   return value.trim().toLocaleLowerCase("en-US");
 }
@@ -76,12 +90,13 @@ function pairLocalizedEntries(
     .map(([id, entry]) => {
       const zh = zhData[id];
       const tierNumber = Number(entry.tier);
+      const defaultImage = imageUrl(version, group, entry.image);
       return {
         id,
         type,
         nameEn: entry.name as string,
         nameZh: zh?.name || entry.name || id,
-        imageUrl: imageUrl(version, group, entry.image),
+        imageUrl: type === "英雄" ? tftShopPortraitUrl(entry.image) ?? defaultImage : defaultImage,
         tier: Number.isFinite(tierNumber) ? tierNumber : undefined,
       } satisfies CatalogEntry;
     })
@@ -212,7 +227,7 @@ export async function GET() {
 
     return NextResponse.json(
       {
-        source: "Riot Data Dragon",
+        source: "Riot Data Dragon + CommunityDragon",
         dataDragonVersion: version,
         tftPatch: patchInfo.patch,
         set: patchInfo.set,
