@@ -8,6 +8,7 @@ export type CatalogEntry = {
   imageUrl?: string;
   tier?: number;
   subtype?: "component" | "completed";
+  aliases?: string[];
 };
 
 export type Recipe = {
@@ -30,7 +31,7 @@ export type TftCatalogPayload = {
 };
 
 export const patchInfo = {
-  set: "Set 18 · Enchanted Wilds / 自然之力",
+  set: "Set 18 · Enchanted Wilds",
   patch: "18.1",
   updated: "2026-09-08",
 };
@@ -46,6 +47,12 @@ export const componentNames = [
   "Sparring Gloves",
 ] as const;
 
+export const itemLegacyAliases: Record<string, string[]> = {
+  "Kraken's Fury": ["Runaan's Hurricane", "卢安娜的飓风"],
+  "Spirit Visage": ["Redemption", "救赎"],
+  "Striker's Flail": ["Guardbreaker", "破防者"],
+};
+
 export const recipes: Recipe[] = [
   { a: "B.F. Sword", b: "B.F. Sword", result: "Deathblade" },
   { a: "B.F. Sword", b: "Recurve Bow", result: "Giant Slayer" },
@@ -59,7 +66,7 @@ export const recipes: Recipe[] = [
   { a: "Recurve Bow", b: "Needlessly Large Rod", result: "Guinsoo's Rageblade" },
   { a: "Recurve Bow", b: "Tear of the Goddess", result: "Statikk Shiv" },
   { a: "Recurve Bow", b: "Chain Vest", result: "Titan's Resolve" },
-  { a: "Recurve Bow", b: "Negatron Cloak", result: "Runaan's Hurricane" },
+  { a: "Recurve Bow", b: "Negatron Cloak", result: "Kraken's Fury" },
   { a: "Recurve Bow", b: "Giant's Belt", result: "Nashor's Tooth" },
   { a: "Recurve Bow", b: "Sparring Gloves", result: "Last Whisper" },
   { a: "Needlessly Large Rod", b: "Needlessly Large Rod", result: "Rabadon's Deathcap" },
@@ -71,7 +78,7 @@ export const recipes: Recipe[] = [
   { a: "Tear of the Goddess", b: "Tear of the Goddess", result: "Blue Buff" },
   { a: "Tear of the Goddess", b: "Chain Vest", result: "Protector's Vow" },
   { a: "Tear of the Goddess", b: "Negatron Cloak", result: "Adaptive Helm" },
-  { a: "Tear of the Goddess", b: "Giant's Belt", result: "Redemption" },
+  { a: "Tear of the Goddess", b: "Giant's Belt", result: "Spirit Visage" },
   { a: "Tear of the Goddess", b: "Sparring Gloves", result: "Hand of Justice" },
   { a: "Chain Vest", b: "Chain Vest", result: "Bramble Vest" },
   { a: "Chain Vest", b: "Negatron Cloak", result: "Gargoyle Stoneplate" },
@@ -81,7 +88,7 @@ export const recipes: Recipe[] = [
   { a: "Negatron Cloak", b: "Giant's Belt", result: "Evenshroud" },
   { a: "Negatron Cloak", b: "Sparring Gloves", result: "Quicksilver" },
   { a: "Giant's Belt", b: "Giant's Belt", result: "Warmog's Armor" },
-  { a: "Giant's Belt", b: "Sparring Gloves", result: "Guardbreaker" },
+  { a: "Giant's Belt", b: "Sparring Gloves", result: "Striker's Flail" },
   { a: "Sparring Gloves", b: "Sparring Gloves", result: "Thief's Gloves" },
 ];
 
