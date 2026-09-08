@@ -31,8 +31,10 @@ function isSet18Augment(id) {
   return /^DA_18_/i.test(id);
 }
 
-function resolveRecordIds(payload) {
-  return Object.entries(payload.data || {}).map(([dataId, entry]) => entry.id || dataId);
+function runtimeParsedIds(payload, predicate) {
+  return Object.entries(payload.data || {})
+    .filter(([dataId, entry]) => Boolean(entry.name && predicate(dataId)))
+    .map(([dataId]) => dataId);
 }
 
 async function getJson(url) {
@@ -61,9 +63,12 @@ const championIds = Object.keys(enChampions.data || {}).filter(isSet18Champion);
 const traitIds = Object.keys(enTraits.data || {}).filter(isSet18Trait);
 const augmentIds = Object.keys(enAugments.data || {}).filter(isSet18Augment);
 
-const runtimeChampionIds = resolveRecordIds(enChampions).filter(isSet18Champion);
-const runtimeTraitIds = resolveRecordIds(enTraits).filter(isSet18Trait);
-const runtimeAugmentIds = resolveRecordIds(enAugments).filter(isSet18Augment);
+const runtimeChampionIds = runtimeParsedIds(enChampions, isSet18Champion);
+const runtimeTraitIds = runtimeParsedIds(enTraits, isSet18Trait);
+const runtimeAugmentIds = runtimeParsedIds(enAugments, isSet18Augment);
+const inlineChampionIds = Object.values(enChampions.data || {})
+  .map((entry) => entry.id)
+  .filter((id) => typeof id === "string" && isSet18Champion(id));
 
 const zhChampionIds = new Set(Object.keys(zhChampions.data || {}));
 const zhTraitIds = new Set(Object.keys(zhTraits.data || {}));
@@ -85,6 +90,7 @@ const missingZhItemIds = Object.entries(enItems.data || {})
 console.log(`Data Dragon: ${version}`);
 console.log(`Set 18 champions: ${championIds.length}`);
 console.log(`Runtime-parsed champions: ${runtimeChampionIds.length}`);
+console.log(`Inline champion IDs matching Set 18: ${inlineChampionIds.length}`);
 console.log(`Set 18 traits: ${traitIds.length}`);
 console.log(`Runtime-parsed traits: ${runtimeTraitIds.length}`);
 console.log(`Set 18 augments: ${augmentIds.length}`);
