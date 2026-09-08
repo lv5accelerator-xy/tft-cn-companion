@@ -1,4 +1,4 @@
-export type EntryType = "英雄" | "装备" | "羁绊";
+export type EntryType = "英雄" | "装备" | "羁绊" | "强化";
 
 export type CatalogEntry = {
   id: string;
@@ -26,6 +26,7 @@ export type TftCatalogPayload = {
   champions: CatalogEntry[];
   items: CatalogEntry[];
   traits: CatalogEntry[];
+  augments: CatalogEntry[];
   components: CatalogEntry[];
   recipes: Recipe[];
 };
