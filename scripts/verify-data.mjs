@@ -24,7 +24,7 @@ const expectedCompletedItems = [
   "Guinsoo's Rageblade",
   "Statikk Shiv",
   "Titan's Resolve",
-  "Runaan's Hurricane",
+  "Kraken's Fury",
   "Nashor's Tooth",
   "Last Whisper",
   "Rabadon's Deathcap",
@@ -36,7 +36,7 @@ const expectedCompletedItems = [
   "Blue Buff",
   "Protector's Vow",
   "Adaptive Helm",
-  "Redemption",
+  "Spirit Visage",
   "Hand of Justice",
   "Bramble Vest",
   "Gargoyle Stoneplate",
@@ -46,7 +46,7 @@ const expectedCompletedItems = [
   "Evenshroud",
   "Quicksilver",
   "Warmog's Armor",
-  "Guardbreaker",
+  "Striker's Flail",
   "Thief's Gloves",
 ];
 
@@ -82,10 +82,8 @@ const [enChampions, zhChampions, enTraits, zhTraits, enItems, zhItems] = await P
   getJson(`${base}/zh_CN/tft-item.json`),
 ]);
 
-const championEntries = Object.entries(enChampions.data || {});
-const traitEntries = Object.entries(enTraits.data || {});
-const championIds = championEntries.map(([id]) => id).filter(isSet18Champion);
-const traitIds = traitEntries.map(([id]) => id).filter(isSet18Trait);
+const championIds = Object.keys(enChampions.data || {}).filter(isSet18Champion);
+const traitIds = Object.keys(enTraits.data || {}).filter(isSet18Trait);
 const zhChampionIds = new Set(Object.keys(zhChampions.data || {}));
 const zhTraitIds = new Set(Object.keys(zhTraits.data || {}));
 const enItemNames = new Set(Object.values(enItems.data || {}).map((item) => normalize(item.name || "")));
@@ -95,21 +93,17 @@ const missingChampionTranslations = championIds.filter((id) => !zhChampionIds.ha
 const missingTraitTranslations = traitIds.filter((id) => !zhTraitIds.has(id));
 const missingComponents = componentNames.filter((name) => !enItemNames.has(normalize(name)));
 const missingCompletedItems = expectedCompletedItems.filter((name) => !enItemNames.has(normalize(name)));
+const wantedItemNames = new Set([...componentNames, ...expectedCompletedItems].map(normalize));
 const missingZhItemIds = Object.entries(enItems.data || {})
-  .filter(([, item]) => [...componentNames, ...expectedCompletedItems].some((name) => normalize(name) === normalize(item.name || "")))
+  .filter(([, item]) => wantedItemNames.has(normalize(item.name || "")))
   .map(([id]) => id)
   .filter((id) => !zhItemIds.has(id));
-const candidateItemAliases = Object.entries(enItems.data || {})
-  .filter(([id, item]) => /runaan|hurricane|redemp|guardbreak|powergauntlet|guard breaker|redemption/i.test(`${id} ${item.name || ""}`))
-  .map(([id, item]) => `${id}=${item.name || ""}`);
 
 console.log(`Data Dragon: ${version}`);
 console.log(`Set 18 champions: ${championIds.length}`);
 console.log(`Set 18 traits: ${traitIds.length}`);
 console.log(`Standard components found: ${componentNames.length - missingComponents.length}/${componentNames.length}`);
 console.log(`Completed items found: ${expectedCompletedItems.length - missingCompletedItems.length}/${expectedCompletedItems.length}`);
-console.log(`Missing completed item names: ${missingCompletedItems.join(" | ") || "none"}`);
-console.log(`Related item records: ${candidateItemAliases.join(" | ") || "none"}`);
 
 if (championIds.length < 20) throw new Error(`Too few Set 18 champions: ${championIds.length}`);
 if (traitIds.length < 5) throw new Error(`Too few Set 18 traits: ${traitIds.length}`);
