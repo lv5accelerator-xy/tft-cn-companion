@@ -1,0 +1,50 @@
+name: Sync TFT Meta Sources
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tft-meta-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Sync TFT-only sources
+        env:
+          TUDING_FEED_URL: ${{ secrets.TUDING_FEED_URL }}
+          SHENCHAO_FEED_URL: ${{ secrets.SHENCHAO_FEED_URL }}
+          LINDO_FEED_URL: ${{ secrets.LINDO_FEED_URL }}
+          META_FEED_BEARER_TOKEN: ${{ secrets.META_FEED_BEARER_TOKEN }}
+          META_PARSER_URL: ${{ secrets.META_PARSER_URL }}
+          META_PARSER_BEARER_TOKEN: ${{ secrets.META_PARSER_BEARER_TOKEN }}
+        run: node scripts/sync-meta-sources.mjs
+
+      - name: Commit updated meta snapshot
+        shell: bash
+        run: |
+          if git diff --quiet -- data/live-meta.generated.json; then
+            echo "No TFT meta content changes."
+            exit 0
+          fi
+          git config user.name "tft-meta-bot"
+          git config user.email "tft-meta-bot@users.noreply.github.com"
+          git add data/live-meta.generated.json
+          git commit -m "data: sync TFT meta sources"
+          git push
