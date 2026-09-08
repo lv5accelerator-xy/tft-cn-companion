@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import UnitIcon from "../components/UnitIcon";
 import BoardPreview from "../components/BoardPreview";
-import { metaComps, type BoardPosition, type MetaComp } from "@/data/comps";
+import { metaComps, type UnifiedMetaComp } from "@/data/meta";
+import type { BoardPosition } from "@/data/comps";
 import type { CatalogEntry, TftCatalogPayload } from "@/data/tft";
 import styles from "./builder.module.css";
 
@@ -151,7 +152,7 @@ export default function BuilderPage() {
     persist([...selectedIds, id]);
   }
 
-  function loadMetaComp(comp: MetaComp) {
+  function loadMetaComp(comp: UnifiedMetaComp) {
     const ids = [...comp.coreUnits, ...comp.flexUnits]
       .map((name) => championLookup.get(normalize(name))?.id)
       .filter((id): id is string => Boolean(id))
@@ -331,12 +332,12 @@ export default function BuilderPage() {
         {recommendations.length ? (
           <div className={styles.recGrid}>
             {recommendations.map(({ comp, overlap, coreOverlap }) => (
-              <div className={styles.recCard} key={comp.id}>
+              <div className={styles.recCard} key={`${comp.sourceId}-${comp.id}`}>
                 <div className={styles.recMeta}>
                   <div>
                     <strong>{comp.nameZh}</strong>
                     <span>{comp.name}</span>
-                    <span>{comp.playstyle} · {comp.tier}</span>
+                    <span>{comp.source} · {comp.playstyle} · {comp.tier}</span>
                     <span className={styles.recScore}>匹配 {overlap} 个英雄 · 核心命中 {coreOverlap}</span>
                   </div>
                   <button className={`${styles.button} ${styles.primary}`} onClick={() => loadMetaComp(comp)}>载入</button>
