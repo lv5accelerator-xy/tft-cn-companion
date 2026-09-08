@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import UnitIcon from "./components/UnitIcon";
-import { metaComps } from "@/data/comps";
+import { metaComps } from "@/data/meta";
 import type { CatalogEntry, TftCatalogPayload } from "@/data/tft";
 import styles from "./dashboard.module.css";
 
@@ -64,11 +64,11 @@ export default function HomePage() {
           </div>
           <div className={styles.compList}>
             {metaComps.slice(0, 6).map((comp) => (
-              <Link href="/comps" className={styles.compRow} key={comp.id}>
+              <Link href="/comps" className={styles.compRow} key={`${comp.sourceId}-${comp.id}`}>
                 <span className={`${styles.tier} ${styles[`tier${comp.tier}`]}`}>{comp.tier === "ACTIVE" ? "·" : comp.tier}</span>
                 <div className={styles.compName}>
                   <strong>{comp.nameZh}</strong>
-                  <span>{comp.name}</span>
+                  <span>{comp.name} · {comp.source}</span>
                 </div>
                 <div className={styles.units}>
                   {[...comp.coreUnits, ...comp.flexUnits.slice(0, 4)].slice(0, 8).map((name) => {
@@ -98,7 +98,7 @@ export default function HomePage() {
               <Link className={styles.moduleCard} href="/traits"><b>Synergy</b><span>查看当前羁绊的中英文名称。</span></Link>
               <Link className={styles.moduleCard} href="/augments"><b>Augments</b><span>强化符文中英快速查询。</span></Link>
               <Link className={styles.moduleCard} href="/builder"><b>Team Builder</b><span>像客户端一样快速组阵并保存。</span></Link>
-              <Link className={styles.moduleCard} href="/search"><b>Integrated Search</b><span>统一搜索本地 TFT 数据。</span></Link>
+              <Link className={styles.moduleCard} href="/sources"><b>Live Sources</b><span>查看公众号与阵容同步状态。</span></Link>
             </div>
           </section>
 
