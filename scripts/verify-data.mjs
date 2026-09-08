@@ -50,27 +50,16 @@ const expectedCompletedItems = [
   "Thief's Gloves",
 ];
 
-const knownSet18ChampionNames = new Set([
-  "Ahri",
-  "Cassiopeia",
-  "Cinderling",
-  "Master Yi",
-  "Morgana",
-  "Draven",
-  "Soraka",
-  "Amumu",
-  "Elder Dragon",
-  "Lux",
-]);
-
-const knownSet18TraitNames = new Set(["Elderwood", "Riftbeast"]);
-
 function normalize(value) {
   return value.trim().toLocaleLowerCase("en-US");
 }
 
-function isSet18(id) {
-  return /^TFT18[_-]/i.test(id) || /^TFTSet18[_-]/i.test(id);
+function isSet18Champion(id) {
+  return /\/Sets\/TFTSet18\/Shop\//i.test(id) || /^TFT18[_-]/i.test(id) || /^TFTSet18[_-]/i.test(id);
+}
+
+function isSet18Trait(id) {
+  return /^DA(?:_|$)/i.test(id) || /^TFT18[_-]/i.test(id) || /^TFTSet18[_-]/i.test(id);
 }
 
 async function getJson(url) {
@@ -95,24 +84,12 @@ const [enChampions, zhChampions, enTraits, zhTraits, enItems, zhItems] = await P
 
 const championEntries = Object.entries(enChampions.data || {});
 const traitEntries = Object.entries(enTraits.data || {});
-const championIds = championEntries.map(([id]) => id).filter(isSet18);
-const traitIds = traitEntries.map(([id]) => id).filter(isSet18);
+const championIds = championEntries.map(([id]) => id).filter(isSet18Champion);
+const traitIds = traitEntries.map(([id]) => id).filter(isSet18Trait);
 const zhChampionIds = new Set(Object.keys(zhChampions.data || {}));
 const zhTraitIds = new Set(Object.keys(zhTraits.data || {}));
 const enItemNames = new Set(Object.values(enItems.data || {}).map((item) => normalize(item.name || "")));
 const zhItemIds = new Set(Object.keys(zhItems.data || {}));
-
-const knownChampionMatches = championEntries
-  .filter(([, champion]) => knownSet18ChampionNames.has(champion.name || ""))
-  .map(([id, champion]) => `${champion.name}=${id}`);
-const knownTraitMatches = traitEntries
-  .filter(([, trait]) => knownSet18TraitNames.has(trait.name || ""))
-  .map(([id, trait]) => `${trait.name}=${id}`);
-const prefixCounts = championEntries.reduce((map, [id]) => {
-  const prefix = id.split("_")[0] || id;
-  map.set(prefix, (map.get(prefix) || 0) + 1);
-  return map;
-}, new Map());
 
 const missingChampionTranslations = championIds.filter((id) => !zhChampionIds.has(id));
 const missingTraitTranslations = traitIds.filter((id) => !zhTraitIds.has(id));
@@ -122,16 +99,17 @@ const missingZhItemIds = Object.entries(enItems.data || {})
   .filter(([, item]) => [...componentNames, ...expectedCompletedItems].some((name) => normalize(name) === normalize(item.name || "")))
   .map(([id]) => id)
   .filter((id) => !zhItemIds.has(id));
+const candidateItemAliases = Object.entries(enItems.data || {})
+  .filter(([id, item]) => /runaan|hurricane|redemp|guardbreak|powergauntlet|guard breaker|redemption/i.test(`${id} ${item.name || ""}`))
+  .map(([id, item]) => `${id}=${item.name || ""}`);
 
 console.log(`Data Dragon: ${version}`);
-console.log(`Champion prefix counts: ${JSON.stringify(Object.fromEntries(prefixCounts))}`);
-console.log(`Known Set 18 champion IDs: ${knownChampionMatches.join(" | ") || "none"}`);
-console.log(`Known Set 18 trait IDs: ${knownTraitMatches.join(" | ") || "none"}`);
-console.log(`Set 18 champions by current filter: ${championIds.length}`);
-console.log(`Set 18 traits by current filter: ${traitIds.length}`);
+console.log(`Set 18 champions: ${championIds.length}`);
+console.log(`Set 18 traits: ${traitIds.length}`);
 console.log(`Standard components found: ${componentNames.length - missingComponents.length}/${componentNames.length}`);
 console.log(`Completed items found: ${expectedCompletedItems.length - missingCompletedItems.length}/${expectedCompletedItems.length}`);
 console.log(`Missing completed item names: ${missingCompletedItems.join(" | ") || "none"}`);
+console.log(`Related item records: ${candidateItemAliases.join(" | ") || "none"}`);
 
 if (championIds.length < 20) throw new Error(`Too few Set 18 champions: ${championIds.length}`);
 if (traitIds.length < 5) throw new Error(`Too few Set 18 traits: ${traitIds.length}`);
