@@ -164,7 +164,13 @@ export default function HomePage() {
       const tabMatch = tab === "全部" || entry.type === tab;
       if (!tabMatch) return false;
       if (!q) return true;
-      const text = [entry.nameZh, entry.nameEn, entry.id, entry.tier?.toString() ?? ""]
+      const text = [
+        entry.nameZh,
+        entry.nameEn,
+        ...(entry.aliases ?? []),
+        entry.id,
+        entry.tier?.toString() ?? "",
+      ]
         .join(" ")
         .toLocaleLowerCase("en-US");
       return text.includes(q);
@@ -363,7 +369,7 @@ export default function HomePage() {
           className="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="搜索英文或中文：Jinx / 金克丝 / Shojin / 朔极之矛…"
+          placeholder="搜索中英名称或旧称：Shojin / 朔极之矛 / Redemption…"
           aria-label="搜索 TFT 资料"
         />
         <kbd>/</kbd>
@@ -432,6 +438,9 @@ export default function HomePage() {
                     </div>
                     <h3>{entry.nameZh}</h3>
                     <div className="englishName">{entry.nameEn}</div>
+                    {entry.aliases?.length ? (
+                      <div className="muted">旧称：{entry.aliases.join(" / ")}</div>
+                    ) : null}
                   </div>
                 </div>
 
@@ -454,7 +463,7 @@ export default function HomePage() {
       )}
 
       {tab !== "阵容" && filtered.length === 0 && (
-        <div className="empty">没有找到匹配内容。可以尝试中文名、英文名或费用。</div>
+        <div className="empty">没有找到匹配内容。可以尝试中文名、英文名、旧装备名或费用。</div>
       )}
 
       <footer className="footer">
