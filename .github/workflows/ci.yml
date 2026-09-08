@@ -25,5 +25,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Verify Riot TFT data
+        run: npm run verify:data
+
       - name: Build
         run: npm run build
