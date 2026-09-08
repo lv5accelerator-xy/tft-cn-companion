@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import UnitIcon from "../components/UnitIcon";
-import { metaComps } from "@/data/comps";
+import { metaComps } from "@/data/meta";
 import type { CatalogEntry, TftCatalogPayload } from "@/data/tft";
 import styles from "./search.module.css";
 
@@ -51,6 +51,8 @@ export default function SearchPage() {
     return metaComps.filter((comp) => normalize([
       comp.name,
       comp.nameZh,
+      comp.source,
+      comp.sourceArticleTitle,
       ...comp.coreUnits,
       ...comp.flexUnits,
       ...comp.traits,
@@ -76,11 +78,11 @@ export default function SearchPage() {
     <div className={styles.page}>
       <header className={styles.heading}>
         <h1>Integrated Search</h1>
-        <p>统一查找英雄、装备、羁绊、强化和当前收录阵容。</p>
+        <p>统一查找英雄、装备、羁绊、强化和多来源 TFT 阵容。</p>
       </header>
 
       <form className={styles.searchBox} onSubmit={submit}>
-        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Nidalee / 奈德丽 / Primal / Morellonomicon…" />
+        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Nidalee / 奈德丽 / Primal / 兔顶之弈…" />
         <button type="submit">Search</button>
       </form>
 
@@ -93,10 +95,10 @@ export default function SearchPage() {
               <div className={styles.sectionHead}><strong>Comps</strong><span>{compResults.length} results</span></div>
               <div className={styles.grid}>
                 {compResults.map((comp) => (
-                  <div className={styles.compCard} key={comp.id}>
+                  <div className={styles.compCard} key={`${comp.sourceId}-${comp.id}`}>
                     <strong>{comp.nameZh}</strong>
                     <span>{comp.name}</span>
-                    <span>{comp.playstyle} · {comp.tier}</span>
+                    <span>{comp.source} · {comp.playstyle} · {comp.tier}</span>
                   </div>
                 ))}
               </div>
