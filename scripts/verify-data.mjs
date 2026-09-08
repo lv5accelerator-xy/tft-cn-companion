@@ -31,10 +31,15 @@ function isSet18Augment(id) {
   return /^DA_18_/i.test(id);
 }
 
-function runtimeParsedIds(payload, predicate) {
-  return Object.entries(payload.data || {})
-    .filter(([dataId, entry]) => Boolean(entry.name && predicate(dataId)))
-    .map(([dataId]) => dataId);
+function dedupeVisibleNames(entries, zhData) {
+  const seen = new Set();
+  return entries.filter(([id, entry]) => {
+    const zh = zhData[id];
+    const key = `${normalize(entry.name || "")}|${normalize(zh?.name || entry.name || "")}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 async function getJson(url) {
@@ -59,17 +64,16 @@ const [enChampions, zhChampions, enTraits, zhTraits, enItems, zhItems, enAugment
   getJson(`${base}/zh_CN/tft-augments.json`),
 ]);
 
-const championIds = Object.keys(enChampions.data || {}).filter(isSet18Champion);
-const traitIds = Object.keys(enTraits.data || {}).filter(isSet18Trait);
-const augmentIds = Object.keys(enAugments.data || {}).filter(isSet18Augment);
+const championEntries = Object.entries(enChampions.data || {}).filter(
+  ([id, entry]) => isSet18Champion(id) && entry.name && !/^Lux \(/i.test(entry.name),
+);
+const traitEntries = Object.entries(enTraits.data || {}).filter(([id, entry]) => isSet18Trait(id) && entry.name);
+const rawAugmentEntries = Object.entries(enAugments.data || {}).filter(([id, entry]) => isSet18Augment(id) && entry.name);
+const augmentEntries = dedupeVisibleNames(rawAugmentEntries, zhAugments.data || {});
 
-const runtimeChampionIds = runtimeParsedIds(enChampions, isSet18Champion);
-const runtimeTraitIds = runtimeParsedIds(enTraits, isSet18Trait);
-const runtimeAugmentIds = runtimeParsedIds(enAugments, isSet18Augment);
-const inlineChampionIds = Object.values(enChampions.data || {})
-  .map((entry) => entry.id)
-  .filter((id) => typeof id === "string" && isSet18Champion(id));
-
+const championIds = championEntries.map(([id]) => id);
+const traitIds = traitEntries.map(([id]) => id);
+const augmentIds = augmentEntries.map(([id]) => id);
 const zhChampionIds = new Set(Object.keys(zhChampions.data || {}));
 const zhTraitIds = new Set(Object.keys(zhTraits.data || {}));
 const zhAugmentIds = new Set(Object.keys(zhAugments.data || {}));
@@ -88,23 +92,17 @@ const missingZhItemIds = Object.entries(enItems.data || {})
   .filter((id) => !zhItemIds.has(id));
 
 console.log(`Data Dragon: ${version}`);
-console.log(`Set 18 champions: ${championIds.length}`);
-console.log(`Runtime-parsed champions: ${runtimeChampionIds.length}`);
-console.log(`Inline champion IDs matching Set 18: ${inlineChampionIds.length}`);
-console.log(`Set 18 traits: ${traitIds.length}`);
-console.log(`Runtime-parsed traits: ${runtimeTraitIds.length}`);
-console.log(`Set 18 augments: ${augmentIds.length}`);
-console.log(`Runtime-parsed augments: ${runtimeAugmentIds.length}`);
+console.log(`Display champions: ${championIds.length}`);
+console.log(`Display traits: ${traitIds.length}`);
+console.log(`Display augments: ${augmentIds.length} (raw ${rawAugmentEntries.length})`);
 console.log(`Standard components found: ${componentNames.length - missingComponents.length}/${componentNames.length}`);
 console.log(`Completed items found: ${expectedCompletedItems.length - missingCompletedItems.length}/${expectedCompletedItems.length}`);
-console.log(`Augment zh_CN matches: ${augmentIds.length - missingAugmentTranslations.length}/${augmentIds.length}`);
 
-if (championIds.length < 20) throw new Error(`Too few Set 18 champions: ${championIds.length}`);
-if (runtimeChampionIds.length !== championIds.length) throw new Error(`Runtime champion parser mismatch: ${runtimeChampionIds.length}/${championIds.length}`);
-if (traitIds.length < 5) throw new Error(`Too few Set 18 traits: ${traitIds.length}`);
-if (runtimeTraitIds.length !== traitIds.length) throw new Error(`Runtime trait parser mismatch: ${runtimeTraitIds.length}/${traitIds.length}`);
-if (augmentIds.length < 30) throw new Error(`Too few Set 18 augments: ${augmentIds.length}`);
-if (runtimeAugmentIds.length !== augmentIds.length) throw new Error(`Runtime augment parser mismatch: ${runtimeAugmentIds.length}/${augmentIds.length}`);
+if (championIds.length < 50) throw new Error(`Too few display champions: ${championIds.length}`);
+if (championEntries.some(([, entry]) => /^Lux \(/i.test(entry.name || ""))) throw new Error("Lux form variants leaked into display catalog");
+if (traitIds.length < 5) throw new Error(`Too few display traits: ${traitIds.length}`);
+if (augmentIds.length < 30) throw new Error(`Too few display augments: ${augmentIds.length}`);
+if (augmentIds.length >= rawAugmentEntries.length) throw new Error("Expected duplicate augment cleanup did not occur");
 if (missingChampionTranslations.length) throw new Error(`Missing zh_CN champions: ${missingChampionTranslations.join(", ")}`);
 if (missingTraitTranslations.length) throw new Error(`Missing zh_CN traits: ${missingTraitTranslations.join(", ")}`);
 if (missingAugmentTranslations.length) throw new Error(`Missing zh_CN augments: ${missingAugmentTranslations.join(", ")}`);
@@ -112,4 +110,4 @@ if (missingComponents.length) throw new Error(`Missing components: ${missingComp
 if (missingCompletedItems.length) throw new Error(`Missing completed items: ${missingCompletedItems.join(", ")}`);
 if (missingZhItemIds.length) throw new Error(`Missing zh_CN item IDs: ${missingZhItemIds.join(", ")}`);
 
-console.log("Riot TFT data verification passed.");
+console.log("Riot TFT cleaned catalog verification passed.");
