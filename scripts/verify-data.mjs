@@ -1,14 +1,8 @@
 const DDRAGON = "https://ddragon.leagueoflegends.com";
 
 const componentNames = [
-  "B.F. Sword",
-  "Recurve Bow",
-  "Needlessly Large Rod",
-  "Tear of the Goddess",
-  "Chain Vest",
-  "Negatron Cloak",
-  "Giant's Belt",
-  "Sparring Gloves",
+  "B.F. Sword", "Recurve Bow", "Needlessly Large Rod", "Tear of the Goddess",
+  "Chain Vest", "Negatron Cloak", "Giant's Belt", "Sparring Gloves",
 ];
 
 const expectedCompletedItems = [
@@ -31,6 +25,10 @@ function isSet18Champion(id) {
 
 function isSet18Trait(id) {
   return /^DA(?:_|$)/i.test(id) || /^TFT18[_-]/i.test(id) || /^TFTSet18[_-]/i.test(id);
+}
+
+function isSet18Augment(id) {
+  return /^DA_18_/i.test(id);
 }
 
 async function getJson(url) {
@@ -57,13 +55,16 @@ const [enChampions, zhChampions, enTraits, zhTraits, enItems, zhItems, enAugment
 
 const championIds = Object.keys(enChampions.data || {}).filter(isSet18Champion);
 const traitIds = Object.keys(enTraits.data || {}).filter(isSet18Trait);
+const augmentIds = Object.keys(enAugments.data || {}).filter(isSet18Augment);
 const zhChampionIds = new Set(Object.keys(zhChampions.data || {}));
 const zhTraitIds = new Set(Object.keys(zhTraits.data || {}));
+const zhAugmentIds = new Set(Object.keys(zhAugments.data || {}));
 const enItemNames = new Set(Object.values(enItems.data || {}).map((item) => normalize(item.name || "")));
 const zhItemIds = new Set(Object.keys(zhItems.data || {}));
 
 const missingChampionTranslations = championIds.filter((id) => !zhChampionIds.has(id));
 const missingTraitTranslations = traitIds.filter((id) => !zhTraitIds.has(id));
+const missingAugmentTranslations = augmentIds.filter((id) => !zhAugmentIds.has(id));
 const missingComponents = componentNames.filter((name) => !enItemNames.has(normalize(name)));
 const missingCompletedItems = expectedCompletedItems.filter((name) => !enItemNames.has(normalize(name)));
 const wantedItemNames = new Set([...componentNames, ...expectedCompletedItems].map(normalize));
@@ -72,26 +73,20 @@ const missingZhItemIds = Object.entries(enItems.data || {})
   .map(([id]) => id)
   .filter((id) => !zhItemIds.has(id));
 
-const augmentEntries = Object.entries(enAugments.data || {});
-const augmentCandidates = augmentEntries
-  .filter(([id]) => /(?:TFT|Set|DA)[^\n]{0,12}18|18[^\n]{0,12}(?:Augment|DA|TFT|Set)/i.test(id))
-  .map(([id, augment]) => ({ id, name: augment?.name || "" }));
-const zhAugmentIds = new Set(Object.keys(zhAugments.data || {}));
-
 console.log(`Data Dragon: ${version}`);
 console.log(`Set 18 champions: ${championIds.length}`);
 console.log(`Set 18 traits: ${traitIds.length}`);
+console.log(`Set 18 augments: ${augmentIds.length}`);
 console.log(`Standard components found: ${componentNames.length - missingComponents.length}/${componentNames.length}`);
 console.log(`Completed items found: ${expectedCompletedItems.length - missingCompletedItems.length}/${expectedCompletedItems.length}`);
-console.log(`Augment records total: ${augmentEntries.length}`);
-console.log(`Set 18 augment candidates: ${augmentCandidates.length}`);
-console.log(`Set 18 augment sample: ${augmentCandidates.slice(0, 120).map((entry) => `${entry.id}=${entry.name}`).join(" | ")}`);
-console.log(`Set 18 augment candidate zh matches: ${augmentCandidates.filter((entry) => zhAugmentIds.has(entry.id)).length}/${augmentCandidates.length}`);
+console.log(`Augment zh_CN matches: ${augmentIds.length - missingAugmentTranslations.length}/${augmentIds.length}`);
 
 if (championIds.length < 20) throw new Error(`Too few Set 18 champions: ${championIds.length}`);
 if (traitIds.length < 5) throw new Error(`Too few Set 18 traits: ${traitIds.length}`);
+if (augmentIds.length < 30) throw new Error(`Too few Set 18 augments: ${augmentIds.length}`);
 if (missingChampionTranslations.length) throw new Error(`Missing zh_CN champions: ${missingChampionTranslations.join(", ")}`);
 if (missingTraitTranslations.length) throw new Error(`Missing zh_CN traits: ${missingTraitTranslations.join(", ")}`);
+if (missingAugmentTranslations.length) throw new Error(`Missing zh_CN augments: ${missingAugmentTranslations.join(", ")}`);
 if (missingComponents.length) throw new Error(`Missing components: ${missingComponents.join(", ")}`);
 if (missingCompletedItems.length) throw new Error(`Missing completed items: ${missingCompletedItems.join(", ")}`);
 if (missingZhItemIds.length) throw new Error(`Missing zh_CN item IDs: ${missingZhItemIds.join(", ")}`);
