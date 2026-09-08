@@ -9,6 +9,7 @@ import type { CatalogEntry, TftCatalogPayload } from "@/data/tft";
 import styles from "./builder.module.css";
 
 const BUILDER_KEY = "tft-cn-companion-builder-v2";
+const LOCAL_IMPORT_KEY = "tft-cn-companion-image-imports-v1";
 const SHARE_PREFIX = "TFTC1:";
 
 type ImportPayload = {
@@ -49,9 +50,22 @@ function isBoardPosition(value: unknown): value is BoardPosition {
     && Number(entry.col) <= 6;
 }
 
+function isManualComp(value: unknown): value is UnifiedMetaComp {
+  if (!value || typeof value !== "object") return false;
+  const comp = value as Partial<UnifiedMetaComp>;
+  return comp.gameMode === "TFT"
+    && comp.syncOrigin === "manual"
+    && typeof comp.id === "string"
+    && typeof comp.name === "string"
+    && Array.isArray(comp.coreUnits)
+    && Array.isArray(comp.flexUnits);
+}
+
 export default function BuilderPage() {
   const [catalog, setCatalog] = useState<TftCatalogPayload | null>(null);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [pendingNames, setPendingNames] = useState<string[]>([]);
+  const [localComps, setLocalComps] = useState<UnifiedMetaComp[]>([]);
   const [compName, setCompName] = useState("我的阵容");
   const [query, setQuery] = useState("");
   const [cost, setCost] = useState<number | null>(null);
@@ -71,11 +85,18 @@ export default function BuilderPage() {
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(BUILDER_KEY);
-      if (!raw) return;
-      const saved = JSON.parse(raw) as ImportPayload;
-      if (saved.name) setCompName(saved.name);
-      if (Array.isArray(saved.championIds)) setSelectedIds(saved.championIds.slice(0, 10));
-      if (Array.isArray(saved.board)) setBoard(saved.board.filter(isBoardPosition));
+      if (raw) {
+        const saved = JSON.parse(raw) as ImportPayload;
+        if (saved.name) setCompName(saved.name);
+        if (Array.isArray(saved.championIds) && saved.championIds.length) {
+          setSelectedIds(saved.championIds.slice(0, 10));
+        } else if (Array.isArray(saved.champions)) {
+          setPendingNames(saved.champions.slice(0, 10));
+        }
+        if (Array.isArray(saved.board)) setBoard(saved.board.filter(isBoardPosition));
+      }
+      const imported = JSON.parse(window.localStorage.getItem(LOCAL_IMPORT_KEY) || "[]") as unknown[];
+      setLocalComps(imported.filter(isManualComp));
     } catch {
       // Ignore malformed local state.
     }
@@ -96,6 +117,17 @@ export default function BuilderPage() {
     return map;
   }, [champions]);
 
+  useEffect(() => {
+    if (!pendingNames.length || !champions.length) return;
+    const ids = pendingNames
+      .map((name) => championLookup.get(normalize(name))?.id)
+      .filter((id): id is string => Boolean(id))
+      .filter((id, index, array) => array.indexOf(id) === index)
+      .slice(0, 10);
+    if (ids.length) setSelectedIds(ids);
+    setPendingNames([]);
+  }, [championLookup, champions.length, pendingNames]);
+
   const filtered = useMemo(() => {
     const q = normalize(query);
     return champions.filter((champion) => {
@@ -112,9 +144,11 @@ export default function BuilderPage() {
     }));
   }, [filtered]);
 
+  const allMetaComps = useMemo(() => [...localComps, ...metaComps], [localComps]);
+
   const recommendations = useMemo(() => {
     const selectedNames = new Set(selected.map((unit) => normalize(unit.nameEn)));
-    return metaComps
+    return allMetaComps
       .map((comp) => {
         const pool = [...comp.coreUnits, ...comp.flexUnits].map(normalize);
         const overlap = pool.filter((name) => selectedNames.has(name)).length;
@@ -124,7 +158,7 @@ export default function BuilderPage() {
       .filter((entry) => entry.overlap > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, 3);
-  }, [selected]);
+  }, [allMetaComps, selected]);
 
   function persist(next: string[], name = compName, nextBoard = board) {
     setSelectedIds(next);
