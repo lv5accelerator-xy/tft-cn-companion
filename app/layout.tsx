@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import CloudSyncAgent from "./components/CloudSyncAgent";
 import DesktopShell from "./components/DesktopShell";
 import { LocaleProvider } from "./components/LocaleProvider";
 
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="zh-CN">
       <body>
         <LocaleProvider>
+          <CloudSyncAgent />
           <DesktopShell>{children}</DesktopShell>
         </LocaleProvider>
       </body>
