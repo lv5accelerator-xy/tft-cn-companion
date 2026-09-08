@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import UnitIcon from "../components/UnitIcon";
+import BoardPreview from "../components/BoardPreview";
 import { metaComps, metaPatch, metaUpdatedAt, type MetaComp } from "@/data/comps";
 import type { CatalogEntry, TftCatalogPayload } from "@/data/tft";
 import styles from "./comps.module.css";
@@ -32,6 +33,8 @@ function CompRow({ comp, champions }: { comp: MetaComp; champions: CatalogEntry[
       window.localStorage.setItem(BUILDER_KEY, JSON.stringify({
         name: comp.nameZh,
         championIds,
+        board: comp.board,
+        sourceCompId: comp.id,
         updatedAt: Date.now(),
       }));
       setCopied(true);
@@ -78,16 +81,28 @@ function CompRow({ comp, champions }: { comp: MetaComp; champions: CatalogEntry[
 
       {expanded && (
         <div className={styles.details}>
-          <strong>什么时候玩：</strong>{comp.whenToPlay}
-          <div style={{ marginTop: 6 }}><strong>装备优先：</strong>{comp.itemFocus.join(" · ")}</div>
-          <div style={{ marginTop: 6 }}><strong>要点：</strong>{comp.keyNotes.slice(0, 3).join("；")}</div>
-          <div className={styles.detailsGrid}>
-            {comp.stages.map((stage) => (
-              <div className={styles.stage} key={stage.stage}>
-                <b>{stage.stage}</b>
-                {stage.text}
+          <div className={styles.detailColumns}>
+            <div>
+              <strong>什么时候玩：</strong>{comp.whenToPlay}
+              <div style={{ marginTop: 6 }}><strong>装备优先：</strong>{comp.itemFocus.join(" · ")}</div>
+              <div style={{ marginTop: 6 }}><strong>要点：</strong>{comp.keyNotes.slice(0, 3).join("；")}</div>
+              <div className={styles.detailsGrid}>
+                {comp.stages.map((stage) => (
+                  <div className={styles.stage} key={stage.stage}>
+                    <b>{stage.stage}</b>
+                    {stage.text}
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+            <div className={styles.positioning}>
+              <div className={styles.positioningHead}>
+                <strong>参考站位</strong>
+                <span>可按对手左右镜像</span>
+              </div>
+              <BoardPreview positions={comp.board} champions={champions} compact />
+              <p>{comp.positioningNote}</p>
+            </div>
           </div>
         </div>
       )}
@@ -130,7 +145,7 @@ export default function CompsPage() {
       <header className={styles.heading}>
         <div>
           <h1>Meta Team Comps</h1>
-          <p>当前补丁精选阵容 · 双击行或点击名称可展开运营摘要</p>
+          <p>当前补丁精选阵容 · 点击阵容名称可展开运营与参考站位</p>
         </div>
         <div className={styles.meta}>
           <span>Patch {metaPatch}</span>
