@@ -71,7 +71,11 @@ function pairLocalizedEntries(
   const enData = enPayload.data ?? {};
   const zhData = zhPayload.data ?? {};
 
-  return Object.values(enData)
+  return Object.entries(enData)
+    .map(([dataId, entry]) => ({
+      ...entry,
+      id: entry.id || dataId,
+    }))
     .filter((entry) => entry.id && entry.name && filter(entry))
     .map((entry) => {
       const id = entry.id as string;
