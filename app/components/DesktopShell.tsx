@@ -16,6 +16,7 @@ const metaNav = [
 
 const toolNav = [
   { href: "/builder", label: "阵容编辑器", glyph: "+" },
+  { href: "/import", label: "一图流导入", glyph: "▧" },
   { href: "/sources", label: "来源同步", glyph: "↻" },
 ];
 
