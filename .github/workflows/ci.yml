@@ -28,5 +28,8 @@ jobs:
       - name: Verify Riot TFT data
         run: npm run verify:data
 
+      - name: Verify TFT-only meta sources
+        run: npm run verify:meta
+
       - name: Build
         run: npm run build
