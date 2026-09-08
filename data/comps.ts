@@ -5,6 +5,12 @@ export type StagePlan = {
   text: string;
 };
 
+export type BoardPosition = {
+  unit: string;
+  row: 0 | 1 | 2 | 3;
+  col: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+};
+
 export type MetaComp = {
   id: string;
   name: string;
@@ -20,6 +26,8 @@ export type MetaComp = {
   whenToPlay: string;
   keyNotes: string[];
   stages: StagePlan[];
+  board: BoardPosition[];
+  positioningNote: string;
   source: string;
   sourceUrl: string;
 };
@@ -52,6 +60,17 @@ export const metaComps: MetaComp[] = [
       { stage: "Stage 3", text: "加入 Fiddlesticks、Cassiopeia、Azir 等高质量三费并围绕其羁绊过渡，装备优先给已升级单位。" },
       { stage: "Stage 4", text: "升级人口并开始找 Malphite；根据实际抽到的四费灵活重组前排与副 C。" },
     ],
+    board: [
+      { unit: "Amumu", row: 0, col: 2 },
+      { unit: "Malphite", row: 0, col: 3 },
+      { unit: "Lillia", row: 0, col: 4 },
+      { unit: "Kennen", row: 1, col: 1 },
+      { unit: "Ahri", row: 3, col: 1 },
+      { unit: "Azir", row: 3, col: 3 },
+      { unit: "Zyra", row: 3, col: 5 },
+      { unit: "Ezreal", row: 2, col: 6 },
+    ],
+    positioningNote: "参考站位：Malphite 顶第一排吸收火力，主后排分散；根据对手主 C 方向左右镜像。",
     source: "TFT Academy",
     sourceUrl: "https://tftacademy.com/tierlist/comps/set-18-soraka-flex",
   },
@@ -79,6 +98,17 @@ export const metaComps: MetaComp[] = [
       { stage: "Stage 3", text: "这套阵容很吃大剑；选秀和装备类强化可优先补大剑与通用 AD 装。" },
       { stage: "Stage 4", text: "8 级寻找 Nidalee、Sivir 与主坦；Malphite 被抢时可切 Sentinel 或 Krug 类前排。" },
     ],
+    board: [
+      { unit: "Malphite", row: 0, col: 2 },
+      { unit: "Amumu", row: 0, col: 3 },
+      { unit: "Maokai", row: 0, col: 4 },
+      { unit: "Kennen", row: 1, col: 3 },
+      { unit: "Kog'Maw", row: 3, col: 1 },
+      { unit: "Ashe", row: 3, col: 0 },
+      { unit: "Sivir", row: 3, col: 5 },
+      { unit: "Nidalee", row: 3, col: 6 },
+    ],
+    positioningNote: "参考站位：三前排居中，Nidalee/Sivir 分居后排两侧，避免同时吃到同一侧切入或范围伤害。",
     source: "TFT Academy",
     sourceUrl: "https://tftacademy.com/tierlist/comps/set-18-primal-jungle-copy",
   },
@@ -106,6 +136,15 @@ export const metaComps: MetaComp[] = [
       { stage: "Stage 3", text: "阵容非常需要 Rod，强化和选秀有机会就补；不走 Invoker 时可先留 Pebbles 等低费连接牌。" },
       { stage: "Stage 4", text: "升 8 搜 4 Invoker 框架；根据前排质量在 Vanguard、Brawler、Juggernaut 间灵活切换。" },
     ],
+    board: [
+      { unit: "Pebbles", row: 0, col: 3 },
+      { unit: "Master Yi", row: 1, col: 2 },
+      { unit: "Morgana", row: 2, col: 3 },
+      { unit: "Kayle", row: 3, col: 0 },
+      { unit: "Kog'Maw", row: 3, col: 2 },
+      { unit: "Nidalee", row: 3, col: 6 },
+    ],
+    positioningNote: "参考站位：Nidalee 单侧后排，Kog'Maw 与 Kayle 分散；前排按你实际两星坦克替换 Pebbles/Yi 位置。",
     source: "TFT Academy",
     sourceUrl: "https://tftacademy.com/tierlist/comps/set-18-adaptor-nidalee",
   },
@@ -133,6 +172,15 @@ export const metaComps: MetaComp[] = [
       { stage: "Stage 3", text: "逐步补 Adaptor 与前排，Stage 3 结束前尽量完成 Yi / Rengar 的主装备。" },
       { stage: "Stage 4", text: "7 级搜 Yi 2、Rengar 2 与 Juggernaut 坦克，随后回经济慢搜三星；8 级补 Kog'Maw 或其他高质量单位。" },
     ],
+    board: [
+      { unit: "Vi", row: 0, col: 2 },
+      { unit: "Krug", row: 0, col: 4 },
+      { unit: "Rengar", row: 1, col: 2 },
+      { unit: "Master Yi", row: 1, col: 4 },
+      { unit: "Kog'Maw", row: 3, col: 1 },
+      { unit: "Nidalee", row: 3, col: 6 },
+    ],
+    positioningNote: "参考站位：Yi/Rengar 第二排错位切入，双坦第一排；根据敌方主 C 所在侧决定近战核心左右镜像。",
     source: "TFT Academy",
     sourceUrl: "https://tftacademy.com/tierlist/comps/set-18-adaptor-reroll-copy",
   },
@@ -160,6 +208,15 @@ export const metaComps: MetaComp[] = [
       { stage: "Stage 3", text: "增加 Adaptors 和前排，Stage 3 结束前优先把 Yi 装备做完整。" },
       { stage: "Stage 4", text: "7 级搜 Yi 2、Kog'Maw 2 与 Juggernaut 坦克，之后存钱慢搜三星；8 级再补 Gromp/flex。" },
     ],
+    board: [
+      { unit: "Vi", row: 0, col: 2 },
+      { unit: "Krug", row: 0, col: 3 },
+      { unit: "Gromp", row: 0, col: 4 },
+      { unit: "Master Yi", row: 1, col: 4 },
+      { unit: "Kog'Maw", row: 3, col: 1 },
+      { unit: "Nidalee", row: 3, col: 6 },
+    ],
+    positioningNote: "参考站位：三前排展开吸收火力，Yi 第二排从侧面入场；后排双 C 分角减少同时被切。",
     source: "TFT Academy",
     sourceUrl: "https://tftacademy.com/tierlist/comps/set-18-adaptor-reroll",
   },
@@ -187,6 +244,15 @@ export const metaComps: MetaComp[] = [
       { stage: "Stage 3", text: "6 级若关键对子很多可以小搜提质量，否则优先攒经济上 7。" },
       { stage: "Stage 4", text: "7 级慢搜你要追的三费三星；根据来牌决定 Executioner/Lux/Ivern 等 flex。" },
     ],
+    board: [
+      { unit: "Ivern", row: 0, col: 3 },
+      { unit: "Diana", row: 0, col: 4 },
+      { unit: "Kha'Zix", row: 1, col: 2 },
+      { unit: "Rengar", row: 1, col: 4 },
+      { unit: "Lux", row: 3, col: 0 },
+      { unit: "Alune", row: 3, col: 6 },
+    ],
+    positioningNote: "参考站位：Kha'Zix/Rengar 第二排分开找切入角度，后排两侧拉开；遇到针对时整体左右镜像。",
     source: "TFT Academy",
     sourceUrl: "https://tftacademy.com/tierlist/comps/set-18-lunarwood-khazix",
   },
@@ -214,6 +280,15 @@ export const metaComps: MetaComp[] = [
       { stage: "Stage 3", text: "阵容吃多种装备；装备不足时强化可以补装备，Riftbeast 在线时 Mama Beak 也能承担输出。" },
       { stage: "Stage 4", text: "8 级重搜 Aphelios 与四费核心；多数四费两星后再考虑上 9。" },
     ],
+    board: [
+      { unit: "Amumu", row: 0, col: 2 },
+      { unit: "Hecarim", row: 0, col: 4 },
+      { unit: "Mama Beak", row: 1, col: 3 },
+      { unit: "Aphelios", row: 3, col: 0 },
+      { unit: "Kog'Maw", row: 3, col: 2 },
+      { unit: "Nidalee", row: 3, col: 6 },
+    ],
+    positioningNote: "参考站位：Aphelios/Nidalee 后排分角，Kog'Maw 居中辅助破抗；前排展开，不让同一控制一次命中全部。",
     source: "TFT Academy",
     sourceUrl: "https://tftacademy.com/tierlist/comps/set-18-aphelios-nidalee",
   },
