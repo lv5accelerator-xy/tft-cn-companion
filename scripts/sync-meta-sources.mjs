@@ -18,6 +18,12 @@ const parserUrl = process.env.META_PARSER_URL?.trim();
 const bearerToken = process.env.META_FEED_BEARER_TOKEN?.trim();
 const parserToken = process.env.META_PARSER_BEARER_TOKEN?.trim() || bearerToken;
 
+if (!sources.some((source) => process.env[source.env]?.trim())) {
+  console.log("No WeChat feed endpoints configured; keeping the current TFT meta snapshot unchanged.");
+  console.log("Required secrets: TUDING_FEED_URL / SHENCHAO_FEED_URL / LINDO_FEED_URL (one or more). ");
+  process.exit(0);
+}
+
 function hash(value) {
   return createHash("sha256").update(value).digest("hex");
 }
@@ -153,6 +159,15 @@ async function parseArticle(source, article) {
   return asArray(payload.comps ?? payload.records ?? payload);
 }
 
+function stableSnapshot(snapshot) {
+  return {
+    schemaVersion: snapshot.schemaVersion,
+    sourceStates: (snapshot.sourceStates ?? []).map(({ lastCheckedAt, ...state }) => state),
+    articles: snapshot.articles ?? [],
+    records: snapshot.records ?? [],
+  };
+}
+
 const previous = JSON.parse(await readFile(snapshotPath, "utf8"));
 const previousArticles = new Map((previous.articles ?? []).map((article) => [`${article.sourceId}:${article.id}`, article]));
 const previousRecordsByArticle = new Map();
@@ -171,7 +186,8 @@ let changed = false;
 for (const source of sources) {
   const feedUrl = process.env[source.env]?.trim();
   if (!feedUrl) {
-    nextStates.push({
+    const previousState = (previous.sourceStates ?? []).find((state) => state.sourceId === source.id);
+    nextStates.push(previousState ?? {
       sourceId: source.id,
       status: "awaiting_feed",
       lastCheckedAt: null,
@@ -201,10 +217,7 @@ for (const source of sources) {
       const key = `${source.id}:${article.id}`;
       const oldArticle = previousArticles.get(key);
       const unchanged = oldArticle?.contentHash === article.contentHash;
-      if (!unchanged) {
-        sourceChanged = true;
-        changed = true;
-      }
+      if (!unchanged) sourceChanged = true;
 
       let comps = [];
       let status = "synced";
@@ -238,28 +251,31 @@ for (const source of sources) {
       nextRecords.push(...comps.filter((comp) => !isGoldenSpatula(JSON.stringify(comp))));
     }
 
+    const oldState = (previous.sourceStates ?? []).find((state) => state.sourceId === source.id);
     nextStates.push({
       sourceId: source.id,
       status: "ready",
       lastCheckedAt: now,
-      lastChangedAt: sourceChanged ? now : (previous.sourceStates ?? []).find((state) => state.sourceId === source.id)?.lastChangedAt ?? null,
+      lastChangedAt: sourceChanged ? now : oldState?.lastChangedAt ?? null,
       message: `${rawArticles.length} 篇候选 · ${parsedCount} 套阵容 · 已过滤 ${filteredCount} 条非 TFT/金铲铲内容`,
     });
   } catch (error) {
+    const oldState = (previous.sourceStates ?? []).find((state) => state.sourceId === source.id);
     nextStates.push({
       sourceId: source.id,
       status: "error",
       lastCheckedAt: now,
-      lastChangedAt: (previous.sourceStates ?? []).find((state) => state.sourceId === source.id)?.lastChangedAt ?? null,
+      lastChangedAt: oldState?.lastChangedAt ?? null,
       message: error instanceof Error ? error.message : String(error),
     });
   }
 }
 
-nextStates.push({
+const oldAcademyState = (previous.sourceStates ?? []).find((state) => state.sourceId === "tft-academy");
+nextStates.push(oldAcademyState ?? {
   sourceId: "tft-academy",
   status: "curated",
-  lastCheckedAt: now,
+  lastCheckedAt: null,
   lastChangedAt: null,
   message: "当前国际服阵容库由项目人工审核；后续可接公开 Feed。",
 });
@@ -275,10 +291,10 @@ const snapshot = {
   records: nextRecords,
 };
 
-const serialized = `${JSON.stringify(snapshot, null, 2)}\n`;
-const previousSerialized = `${JSON.stringify(previous, null, 2)}\n`;
-if (serialized !== previousSerialized) {
-  await writeFile(snapshotPath, serialized, "utf8");
+const stableNext = JSON.stringify(stableSnapshot(snapshot));
+const stablePrevious = JSON.stringify(stableSnapshot(previous));
+if (stableNext !== stablePrevious) {
+  await writeFile(snapshotPath, `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
   changed = true;
 }
 
