@@ -1,10 +1,9 @@
 "use client";
 
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { LOCALE_KEY, WORKSPACE_EVENT, markWorkspaceChanged } from "@/lib/workspace";
 
 export type AppLocale = "zh" | "en";
-
-const LOCALE_KEY = "tft-cn-companion-locale-v1";
 
 type LocalizedEntry = {
   nameZh?: string;
@@ -25,16 +24,22 @@ type LocaleContextValue = {
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
+function readLocale(): AppLocale {
+  try {
+    return window.localStorage.getItem(LOCALE_KEY) === "en" ? "en" : "zh";
+  } catch {
+    return "zh";
+  }
+}
+
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<AppLocale>("zh");
 
   useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(LOCALE_KEY);
-      if (saved === "en" || saved === "zh") setLocaleState(saved);
-    } catch {
-      // Keep Chinese as the default when storage is unavailable.
-    }
+    setLocaleState(readLocale());
+    const syncLocale = () => setLocaleState(readLocale());
+    window.addEventListener(WORKSPACE_EVENT, syncLocale);
+    return () => window.removeEventListener(WORKSPACE_EVENT, syncLocale);
   }, []);
 
   useEffect(() => {
@@ -46,6 +51,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     setLocaleState(next);
     try {
       window.localStorage.setItem(LOCALE_KEY, next);
+      markWorkspaceChanged();
     } catch {
       // UI language can still switch for the current session.
     }
