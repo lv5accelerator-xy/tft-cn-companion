@@ -12,14 +12,9 @@ import {
   type TftCatalogPayload,
 } from "@/data/tft";
 
-const tabs = ["全部", "英雄", "装备", "羁绊", "阵容"] as const;
+const tabs = ["全部", "英雄", "装备", "羁绊", "强化", "阵容"] as const;
 type Tab = (typeof tabs)[number];
-
-type SavedComp = {
-  id: string;
-  name: string;
-  championIds: string[];
-};
+type SavedComp = { id: string; name: string; championIds: string[] };
 
 const STORAGE_KEY = "tft-cn-companion-comps-v1";
 
@@ -31,16 +26,9 @@ function EntryIcon({ entry }: { entry: CatalogEntry }) {
   if (!entry.imageUrl) {
     return <div className="entryIcon placeholder">{entry.nameZh.slice(0, 1)}</div>;
   }
-
   return (
     <div className="entryIcon">
-      <Image
-        src={entry.imageUrl}
-        alt={entry.nameEn}
-        width={48}
-        height={48}
-        unoptimized
-      />
+      <Image src={entry.imageUrl} alt={entry.nameEn} width={48} height={48} unoptimized />
     </div>
   );
 }
@@ -60,7 +48,6 @@ export default function HomePage() {
 
   useEffect(() => {
     let cancelled = false;
-
     fetch("/api/tft")
       .then(async (response) => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -74,10 +61,7 @@ export default function HomePage() {
       .catch(() => {
         if (!cancelled) setLoadState("fallback");
       });
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, []);
 
   useEffect(() => {
@@ -85,7 +69,7 @@ export default function HomePage() {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) setSavedComps(JSON.parse(raw) as SavedComp[]);
     } catch {
-      // Ignore malformed browser storage and keep an empty planner.
+      // Keep the planner empty when browser storage is malformed.
     }
   }, []);
 
@@ -93,7 +77,6 @@ export default function HomePage() {
     const onKeyDown = (event: KeyboardEvent) => {
       const tag = (event.target as HTMLElement | null)?.tagName;
       const typing = tag === "INPUT" || tag === "TEXTAREA";
-
       if (event.key === "/" && !typing) {
         event.preventDefault();
         searchRef.current?.focus();
@@ -103,25 +86,17 @@ export default function HomePage() {
         searchRef.current?.blur();
       }
     };
-
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [query]);
 
   const entries = useMemo(() => {
     if (!catalog) return fallbackEntries;
-    return [...catalog.champions, ...catalog.items, ...catalog.traits];
+    return [...catalog.champions, ...catalog.items, ...catalog.traits, ...catalog.augments];
   }, [catalog]);
 
-  const champions = useMemo(
-    () => entries.filter((entry) => entry.type === "英雄"),
-    [entries],
-  );
-
-  const items = useMemo(
-    () => entries.filter((entry) => entry.type === "装备"),
-    [entries],
-  );
+  const champions = useMemo(() => entries.filter((entry) => entry.type === "英雄"), [entries]);
+  const items = useMemo(() => entries.filter((entry) => entry.type === "装备"), [entries]);
 
   const components = useMemo<CatalogEntry[]>(() => {
     if (catalog?.components.length) return catalog.components;
@@ -164,16 +139,13 @@ export default function HomePage() {
       const tabMatch = tab === "全部" || entry.type === tab;
       if (!tabMatch) return false;
       if (!q) return true;
-      const text = [
+      return [
         entry.nameZh,
         entry.nameEn,
         ...(entry.aliases ?? []),
         entry.id,
         entry.tier?.toString() ?? "",
-      ]
-        .join(" ")
-        .toLocaleLowerCase("en-US");
-      return text.includes(q);
+      ].join(" ").toLocaleLowerCase("en-US").includes(q);
     });
   }, [entries, query, tab]);
 
@@ -189,14 +161,8 @@ export default function HomePage() {
   }, [champions, query, savedComps]);
 
   function pickComponent(name: string) {
-    if (!componentA) {
-      setComponentA(name);
-      return;
-    }
-    if (!componentB) {
-      setComponentB(name);
-      return;
-    }
+    if (!componentA) { setComponentA(name); return; }
+    if (!componentB) { setComponentB(name); return; }
     setComponentA(name);
     setComponentB(null);
   }
@@ -221,12 +187,9 @@ export default function HomePage() {
 
   function saveCurrentComp() {
     if (!selectedChampionIds.length) return;
-    const fallbackName = `我的阵容 ${savedComps.length + 1}`;
     const nextComp: SavedComp = {
-      id: typeof crypto !== "undefined" && "randomUUID" in crypto
-        ? crypto.randomUUID()
-        : `${Date.now()}`,
-      name: compName.trim() || fallbackName,
+      id: typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `${Date.now()}`,
+      name: compName.trim() || `我的阵容 ${savedComps.length + 1}`,
       championIds: selectedChampionIds,
     };
     persistComps([nextComp, ...savedComps]);
@@ -254,7 +217,7 @@ export default function HomePage() {
         <div className="brand">
           <div className="eyebrow">NA · 中文副屏助手</div>
           <h1>TFT CN Companion</h1>
-          <p>美服英文界面 ↔ 中文名称 · 快速装备合成 · 阵容收藏</p>
+          <p>美服英文界面 ↔ 中文名称 · 英雄 / 装备 / 羁绊 / 强化快速查询</p>
         </div>
         <div className="headerActions">
           <button className="ghostButton" onClick={() => setCompact((value) => !value)}>
@@ -272,7 +235,7 @@ export default function HomePage() {
         <span>{sourceLine}</span>
         {catalog && (
           <span className="statusCounts">
-            {catalog.champions.length} 英雄 · {catalog.items.length} 装备 · {catalog.traits.length} 羁绊
+            {catalog.champions.length} 英雄 · {catalog.items.length} 装备 · {catalog.traits.length} 羁绊 · {catalog.augments.length} 强化
           </span>
         )}
       </section>
@@ -285,7 +248,6 @@ export default function HomePage() {
           </div>
           <button className="ghostButton small" onClick={clearComponents}>清空</button>
         </div>
-
         <div className="componentRow">
           {components.map((component) => {
             const active = component.nameEn === componentA || component.nameEn === componentB;
@@ -303,15 +265,10 @@ export default function HomePage() {
             );
           })}
         </div>
-
         <div className="recipeStrip">
-          <div className="recipeSlot">
-            <strong>{componentA ?? "散件 1"}</strong>
-          </div>
+          <div className="recipeSlot"><strong>{componentA ?? "散件 1"}</strong></div>
           <span className="plus">+</span>
-          <div className="recipeSlot">
-            <strong>{componentB ?? "散件 2"}</strong>
-          </div>
+          <div className="recipeSlot"><strong>{componentB ?? "散件 2"}</strong></div>
           <span className="equals">=</span>
           <div className={`recipeResult ${recipeResult ? "ready" : ""}`}>
             {resultItem && <EntryIcon entry={resultItem} />}
@@ -331,35 +288,18 @@ export default function HomePage() {
           </div>
           <span className="counter">{selectedChampionIds.length}/10</span>
         </div>
-
         <div className="selectedUnits">
           {selectedChampions.length ? selectedChampions.map((champion) => (
-            <button
-              key={champion.id}
-              className="selectedUnit"
-              onClick={() => toggleChampion(champion.id)}
-              title="点击移除"
-            >
+            <button key={champion.id} className="selectedUnit" onClick={() => toggleChampion(champion.id)} title="点击移除">
               <EntryIcon entry={champion} />
               <span>{champion.nameZh}</span>
             </button>
-          )) : (
-            <div className="plannerHint">在下面的英雄卡片点“加入规划”，最多保存 10 名英雄。</div>
-          )}
+          )) : <div className="plannerHint">在下面的英雄卡片点“加入规划”，最多保存 10 名英雄。</div>}
         </div>
-
         <div className="saveRow">
-          <input
-            value={compName}
-            onChange={(event) => setCompName(event.target.value)}
-            placeholder="阵容名称，例如：永恒之森法系"
-          />
-          <button className="primaryButton" onClick={saveCurrentComp} disabled={!selectedChampionIds.length}>
-            保存阵容
-          </button>
-          <button className="ghostButton" onClick={() => setSelectedChampionIds([])}>
-            清空英雄
-          </button>
+          <input value={compName} onChange={(event) => setCompName(event.target.value)} placeholder="阵容名称，例如：Primal Fast 8" />
+          <button className="primaryButton" onClick={saveCurrentComp} disabled={!selectedChampionIds.length}>保存阵容</button>
+          <button className="ghostButton" onClick={() => setSelectedChampionIds([])}>清空英雄</button>
         </div>
       </section>
 
@@ -369,7 +309,7 @@ export default function HomePage() {
           className="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="搜索中英名称或旧称：Shojin / 朔极之矛 / Redemption…"
+          placeholder="搜中英名称：Nidalee / 奈德丽 / Beast Within / Redemption…"
           aria-label="搜索 TFT 资料"
         />
         <kbd>/</kbd>
@@ -377,11 +317,7 @@ export default function HomePage() {
 
       <nav className="tabs" aria-label="资料类型">
         {tabs.map((item) => (
-          <button
-            className={`tab ${tab === item ? "active" : ""}`}
-            key={item}
-            onClick={() => setTab(item)}
-          >
+          <button className={`tab ${tab === item ? "active" : ""}`} key={item} onClick={() => setTab(item)}>
             {item}
             {item === "阵容" && savedComps.length > 0 && <span className="tabCount">{savedComps.length}</span>}
           </button>
@@ -392,10 +328,7 @@ export default function HomePage() {
         <section className="grid compGrid">
           {visibleSavedComps.map((comp) => (
             <article className="card compCard" key={comp.id}>
-              <div className="cardTopline">
-                <span className="typeBadge">阵容</span>
-                <span className="muted">{comp.championIds.length} 名英雄</span>
-              </div>
+              <div className="cardTopline"><span className="typeBadge">阵容</span><span className="muted">{comp.championIds.length} 名英雄</span></div>
               <h3>{comp.name}</h3>
               <div className="miniUnits">
                 {comp.championIds.map((id) => {
@@ -414,9 +347,7 @@ export default function HomePage() {
               </div>
             </article>
           ))}
-          {visibleSavedComps.length === 0 && (
-            <div className="empty">还没有保存阵容。先从“英雄”标签里选择棋子并保存。</div>
-          )}
+          {visibleSavedComps.length === 0 && <div className="empty">还没有保存阵容。先从“英雄”标签里选择棋子并保存。</div>}
         </section>
       ) : (
         <section className="grid">
@@ -425,7 +356,6 @@ export default function HomePage() {
             const entryRecipe = entry.type === "装备"
               ? activeRecipes.find((recipe) => normalize(recipe.result) === normalize(entry.nameEn))
               : undefined;
-
             return (
               <article className={`card entryCard ${selected ? "selectedCard" : ""}`} key={`${entry.type}-${entry.id}`}>
                 <div className="entryMain">
@@ -438,21 +368,12 @@ export default function HomePage() {
                     </div>
                     <h3>{entry.nameZh}</h3>
                     <div className="englishName">{entry.nameEn}</div>
-                    {entry.aliases?.length ? (
-                      <div className="muted">旧称：{entry.aliases.join(" / ")}</div>
-                    ) : null}
+                    {entry.aliases?.length ? <div className="muted">旧称：{entry.aliases.join(" / ")}</div> : null}
                   </div>
                 </div>
-
-                {entryRecipe && (
-                  <div className="recipeText">{entryRecipe.a} + {entryRecipe.b}</div>
-                )}
-
+                {entryRecipe && <div className="recipeText">{entryRecipe.a} + {entryRecipe.b}</div>}
                 {entry.type === "英雄" && (
-                  <button
-                    className={`plannerButton ${selected ? "selected" : ""}`}
-                    onClick={() => toggleChampion(entry.id)}
-                  >
+                  <button className={`plannerButton ${selected ? "selected" : ""}`} onClick={() => toggleChampion(entry.id)}>
                     {selected ? "✓ 已加入规划" : "+ 加入规划"}
                   </button>
                 )}
@@ -462,13 +383,10 @@ export default function HomePage() {
         </section>
       )}
 
-      {tab !== "阵容" && filtered.length === 0 && (
-        <div className="empty">没有找到匹配内容。可以尝试中文名、英文名、旧装备名或费用。</div>
-      )}
+      {tab !== "阵容" && filtered.length === 0 && <div className="empty">没有找到匹配内容。可以尝试中文名、英文名、旧装备名或强化名称。</div>}
 
       <footer className="footer">
-        <strong>数据：</strong> Riot Data Dragon（NA） · TFT {catalog?.tftPatch ?? patchInfo.patch} · {catalog?.set ?? patchInfo.set}。
-        本工具仅提供赛前已知的静态资料与个人阵容规划，不读取实时对局状态，不追踪对手棋盘。
+        <strong>数据：</strong> Riot Data Dragon（NA） · TFT {catalog?.tftPatch ?? patchInfo.patch} · {catalog?.set ?? patchInfo.set}。强化区只展示当前 Set 18 的 `DA_18_*` 静态资料；本工具不读取实时对局状态。
       </footer>
     </main>
   );
