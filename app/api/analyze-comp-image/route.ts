@@ -14,6 +14,14 @@ type RequestBody = {
   patch?: string;
 };
 
+export async function GET() {
+  return NextResponse.json({
+    configured: Boolean(process.env.OPENAI_API_KEY?.trim()),
+    model: MODEL,
+    maxImages: MAX_IMAGES,
+  });
+}
+
 function extractOutputText(payload: any) {
   if (typeof payload?.output_text === "string" && payload.output_text.trim()) return payload.output_text;
   const texts: string[] = [];
