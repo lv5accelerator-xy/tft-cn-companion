@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import {
   componentNames,
+  itemLegacyAliases,
   patchInfo,
   recipes,
   standardItemNames,
@@ -112,6 +113,7 @@ function normalizeItems(
       subtype: componentNames.includes(entry.name as (typeof componentNames)[number])
         ? "component"
         : "completed",
+      aliases: itemLegacyAliases[entry.name],
     };
 
     const current = byName.get(key);
