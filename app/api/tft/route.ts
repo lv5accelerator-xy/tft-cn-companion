@@ -20,6 +20,8 @@ type DragonRecord = {
   name?: string;
   tier?: number | string;
   image?: DragonImage;
+  description?: string;
+  desc?: string;
 };
 
 type DragonPayload = {
@@ -81,6 +83,27 @@ function normalizeName(value: string) {
     .replace(/\s+/g, " ");
 }
 
+function cleanDescription(value?: string) {
+  if (!value) return undefined;
+  const cleaned = value
+    .replace(/<br\s*\/?\s*>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/gi, '"')
+    .replace(/[ \t]+/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+  return cleaned || undefined;
+}
+
+function recordDescription(record?: DragonRecord) {
+  return cleanDescription(record?.description ?? record?.desc);
+}
+
 function pairLocalizedEntries(
   version: string,
   type: CatalogEntry["type"],
@@ -105,6 +128,8 @@ function pairLocalizedEntries(
         nameZh: zh?.name || entry.name || id,
         imageUrl: type === "英雄" ? tftShopPortraitUrl(entry.image) ?? defaultImage : defaultImage,
         tier: Number.isFinite(tierNumber) ? tierNumber : undefined,
+        descriptionEn: recordDescription(entry),
+        descriptionZh: recordDescription(zh) ?? recordDescription(entry),
       } satisfies CatalogEntry;
     })
     .sort((a, b) => {
@@ -169,6 +194,8 @@ function normalizeItems(
       imageUrl: imageUrl(version, "tft-item", entry.image),
       subtype,
       aliases: aliasesForItem(entry.name),
+      descriptionEn: recordDescription(entry),
+      descriptionZh: recordDescription(zh) ?? recordDescription(entry),
     };
 
     const current = byName.get(key);
