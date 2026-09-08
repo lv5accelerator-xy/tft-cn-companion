@@ -49,10 +49,6 @@ export default function HomePage() {
         </div>
       </header>
 
-      <div className={styles.notice}>
-        界面结构按 OP.GG Desktop TFT 的信息密度重构；全球平均名次、前四率、登顶率和场次需要独立统计后端，当前不伪造这些数字。
-      </div>
-
       <section className={styles.kpis}>
         <div className={styles.kpi}><span>精选阵容</span><strong>{metaComps.length}</strong></div>
         <div className={styles.kpi}><span>Set 18 英雄</span><strong>{catalog?.champions.length ?? "—"}</strong></div>
