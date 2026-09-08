@@ -66,21 +66,21 @@ function pairLocalizedEntries(
   enPayload: DragonPayload,
   zhPayload: DragonPayload,
   group: string,
-  filterId: (id: string) => boolean,
+  filter: (id: string, entry: DragonRecord) => boolean,
 ): CatalogEntry[] {
   const enData = enPayload.data ?? {};
   const zhData = zhPayload.data ?? {};
 
   return Object.entries(enData)
-    .filter(([dataId, entry]) => Boolean(entry.name && filterId(dataId)))
-    .map(([dataId, entry]) => {
-      const zh = zhData[dataId];
+    .filter(([id, entry]) => entry.name && filter(id, entry))
+    .map(([id, entry]) => {
+      const zh = zhData[id];
       const tierNumber = Number(entry.tier);
       return {
-        id: dataId,
+        id,
         type,
         nameEn: entry.name as string,
-        nameZh: zh?.name || entry.name || dataId,
+        nameZh: zh?.name || entry.name || id,
         imageUrl: imageUrl(version, group, entry.image),
         tier: Number.isFinite(tierNumber) ? tierNumber : undefined,
       } satisfies CatalogEntry;
@@ -89,6 +89,16 @@ function pairLocalizedEntries(
       if (type === "英雄" && a.tier !== b.tier) return (a.tier ?? 99) - (b.tier ?? 99);
       return a.nameEn.localeCompare(b.nameEn);
     });
+}
+
+function dedupeByVisibleName(entries: CatalogEntry[]) {
+  const seen = new Set<string>();
+  return entries.filter((entry) => {
+    const key = `${normalizeName(entry.nameEn)}|${normalizeName(entry.nameZh)}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function normalizeItems(
@@ -101,13 +111,12 @@ function normalizeItems(
   const zhData = zhPayload.data ?? {};
   const byName = new Map<string, CatalogEntry>();
 
-  for (const [dataId, entry] of Object.entries(enData)) {
+  for (const [id, entry] of Object.entries(enData)) {
     if (!entry.name) continue;
     const key = normalizeName(entry.name);
     if (!wanted.has(key)) continue;
 
-    const zh = zhData[dataId];
-    const id = entry.id || dataId;
+    const zh = zhData[id];
     const candidate: CatalogEntry = {
       id,
       type: "装备",
@@ -166,7 +175,8 @@ export async function GET() {
       enChampions,
       zhChampions,
       "tft-champion",
-      isSet18ChampionId,
+      (id, entry) =>
+        isSet18ChampionId(id) && !/^Lux \(/i.test(entry.name ?? ""),
     );
 
     const traits = pairLocalizedEntries(
@@ -175,16 +185,18 @@ export async function GET() {
       enTraits,
       zhTraits,
       "tft-trait",
-      isSet18TraitId,
+      (id) => isSet18TraitId(id),
     );
 
-    const augments = pairLocalizedEntries(
-      version,
-      "强化",
-      enAugments,
-      zhAugments,
-      "tft-augment",
-      isSet18AugmentId,
+    const augments = dedupeByVisibleName(
+      pairLocalizedEntries(
+        version,
+        "强化",
+        enAugments,
+        zhAugments,
+        "tft-augment",
+        (id) => isSet18AugmentId(id),
+      ),
     );
 
     const items = normalizeItems(version, enItems, zhItems);
@@ -192,7 +204,7 @@ export async function GET() {
       .map((name) => items.find((item) => normalizeName(item.nameEn) === normalizeName(name)))
       .filter((item): item is CatalogEntry => Boolean(item));
 
-    if (champions.length < 20 || traits.length < 5 || augments.length < 30 || components.length < 8) {
+    if (champions.length < 50 || traits.length < 5 || augments.length < 30 || components.length < 8) {
       throw new Error(
         `Incomplete TFT catalog: champions=${champions.length}, traits=${traits.length}, augments=${augments.length}, components=${components.length}`,
       );
