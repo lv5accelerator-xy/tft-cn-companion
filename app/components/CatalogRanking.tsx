@@ -15,7 +15,7 @@ type Config = {
 
 const configs: Record<CatalogKey, Config> = {
   champions: { title: "Champion Ranking", subtitle: "Set 18 英雄中英资料与费用筛选", label: "Champion" },
-  items: { title: "Item Ranking", subtitle: "标准散件与成装中英资料", label: "Item" },
+  items: { title: "Item Ranking", subtitle: "标准散件、成装与组合查询", label: "Item" },
   traits: { title: "Synergy Ranking", subtitle: "Set 18 羁绊中英名称", label: "Synergy" },
   augments: { title: "Augment Ranking", subtitle: "Set 18 强化符文中英资料", label: "Augment" },
 };
@@ -29,6 +29,8 @@ export default function CatalogRanking({ kind }: { kind: CatalogKey }) {
   const [query, setQuery] = useState("");
   const [cost, setCost] = useState<number | null>(null);
   const [itemType, setItemType] = useState<"all" | "component" | "completed">("all");
+  const [componentA, setComponentA] = useState<string | null>(null);
+  const [componentB, setComponentB] = useState<string | null>(null);
   const config = configs[kind];
 
   useEffect(() => {
@@ -56,6 +58,32 @@ export default function CatalogRanking({ kind }: { kind: CatalogKey }) {
       });
   }, [catalog, cost, itemType, kind, query]);
 
+  const recipeResult = useMemo(() => {
+    if (!catalog || !componentA || !componentB) return null;
+    return catalog.recipes.find((recipe) =>
+      (recipe.a === componentA && recipe.b === componentB)
+      || (recipe.a === componentB && recipe.b === componentA),
+    ) ?? null;
+  }, [catalog, componentA, componentB]);
+
+  const resultItem = useMemo(() => {
+    if (!catalog || !recipeResult) return null;
+    return catalog.items.find((item) => normalize(item.nameEn) === normalize(recipeResult.result)) ?? null;
+  }, [catalog, recipeResult]);
+
+  function pickComponent(name: string) {
+    if (!componentA) {
+      setComponentA(name);
+      return;
+    }
+    if (!componentB) {
+      setComponentB(name);
+      return;
+    }
+    setComponentA(name);
+    setComponentB(null);
+  }
+
   return (
     <div className={styles.page}>
       <header className={styles.heading}>
@@ -65,6 +93,44 @@ export default function CatalogRanking({ kind }: { kind: CatalogKey }) {
         </div>
         <span className={styles.count}>{entries.length || "—"} entries</span>
       </header>
+
+      {kind === "items" && (
+        <section className={styles.itemBuilder}>
+          <div className={styles.itemBuilderHead}>
+            <strong>Item Combination</strong>
+            <span>点击两个基础散件查看合成结果</span>
+          </div>
+          <div className={styles.components}>
+            {(catalog?.components ?? []).map((component) => {
+              const selected = component.nameEn === componentA || component.nameEn === componentB;
+              return (
+                <button
+                  key={component.id}
+                  className={`${styles.component} ${selected ? styles.selected : ""}`}
+                  onClick={() => pickComponent(component.nameEn)}
+                  title={`${component.nameZh} / ${component.nameEn}`}
+                >
+                  <UnitIcon entry={component} size={28} />
+                  <span>{component.nameZh}</span>
+                </button>
+              );
+            })}
+          </div>
+          <div className={styles.recipe}>
+            <div className={styles.recipeSlot}>{componentA ?? "Component 1"}</div>
+            <span className={styles.operator}>+</span>
+            <div className={styles.recipeSlot}>{componentB ?? "Component 2"}</div>
+            <span className={styles.operator}>=</span>
+            <div className={`${styles.recipeResult} ${recipeResult ? styles.ready : ""}`}>
+              {resultItem ? <UnitIcon entry={resultItem} size={30} /> : null}
+              <div>
+                <strong>{resultItem?.nameZh ?? recipeResult?.result ?? "Select two components"}</strong>
+                <span>{resultItem?.nameEn ?? recipeResult?.result ?? "36 basic combinations supported"}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className={styles.toolbar}>
         <input
