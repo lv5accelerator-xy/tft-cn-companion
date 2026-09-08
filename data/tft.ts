@@ -11,6 +11,8 @@ export type CatalogEntry = {
   tier?: number;
   subtype?: ItemSubtype;
   aliases?: string[];
+  descriptionZh?: string;
+  descriptionEn?: string;
 };
 
 export type Recipe = {

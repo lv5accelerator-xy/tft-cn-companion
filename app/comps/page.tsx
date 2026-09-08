@@ -85,7 +85,7 @@ function CompRow({ comp, champions }: { comp: UnifiedMetaComp; champions: Catalo
       <div className={styles.units}>
         {units.map((unit) => (
           <span className={styles.unit} key={unit.id} title={`${unit.nameZh} / ${unit.nameEn}`}>
-            <UnitIcon entry={unit} size={34} />
+            <UnitIcon entry={unit} size={36} />
             {unit.tier ? <em>{unit.tier}</em> : null}
           </span>
         ))}
@@ -113,8 +113,8 @@ function CompRow({ comp, champions }: { comp: UnifiedMetaComp; champions: Catalo
           <div className={styles.detailColumns}>
             <div>
               <strong>什么时候玩：</strong>{comp.whenToPlay || "来源尚未提供明确开局条件。"}
-              <div style={{ marginTop: 6 }}><strong>装备优先：</strong>{comp.itemFocus.length ? comp.itemFocus.join(" · ") : "—"}</div>
-              <div style={{ marginTop: 6 }}><strong>要点：</strong>{comp.keyNotes.length ? comp.keyNotes.slice(0, 5).join("；") : "—"}</div>
+              <div className={styles.detailLine}><strong>装备优先：</strong>{comp.itemFocus.length ? comp.itemFocus.join(" · ") : "—"}</div>
+              <div className={styles.detailLine}><strong>要点：</strong>{comp.keyNotes.length ? comp.keyNotes.slice(0, 5).join("；") : "—"}</div>
               <div className={styles.detailsGrid}>
                 {comp.stages.map((stage) => (
                   <div className={styles.stage} key={stage.stage}>
@@ -127,9 +127,9 @@ function CompRow({ comp, champions }: { comp: UnifiedMetaComp; champions: Catalo
             <div className={styles.positioning}>
               <div className={styles.positioningHead}>
                 <strong>参考站位</strong>
-                <span>可按对手左右镜像</span>
+                <span>前排在上 · 后排在下 · 可按对手左右镜像</span>
               </div>
-              <BoardPreview positions={comp.board} champions={champions} compact />
+              <BoardPreview positions={comp.board} champions={champions} />
               <p>{comp.positioningNote}</p>
             </div>
           </div>
