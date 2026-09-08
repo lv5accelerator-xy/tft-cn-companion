@@ -38,8 +38,12 @@ async function getJson<T>(url: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-function set18Id(id: string) {
-  return /^TFT18[_-]/i.test(id) || /^TFTSet18[_-]/i.test(id);
+function isSet18ChampionId(id: string) {
+  return /\/Sets\/TFTSet18\/Shop\//i.test(id) || /^TFT18[_-]/i.test(id) || /^TFTSet18[_-]/i.test(id);
+}
+
+function isSet18TraitId(id: string) {
+  return /^DA(?:_|$)/i.test(id) || /^TFT18[_-]/i.test(id) || /^TFTSet18[_-]/i.test(id);
 }
 
 function imageUrl(version: string, group: string, image?: DragonImage) {
@@ -145,7 +149,7 @@ export async function GET() {
       enChampions,
       zhChampions,
       "tft-champion",
-      (entry) => Boolean(entry.id && set18Id(entry.id)),
+      (entry) => Boolean(entry.id && isSet18ChampionId(entry.id)),
     );
 
     const traits = pairLocalizedEntries(
@@ -154,13 +158,19 @@ export async function GET() {
       enTraits,
       zhTraits,
       "tft-trait",
-      (entry) => Boolean(entry.id && set18Id(entry.id)),
+      (entry) => Boolean(entry.id && isSet18TraitId(entry.id)),
     );
 
     const items = normalizeItems(version, enItems, zhItems);
     const components = componentNames
       .map((name) => items.find((item) => normalizeName(item.nameEn) === normalizeName(name)))
       .filter((item): item is CatalogEntry => Boolean(item));
+
+    if (champions.length < 20 || traits.length < 5 || components.length < 8) {
+      throw new Error(
+        `Incomplete TFT catalog: champions=${champions.length}, traits=${traits.length}, components=${components.length}`,
+      );
+    }
 
     return NextResponse.json(
       {
