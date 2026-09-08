@@ -31,6 +31,10 @@ function isSet18Augment(id) {
   return /^DA_18_/i.test(id);
 }
 
+function resolveRecordIds(payload) {
+  return Object.entries(payload.data || {}).map(([dataId, entry]) => entry.id || dataId);
+}
+
 async function getJson(url) {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`${response.status} ${url}`);
@@ -56,6 +60,11 @@ const [enChampions, zhChampions, enTraits, zhTraits, enItems, zhItems, enAugment
 const championIds = Object.keys(enChampions.data || {}).filter(isSet18Champion);
 const traitIds = Object.keys(enTraits.data || {}).filter(isSet18Trait);
 const augmentIds = Object.keys(enAugments.data || {}).filter(isSet18Augment);
+
+const runtimeChampionIds = resolveRecordIds(enChampions).filter(isSet18Champion);
+const runtimeTraitIds = resolveRecordIds(enTraits).filter(isSet18Trait);
+const runtimeAugmentIds = resolveRecordIds(enAugments).filter(isSet18Augment);
+
 const zhChampionIds = new Set(Object.keys(zhChampions.data || {}));
 const zhTraitIds = new Set(Object.keys(zhTraits.data || {}));
 const zhAugmentIds = new Set(Object.keys(zhAugments.data || {}));
@@ -75,15 +84,21 @@ const missingZhItemIds = Object.entries(enItems.data || {})
 
 console.log(`Data Dragon: ${version}`);
 console.log(`Set 18 champions: ${championIds.length}`);
+console.log(`Runtime-parsed champions: ${runtimeChampionIds.length}`);
 console.log(`Set 18 traits: ${traitIds.length}`);
+console.log(`Runtime-parsed traits: ${runtimeTraitIds.length}`);
 console.log(`Set 18 augments: ${augmentIds.length}`);
+console.log(`Runtime-parsed augments: ${runtimeAugmentIds.length}`);
 console.log(`Standard components found: ${componentNames.length - missingComponents.length}/${componentNames.length}`);
 console.log(`Completed items found: ${expectedCompletedItems.length - missingCompletedItems.length}/${expectedCompletedItems.length}`);
 console.log(`Augment zh_CN matches: ${augmentIds.length - missingAugmentTranslations.length}/${augmentIds.length}`);
 
 if (championIds.length < 20) throw new Error(`Too few Set 18 champions: ${championIds.length}`);
+if (runtimeChampionIds.length !== championIds.length) throw new Error(`Runtime champion parser mismatch: ${runtimeChampionIds.length}/${championIds.length}`);
 if (traitIds.length < 5) throw new Error(`Too few Set 18 traits: ${traitIds.length}`);
+if (runtimeTraitIds.length !== traitIds.length) throw new Error(`Runtime trait parser mismatch: ${runtimeTraitIds.length}/${traitIds.length}`);
 if (augmentIds.length < 30) throw new Error(`Too few Set 18 augments: ${augmentIds.length}`);
+if (runtimeAugmentIds.length !== augmentIds.length) throw new Error(`Runtime augment parser mismatch: ${runtimeAugmentIds.length}/${augmentIds.length}`);
 if (missingChampionTranslations.length) throw new Error(`Missing zh_CN champions: ${missingChampionTranslations.join(", ")}`);
 if (missingTraitTranslations.length) throw new Error(`Missing zh_CN traits: ${missingTraitTranslations.join(", ")}`);
 if (missingAugmentTranslations.length) throw new Error(`Missing zh_CN augments: ${missingAugmentTranslations.join(", ")}`);
