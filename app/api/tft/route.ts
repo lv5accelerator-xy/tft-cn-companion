@@ -66,26 +66,21 @@ function pairLocalizedEntries(
   enPayload: DragonPayload,
   zhPayload: DragonPayload,
   group: string,
-  filter: (entry: DragonRecord) => boolean,
+  filterId: (id: string) => boolean,
 ): CatalogEntry[] {
   const enData = enPayload.data ?? {};
   const zhData = zhPayload.data ?? {};
 
   return Object.entries(enData)
-    .map(([dataId, entry]) => ({
-      ...entry,
-      id: entry.id || dataId,
-    }))
-    .filter((entry) => entry.id && entry.name && filter(entry))
-    .map((entry) => {
-      const id = entry.id as string;
-      const zh = zhData[id];
+    .filter(([dataId, entry]) => Boolean(entry.name && filterId(dataId)))
+    .map(([dataId, entry]) => {
+      const zh = zhData[dataId];
       const tierNumber = Number(entry.tier);
       return {
-        id,
+        id: dataId,
         type,
         nameEn: entry.name as string,
-        nameZh: zh?.name || entry.name || id,
+        nameZh: zh?.name || entry.name || dataId,
         imageUrl: imageUrl(version, group, entry.image),
         tier: Number.isFinite(tierNumber) ? tierNumber : undefined,
       } satisfies CatalogEntry;
@@ -106,14 +101,15 @@ function normalizeItems(
   const zhData = zhPayload.data ?? {};
   const byName = new Map<string, CatalogEntry>();
 
-  for (const entry of Object.values(enData)) {
-    if (!entry.id || !entry.name) continue;
+  for (const [dataId, entry] of Object.entries(enData)) {
+    if (!entry.name) continue;
     const key = normalizeName(entry.name);
     if (!wanted.has(key)) continue;
 
-    const zh = zhData[entry.id];
+    const zh = zhData[dataId];
+    const id = entry.id || dataId;
     const candidate: CatalogEntry = {
-      id: entry.id,
+      id,
       type: "装备",
       nameEn: entry.name,
       nameZh: zh?.name || entry.name,
@@ -125,7 +121,7 @@ function normalizeItems(
     };
 
     const current = byName.get(key);
-    const candidateIsGeneric = entry.id.startsWith("TFT_Item_");
+    const candidateIsGeneric = id.startsWith("TFT_Item_");
     const currentIsGeneric = current?.id.startsWith("TFT_Item_") ?? false;
     if (!current || (candidateIsGeneric && !currentIsGeneric)) {
       byName.set(key, candidate);
@@ -170,7 +166,7 @@ export async function GET() {
       enChampions,
       zhChampions,
       "tft-champion",
-      (entry) => Boolean(entry.id && isSet18ChampionId(entry.id)),
+      isSet18ChampionId,
     );
 
     const traits = pairLocalizedEntries(
@@ -179,7 +175,7 @@ export async function GET() {
       enTraits,
       zhTraits,
       "tft-trait",
-      (entry) => Boolean(entry.id && isSet18TraitId(entry.id)),
+      isSet18TraitId,
     );
 
     const augments = pairLocalizedEntries(
@@ -188,7 +184,7 @@ export async function GET() {
       enAugments,
       zhAugments,
       "tft-augment",
-      (entry) => Boolean(entry.id && isSet18AugmentId(entry.id)),
+      isSet18AugmentId,
     );
 
     const items = normalizeItems(version, enItems, zhItems);
