@@ -1,5 +1,7 @@
 export type EntryType = "英雄" | "装备" | "羁绊" | "强化";
 
+export type ItemSubtype = "component" | "completed" | "artifact" | "emblem" | "tactician";
+
 export type CatalogEntry = {
   id: string;
   type: EntryType;
@@ -7,7 +9,7 @@ export type CatalogEntry = {
   nameEn: string;
   imageUrl?: string;
   tier?: number;
-  subtype?: "component" | "completed";
+  subtype?: ItemSubtype;
   aliases?: string[];
 };
 
@@ -46,12 +48,41 @@ export const componentNames = [
   "Negatron Cloak",
   "Giant's Belt",
   "Sparring Gloves",
+  "Spatula",
+  "Frying Pan",
+] as const;
+
+export const set18EmblemNames = [
+  "Fae Emblem",
+  "Inferno Emblem",
+  "Blossom Emblem",
+  "Lunar Emblem",
+  "Elderwood Emblem",
+  "Sprykin Emblem",
+  "Blackthorn Emblem",
+  "Primal Emblem",
+  "Hunter Emblem",
+  "Rapidfire Emblem",
+  "Spellweaver Emblem",
+  "Invoker Emblem",
+  "Vanguard Emblem",
+  "Ravager Emblem",
+  "Brawler Emblem",
+  "Executioner Emblem",
+] as const;
+
+export const tacticianItemNames = [
+  "Tactician's Crown",
+  "Tactician's Cape",
+  "Tactician's Shield",
 ] as const;
 
 export const itemLegacyAliases: Record<string, string[]> = {
   "Kraken's Fury": ["Runaan's Hurricane", "卢安娜的飓风"],
   "Spirit Visage": ["Redemption", "救赎"],
   "Striker's Flail": ["Guardbreaker", "破防者"],
+  "Tactician's Crown": ["Tacticians Crown"],
+  "Tactician's Shield": ["Tacticians Shield"],
 };
 
 export const recipes: Recipe[] = [
@@ -65,7 +96,7 @@ export const recipes: Recipe[] = [
   { a: "B.F. Sword", b: "Sparring Gloves", result: "Infinity Edge" },
   { a: "Recurve Bow", b: "Recurve Bow", result: "Red Buff" },
   { a: "Recurve Bow", b: "Needlessly Large Rod", result: "Guinsoo's Rageblade" },
-  { a: "Recurve Bow", b: "Tear of the Goddess", result: "Statikk Shiv" },
+  { a: "Recurve Bow", b: "Tear of the Goddess", result: "Void Staff" },
   { a: "Recurve Bow", b: "Chain Vest", result: "Titan's Resolve" },
   { a: "Recurve Bow", b: "Negatron Cloak", result: "Kraken's Fury" },
   { a: "Recurve Bow", b: "Giant's Belt", result: "Nashor's Tooth" },
@@ -91,6 +122,31 @@ export const recipes: Recipe[] = [
   { a: "Giant's Belt", b: "Giant's Belt", result: "Warmog's Armor" },
   { a: "Giant's Belt", b: "Sparring Gloves", result: "Striker's Flail" },
   { a: "Sparring Gloves", b: "Sparring Gloves", result: "Thief's Gloves" },
+
+  // Set 18 craftable Spatula emblems.
+  { a: "Spatula", b: "B.F. Sword", result: "Fae Emblem" },
+  { a: "Spatula", b: "Recurve Bow", result: "Inferno Emblem" },
+  { a: "Spatula", b: "Needlessly Large Rod", result: "Blossom Emblem" },
+  { a: "Spatula", b: "Tear of the Goddess", result: "Lunar Emblem" },
+  { a: "Spatula", b: "Chain Vest", result: "Elderwood Emblem" },
+  { a: "Spatula", b: "Negatron Cloak", result: "Sprykin Emblem" },
+  { a: "Spatula", b: "Giant's Belt", result: "Blackthorn Emblem" },
+  { a: "Spatula", b: "Sparring Gloves", result: "Primal Emblem" },
+
+  // Set 18 craftable Frying Pan emblems.
+  { a: "Frying Pan", b: "B.F. Sword", result: "Hunter Emblem" },
+  { a: "Frying Pan", b: "Recurve Bow", result: "Rapidfire Emblem" },
+  { a: "Frying Pan", b: "Needlessly Large Rod", result: "Spellweaver Emblem" },
+  { a: "Frying Pan", b: "Tear of the Goddess", result: "Invoker Emblem" },
+  { a: "Frying Pan", b: "Chain Vest", result: "Vanguard Emblem" },
+  { a: "Frying Pan", b: "Negatron Cloak", result: "Ravager Emblem" },
+  { a: "Frying Pan", b: "Giant's Belt", result: "Brawler Emblem" },
+  { a: "Frying Pan", b: "Sparring Gloves", result: "Executioner Emblem" },
+
+  // Team-size items.
+  { a: "Spatula", b: "Spatula", result: "Tactician's Crown" },
+  { a: "Spatula", b: "Frying Pan", result: "Tactician's Cape" },
+  { a: "Frying Pan", b: "Frying Pan", result: "Tactician's Shield" },
 ];
 
 export const standardItemNames = Array.from(

@@ -4,8 +4,11 @@ import {
   itemLegacyAliases,
   patchInfo,
   recipes,
+  set18EmblemNames,
   standardItemNames,
+  tacticianItemNames,
   type CatalogEntry,
+  type ItemSubtype,
 } from "@/data/tft";
 
 type DragonImage = {
@@ -71,7 +74,11 @@ function tftShopPortraitUrl(image?: DragonImage) {
 }
 
 function normalizeName(value: string) {
-  return value.trim().toLocaleLowerCase("en-US");
+  return value
+    .trim()
+    .toLocaleLowerCase("en-US")
+    .replace(/[’']/g, "")
+    .replace(/\s+/g, " ");
 }
 
 function pairLocalizedEntries(
@@ -116,12 +123,27 @@ function dedupeByVisibleName(entries: CatalogEntry[]) {
   });
 }
 
+function isArtifactItemId(id: string) {
+  return /(?:ornn|artifact)/i.test(id)
+    && !/(radiant|support|augment)/i.test(id);
+}
+
+function aliasesForItem(name: string) {
+  const normalized = normalizeName(name);
+  const match = Object.entries(itemLegacyAliases)
+    .find(([key]) => normalizeName(key) === normalized);
+  return match?.[1];
+}
+
 function normalizeItems(
   version: string,
   enPayload: DragonPayload,
   zhPayload: DragonPayload,
 ): CatalogEntry[] {
   const wanted = new Set(standardItemNames.map(normalizeName));
+  const components = new Set(componentNames.map(normalizeName));
+  const emblems = new Set(set18EmblemNames.map(normalizeName));
+  const tacticianItems = new Set(tacticianItemNames.map(normalizeName));
   const enData = enPayload.data ?? {};
   const zhData = zhPayload.data ?? {};
   const byName = new Map<string, CatalogEntry>();
@@ -129,7 +151,14 @@ function normalizeItems(
   for (const [id, entry] of Object.entries(enData)) {
     if (!entry.name) continue;
     const key = normalizeName(entry.name);
-    if (!wanted.has(key)) continue;
+    const isArtifact = isArtifactItemId(id);
+    if (!wanted.has(key) && !isArtifact) continue;
+
+    let subtype: ItemSubtype = "completed";
+    if (components.has(key)) subtype = "component";
+    else if (emblems.has(key)) subtype = "emblem";
+    else if (tacticianItems.has(key)) subtype = "tactician";
+    else if (isArtifact) subtype = "artifact";
 
     const zh = zhData[id];
     const candidate: CatalogEntry = {
@@ -138,10 +167,8 @@ function normalizeItems(
       nameEn: entry.name,
       nameZh: zh?.name || entry.name,
       imageUrl: imageUrl(version, "tft-item", entry.image),
-      subtype: componentNames.includes(entry.name as (typeof componentNames)[number])
-        ? "component"
-        : "completed",
-      aliases: itemLegacyAliases[entry.name],
+      subtype,
+      aliases: aliasesForItem(entry.name),
     };
 
     const current = byName.get(key);
@@ -152,9 +179,18 @@ function normalizeItems(
     }
   }
 
+  const order: Record<ItemSubtype, number> = {
+    component: 0,
+    completed: 1,
+    emblem: 2,
+    tactician: 3,
+    artifact: 4,
+  };
+
   return Array.from(byName.values()).sort((a, b) => {
-    if (a.subtype !== b.subtype) return a.subtype === "component" ? -1 : 1;
-    return a.nameEn.localeCompare(b.nameEn);
+    const aOrder = a.subtype ? order[a.subtype] : 99;
+    const bOrder = b.subtype ? order[b.subtype] : 99;
+    return aOrder - bOrder || a.nameEn.localeCompare(b.nameEn);
   });
 }
 
@@ -219,7 +255,7 @@ export async function GET() {
       .map((name) => items.find((item) => normalizeName(item.nameEn) === normalizeName(name)))
       .filter((item): item is CatalogEntry => Boolean(item));
 
-    if (champions.length < 50 || traits.length < 5 || augments.length < 30 || components.length < 8) {
+    if (champions.length < 50 || traits.length < 5 || augments.length < 30 || components.length < 10) {
       throw new Error(
         `Incomplete TFT catalog: champions=${champions.length}, traits=${traits.length}, augments=${augments.length}, components=${components.length}`,
       );
