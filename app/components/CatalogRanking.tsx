@@ -2,10 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import UnitIcon from "./UnitIcon";
-import type { CatalogEntry, TftCatalogPayload } from "@/data/tft";
+import type { CatalogEntry, ItemSubtype, TftCatalogPayload } from "@/data/tft";
 import styles from "./catalog-ranking.module.css";
 
 type CatalogKey = "champions" | "items" | "traits" | "augments";
+type ItemFilter = "all" | ItemSubtype;
 
 type Config = {
   title: string;
@@ -15,20 +16,38 @@ type Config = {
 
 const configs: Record<CatalogKey, Config> = {
   champions: { title: "Champion Ranking", subtitle: "Set 18 英雄中英资料与费用筛选", label: "Champion" },
-  items: { title: "Item Ranking", subtitle: "标准散件、成装与组合查询", label: "Item" },
+  items: { title: "Item Ranking", subtitle: "散件、成装、转职纹章、神器与组合查询", label: "Item" },
   traits: { title: "Synergy Ranking", subtitle: "Set 18 羁绊中英名称", label: "Synergy" },
   augments: { title: "Augment Ranking", subtitle: "Set 18 强化符文中英资料", label: "Augment" },
 };
 
+const itemFilterLabels: Record<ItemFilter, string> = {
+  all: "全部",
+  component: "基础散件",
+  completed: "成装",
+  emblem: "转职纹章",
+  artifact: "神器装备",
+  tactician: "战术家装备",
+};
+
 function normalize(value: string) {
-  return value.trim().toLocaleLowerCase("en-US");
+  return value
+    .trim()
+    .toLocaleLowerCase("en-US")
+    .replace(/[’']/g, "")
+    .replace(/\s+/g, " ");
+}
+
+function itemTypeLabel(subtype?: ItemSubtype) {
+  if (!subtype) return "—";
+  return itemFilterLabels[subtype];
 }
 
 export default function CatalogRanking({ kind }: { kind: CatalogKey }) {
   const [catalog, setCatalog] = useState<TftCatalogPayload | null>(null);
   const [query, setQuery] = useState("");
   const [cost, setCost] = useState<number | null>(null);
-  const [itemType, setItemType] = useState<"all" | "component" | "completed">("all");
+  const [itemType, setItemType] = useState<ItemFilter>("all");
   const [componentA, setComponentA] = useState<string | null>(null);
   const [componentB, setComponentB] = useState<string | null>(null);
   const config = configs[kind];
@@ -53,18 +72,40 @@ export default function CatalogRanking({ kind }: { kind: CatalogKey }) {
       })
       .sort((a, b) => {
         if (kind === "champions") return (a.tier ?? 99) - (b.tier ?? 99) || a.nameEn.localeCompare(b.nameEn);
-        if (kind === "items" && a.subtype !== b.subtype) return a.subtype === "component" ? -1 : 1;
+        if (kind === "items" && a.subtype !== b.subtype) {
+          const order: Record<ItemSubtype, number> = {
+            component: 0,
+            completed: 1,
+            emblem: 2,
+            tactician: 3,
+            artifact: 4,
+          };
+          return (a.subtype ? order[a.subtype] : 99) - (b.subtype ? order[b.subtype] : 99);
+        }
         return a.nameEn.localeCompare(b.nameEn);
       });
   }, [catalog, cost, itemType, kind, query]);
 
   const recipeResult = useMemo(() => {
     if (!catalog || !componentA || !componentB) return null;
-    return catalog.recipes.find((recipe) =>
-      (recipe.a === componentA && recipe.b === componentB)
-      || (recipe.a === componentB && recipe.b === componentA),
-    ) ?? null;
+    const a = normalize(componentA);
+    const b = normalize(componentB);
+    return catalog.recipes.find((recipe) => {
+      const recipeA = normalize(recipe.a);
+      const recipeB = normalize(recipe.b);
+      return (recipeA === a && recipeB === b) || (recipeA === b && recipeB === a);
+    }) ?? null;
   }, [catalog, componentA, componentB]);
+
+  const selectedA = useMemo(() => {
+    if (!catalog || !componentA) return null;
+    return catalog.components.find((item) => normalize(item.nameEn) === normalize(componentA)) ?? null;
+  }, [catalog, componentA]);
+
+  const selectedB = useMemo(() => {
+    if (!catalog || !componentB) return null;
+    return catalog.components.find((item) => normalize(item.nameEn) === normalize(componentB)) ?? null;
+  }, [catalog, componentB]);
 
   const resultItem = useMemo(() => {
     if (!catalog || !recipeResult) return null;
@@ -97,8 +138,8 @@ export default function CatalogRanking({ kind }: { kind: CatalogKey }) {
       {kind === "items" && (
         <section className={styles.itemBuilder}>
           <div className={styles.itemBuilderHead}>
-            <strong>Item Combination</strong>
-            <span>点击两个基础散件查看合成结果</span>
+            <strong>装备合成器</strong>
+            <span>点击两个散件查看合成结果 · 包含金铲铲、金锅锅与 Set 18 转职</span>
           </div>
           <div className={styles.components}>
             {(catalog?.components ?? []).map((component) => {
@@ -110,22 +151,32 @@ export default function CatalogRanking({ kind }: { kind: CatalogKey }) {
                   onClick={() => pickComponent(component.nameEn)}
                   title={`${component.nameZh} / ${component.nameEn}`}
                 >
-                  <UnitIcon entry={component} size={28} />
+                  <UnitIcon entry={component} size={30} />
                   <span>{component.nameZh}</span>
                 </button>
               );
             })}
           </div>
           <div className={styles.recipe}>
-            <div className={styles.recipeSlot}>{componentA ?? "Component 1"}</div>
+            <div
+              className={`${styles.recipeSlot} ${selectedA ? styles.recipeSlotFilled : ""}`}
+              title={selectedA ? `${selectedA.nameZh} / ${selectedA.nameEn}` : "散件 1"}
+            >
+              {selectedA ? <UnitIcon entry={selectedA} size={40} /> : <span>散件 1</span>}
+            </div>
             <span className={styles.operator}>+</span>
-            <div className={styles.recipeSlot}>{componentB ?? "Component 2"}</div>
+            <div
+              className={`${styles.recipeSlot} ${selectedB ? styles.recipeSlotFilled : ""}`}
+              title={selectedB ? `${selectedB.nameZh} / ${selectedB.nameEn}` : "散件 2"}
+            >
+              {selectedB ? <UnitIcon entry={selectedB} size={40} /> : <span>散件 2</span>}
+            </div>
             <span className={styles.operator}>=</span>
             <div className={`${styles.recipeResult} ${recipeResult ? styles.ready : ""}`}>
-              {resultItem ? <UnitIcon entry={resultItem} size={30} /> : null}
+              {resultItem ? <UnitIcon entry={resultItem} size={38} /> : null}
               <div>
-                <strong>{resultItem?.nameZh ?? recipeResult?.result ?? "Select two components"}</strong>
-                <span>{resultItem?.nameEn ?? recipeResult?.result ?? "36 basic combinations supported"}</span>
+                <strong>{resultItem?.nameZh ?? recipeResult?.result ?? "选择两个散件"}</strong>
+                <span>{resultItem?.nameEn ?? recipeResult?.result ?? "支持 Set 18 的 55 种合成"}</span>
               </div>
             </div>
           </div>
@@ -151,9 +202,9 @@ export default function CatalogRanking({ kind }: { kind: CatalogKey }) {
 
         {kind === "items" && (
           <div className={styles.chips}>
-            {(["all", "component", "completed"] as const).map((value) => (
+            {(["all", "component", "completed", "emblem", "artifact", "tactician"] as const).map((value) => (
               <button key={value} className={`${styles.chip} ${itemType === value ? styles.active : ""}`} onClick={() => setItemType(value)}>
-                {value === "all" ? "All" : value === "component" ? "Components" : "Completed"}
+                {itemFilterLabels[value]}
               </button>
             ))}
           </div>
@@ -193,7 +244,7 @@ export default function CatalogRanking({ kind }: { kind: CatalogKey }) {
                     {kind === "champions"
                       ? `${entry.tier ?? "—"} Cost`
                       : kind === "items"
-                        ? (entry.subtype === "component" ? "Component" : "Completed")
+                        ? itemTypeLabel(entry.subtype)
                         : "Set 18"}
                   </span>
                 </td>
