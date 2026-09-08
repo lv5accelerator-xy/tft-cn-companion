@@ -12,42 +12,13 @@ const componentNames = [
 ];
 
 const expectedCompletedItems = [
-  "Deathblade",
-  "Giant Slayer",
-  "Hextech Gunblade",
-  "Spear of Shojin",
-  "Edge of Night",
-  "Bloodthirster",
-  "Sterak's Gage",
-  "Infinity Edge",
-  "Red Buff",
-  "Guinsoo's Rageblade",
-  "Statikk Shiv",
-  "Titan's Resolve",
-  "Kraken's Fury",
-  "Nashor's Tooth",
-  "Last Whisper",
-  "Rabadon's Deathcap",
-  "Archangel's Staff",
-  "Crownguard",
-  "Ionic Spark",
-  "Morellonomicon",
-  "Jeweled Gauntlet",
-  "Blue Buff",
-  "Protector's Vow",
-  "Adaptive Helm",
-  "Spirit Visage",
-  "Hand of Justice",
-  "Bramble Vest",
-  "Gargoyle Stoneplate",
-  "Sunfire Cape",
-  "Steadfast Heart",
-  "Dragon's Claw",
-  "Evenshroud",
-  "Quicksilver",
-  "Warmog's Armor",
-  "Striker's Flail",
-  "Thief's Gloves",
+  "Deathblade", "Giant Slayer", "Hextech Gunblade", "Spear of Shojin", "Edge of Night",
+  "Bloodthirster", "Sterak's Gage", "Infinity Edge", "Red Buff", "Guinsoo's Rageblade",
+  "Statikk Shiv", "Titan's Resolve", "Kraken's Fury", "Nashor's Tooth", "Last Whisper",
+  "Rabadon's Deathcap", "Archangel's Staff", "Crownguard", "Ionic Spark", "Morellonomicon",
+  "Jeweled Gauntlet", "Blue Buff", "Protector's Vow", "Adaptive Helm", "Spirit Visage",
+  "Hand of Justice", "Bramble Vest", "Gargoyle Stoneplate", "Sunfire Cape", "Steadfast Heart",
+  "Dragon's Claw", "Evenshroud", "Quicksilver", "Warmog's Armor", "Striker's Flail", "Thief's Gloves",
 ];
 
 function normalize(value) {
@@ -73,13 +44,15 @@ const version = realm.v || realm.n?.item;
 if (!version) throw new Error("NA realm did not provide a Data Dragon version");
 
 const base = `${DDRAGON}/cdn/${version}/data`;
-const [enChampions, zhChampions, enTraits, zhTraits, enItems, zhItems] = await Promise.all([
+const [enChampions, zhChampions, enTraits, zhTraits, enItems, zhItems, enAugments, zhAugments] = await Promise.all([
   getJson(`${base}/en_US/tft-champion.json`),
   getJson(`${base}/zh_CN/tft-champion.json`),
   getJson(`${base}/en_US/tft-trait.json`),
   getJson(`${base}/zh_CN/tft-trait.json`),
   getJson(`${base}/en_US/tft-item.json`),
   getJson(`${base}/zh_CN/tft-item.json`),
+  getJson(`${base}/en_US/tft-augments.json`),
+  getJson(`${base}/zh_CN/tft-augments.json`),
 ]);
 
 const championIds = Object.keys(enChampions.data || {}).filter(isSet18Champion);
@@ -99,11 +72,21 @@ const missingZhItemIds = Object.entries(enItems.data || {})
   .map(([id]) => id)
   .filter((id) => !zhItemIds.has(id));
 
+const augmentEntries = Object.entries(enAugments.data || {});
+const augmentCandidates = augmentEntries
+  .filter(([id]) => /(?:TFT|Set|DA)[^\n]{0,12}18|18[^\n]{0,12}(?:Augment|DA|TFT|Set)/i.test(id))
+  .map(([id, augment]) => ({ id, name: augment?.name || "" }));
+const zhAugmentIds = new Set(Object.keys(zhAugments.data || {}));
+
 console.log(`Data Dragon: ${version}`);
 console.log(`Set 18 champions: ${championIds.length}`);
 console.log(`Set 18 traits: ${traitIds.length}`);
 console.log(`Standard components found: ${componentNames.length - missingComponents.length}/${componentNames.length}`);
 console.log(`Completed items found: ${expectedCompletedItems.length - missingCompletedItems.length}/${expectedCompletedItems.length}`);
+console.log(`Augment records total: ${augmentEntries.length}`);
+console.log(`Set 18 augment candidates: ${augmentCandidates.length}`);
+console.log(`Set 18 augment sample: ${augmentCandidates.slice(0, 120).map((entry) => `${entry.id}=${entry.name}`).join(" | ")}`);
+console.log(`Set 18 augment candidate zh matches: ${augmentCandidates.filter((entry) => zhAugmentIds.has(entry.id)).length}/${augmentCandidates.length}`);
 
 if (championIds.length < 20) throw new Error(`Too few Set 18 champions: ${championIds.length}`);
 if (traitIds.length < 5) throw new Error(`Too few Set 18 traits: ${traitIds.length}`);
