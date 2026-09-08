@@ -1,24 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { User } from "@supabase/supabase-js";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
-import {
-  AUTO_SYNC_KEY,
-  WORKSPACE_EVENT,
-  readWorkspaceSnapshot,
-  writeWorkspaceSnapshot,
-  type WorkspaceSnapshot,
-} from "@/lib/workspace";
+import { AUTO_SYNC_KEY, WORKSPACE_EVENT, readWorkspaceSnapshot, type WorkspaceSnapshot } from "@/lib/workspace";
 
 export const CLOUD_SYNC_EVENT = "tft-cloud-sync-status";
 
-type CloudRecord = {
-  payload: WorkspaceSnapshot;
-  updated_at: string;
-};
-
-function emit(state: "idle" | "syncing" | "success" | "error", message = "") {
+function emit(state: "syncing" | "success" | "error", message = "") {
   window.dispatchEvent(new CustomEvent(CLOUD_SYNC_EVENT, { detail: { state, message, at: Date.now() } }));
 }
 
@@ -31,98 +19,52 @@ function autoSyncEnabled() {
 }
 
 export default function CloudSyncAgent() {
-  const userRef = useRef<User | null>(null);
+  const userIdRef = useRef<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const applyingRemoteRef = useRef(false);
 
   useEffect(() => {
-    const supabase = getSupabaseBrowserClient();
-    if (!supabase) return;
-    let cancelled = false;
-
-    async function reconcile(user: User) {
-      if (!autoSyncEnabled()) return;
-      emit("syncing", "reconcile");
-      try {
-        const local = readWorkspaceSnapshot();
-        const { data, error } = await supabase
-          .from("tft_workspaces")
-          .select("payload,updated_at")
-          .eq("user_id", user.id)
-          .maybeSingle();
-        if (error) throw error;
-        if (cancelled) return;
-        const remote = data as CloudRecord | null;
-        const remoteSavedAt = Number(remote?.payload?.savedAt || 0);
-        const localSavedAt = Number(local.savedAt || 0);
-
-        if (remote?.payload && remoteSavedAt > localSavedAt) {
-          applyingRemoteRef.current = true;
-          writeWorkspaceSnapshot(remote.payload);
-          window.setTimeout(() => { applyingRemoteRef.current = false; }, 0);
-          emit("success", "pulled");
-          return;
-        }
-
-        const payload: WorkspaceSnapshot = { ...local, savedAt: Date.now() };
-        const { error: upsertError } = await supabase
-          .from("tft_workspaces")
-          .upsert({ user_id: user.id, payload }, { onConflict: "user_id" });
-        if (upsertError) throw upsertError;
-        emit("success", "pushed");
-      } catch (error) {
-        emit("error", error instanceof Error ? error.message : "cloud-sync-failed");
-      }
-    }
+    const maybeClient = getSupabaseBrowserClient();
+    if (maybeClient === null) return undefined;
+    const client = maybeClient;
+    let disposed = false;
 
     async function pushCurrent() {
-      const user = userRef.current;
-      if (!user || !autoSyncEnabled() || applyingRemoteRef.current) return;
+      const userId = userIdRef.current;
+      if (!userId || !autoSyncEnabled()) return;
       emit("syncing", "push");
       try {
         const snapshot = readWorkspaceSnapshot();
         const payload: WorkspaceSnapshot = { ...snapshot, savedAt: Date.now() };
-        const { error } = await supabase
+        const { error } = await client
           .from("tft_workspaces")
-          .upsert({ user_id: user.id, payload }, { onConflict: "user_id" });
+          .upsert({ user_id: userId, payload }, { onConflict: "user_id" });
         if (error) throw error;
-        emit("success", "pushed");
+        if (!disposed) emit("success", "pushed");
       } catch (error) {
-        emit("error", error instanceof Error ? error.message : "cloud-sync-failed");
+        if (!disposed) emit("error", error instanceof Error ? error.message : "cloud-sync-failed");
       }
     }
 
-    const onWorkspace = () => {
-      if (!userRef.current || !autoSyncEnabled() || applyingRemoteRef.current) return;
-      if (timerRef.current) clearTimeout(timerRef.current);
+    function schedulePush() {
+      if (!userIdRef.current || !autoSyncEnabled()) return;
+      if (timerRef.current !== null) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => void pushCurrent(), 1200);
-    };
+    }
 
-    const onStorage = (event: StorageEvent) => {
-      if (event.key === AUTO_SYNC_KEY && event.newValue === "1" && userRef.current) {
-        void reconcile(userRef.current);
-      }
-    };
-
-    supabase.auth.getUser().then(({ data }) => {
-      if (cancelled) return;
-      userRef.current = data.user ?? null;
-      if (data.user) void reconcile(data.user);
+    void client.auth.getUser().then(({ data }) => {
+      if (!disposed) userIdRef.current = data.user?.id ?? null;
     });
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      userRef.current = session?.user ?? null;
-      if (session?.user) void reconcile(session.user);
+    const { data: authListener } = client.auth.onAuthStateChange((_event, session) => {
+      userIdRef.current = session?.user?.id ?? null;
     });
 
-    window.addEventListener(WORKSPACE_EVENT, onWorkspace);
-    window.addEventListener("storage", onStorage);
+    window.addEventListener(WORKSPACE_EVENT, schedulePush);
     return () => {
-      cancelled = true;
-      if (timerRef.current) clearTimeout(timerRef.current);
+      disposed = true;
+      if (timerRef.current !== null) clearTimeout(timerRef.current);
       authListener.subscription.unsubscribe();
-      window.removeEventListener(WORKSPACE_EVENT, onWorkspace);
-      window.removeEventListener("storage", onStorage);
+      window.removeEventListener(WORKSPACE_EVENT, schedulePush);
     };
   }, []);
 
