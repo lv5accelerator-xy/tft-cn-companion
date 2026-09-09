@@ -15,6 +15,12 @@ type DragonImage = {
   full?: string;
 };
 
+type DragonTraitEffect = {
+  minUnits?: number | string;
+  maxUnits?: number | string;
+  style?: number | string;
+};
+
 type DragonRecord = {
   id?: string;
   name?: string;
@@ -22,6 +28,7 @@ type DragonRecord = {
   image?: DragonImage;
   description?: string;
   desc?: string;
+  effects?: DragonTraitEffect[];
 };
 
 type DragonPayload = {
@@ -104,6 +111,13 @@ function recordDescription(record?: DragonRecord) {
   return cleanDescription(record?.description ?? record?.desc);
 }
 
+function traitThresholds(record: DragonRecord) {
+  const values = (record.effects ?? [])
+    .map((effect) => Number(effect.minUnits))
+    .filter((value) => Number.isFinite(value) && value > 0);
+  return values.length ? Array.from(new Set(values)).sort((a, b) => a - b) : undefined;
+}
+
 function pairLocalizedEntries(
   version: string,
   type: CatalogEntry["type"],
@@ -130,6 +144,7 @@ function pairLocalizedEntries(
         tier: Number.isFinite(tierNumber) ? tierNumber : undefined,
         descriptionEn: recordDescription(entry),
         descriptionZh: recordDescription(zh) ?? recordDescription(entry),
+        thresholds: type === "羁绊" ? traitThresholds(entry) : undefined,
       } satisfies CatalogEntry;
     })
     .sort((a, b) => {

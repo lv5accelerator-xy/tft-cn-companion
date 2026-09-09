@@ -1,5 +1,5 @@
-import CatalogRanking from "../components/CatalogRanking";
+import ReferenceExplorer from "../components/ReferenceExplorer";
 
 export default function AugmentsPage() {
-  return <CatalogRanking kind="augments" />;
+  return <ReferenceExplorer kind="augments" />;
 }
