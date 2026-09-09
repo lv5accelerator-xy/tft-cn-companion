@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { patchInfo } from "@/data/tft";
 import type {
+  AbilityDamageType,
   AbilityScale,
   AbilityTermKind,
   ChampionAbilityTerm,
@@ -171,6 +172,15 @@ function termKind(label: string): AbilityTermKind {
   return "utility";
 }
 
+function inferDamageType(label: string, following: string, kind: AbilityTermKind): AbilityDamageType | undefined {
+  if (kind !== "damage") return undefined;
+  const context = `${label} ${following}`.toLocaleLowerCase("en-US");
+  if (/(true\s+damage|真实伤害|真实)/.test(context)) return "true";
+  if (/(physical\s+damage|physical|物理伤害|物理)/.test(context)) return "physical";
+  if (/(magic\s+damage|magic|魔法伤害|魔法)/.test(context)) return "magic";
+  return "unknown";
+}
+
 function parseAbilityTerms(desc: string | undefined, variables: CDragonVariable[] | undefined): ChampionAbilityTerm[] {
   if (!desc || !variables?.length) return [];
 
@@ -196,10 +206,12 @@ function parseAbilityTerms(desc: string | undefined, variables: CDragonVariable[
     const icon = following.match(/%i:(scaleAD|scaleAP|scaleAS|scaleArmor|scaleCrit|scaleCritMult|scaleDA|scaleDR|scaleHealth|scaleMR|scaleSV)%/)?.[1];
     const scale = icon ? scaleMap[icon] ?? "None" : "None";
     const label = termLabel(variableKey) || variableKey;
-    const signature = `${variableKey}|${scale}|${values.join(",")}`;
+    const kind = termKind(label);
+    const damageType = inferDamageType(label, following, kind);
+    const signature = `${variableKey}|${scale}|${values.join(",")}|${damageType ?? "none"}`;
     if (seen.has(signature)) continue;
     seen.add(signature);
-    terms.push({ key: variableKey, label, values, scale, kind: termKind(label) });
+    terms.push({ key: variableKey, label, values, scale, kind, damageType });
   }
 
   return terms.slice(0, 16);
