@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import UnitIcon from "../components/UnitIcon";
 import { useLocale } from "../components/LocaleProvider";
+import DefenseLab from "./DefenseLab";
 import { detailForEntry, loadChampionDetails, type ChampionDetailIndex } from "@/lib/champion-details-client";
 import {
   damageTypeLabel,
@@ -273,8 +274,8 @@ export default function StatSimulator({ initialChampionId = "" }: { initialChamp
       <header className={styles.heading}>
         <div>
           <span className={styles.eyebrow}>SET 18 · STAT LAB</span>
-          <h1>{tr("英雄装备属性与伤害实验室", "Champion Item & Damage Lab")}</h1>
-          <p>{tr("同一英雄同时对比 A/B 两套装备，查看 1★ / 2★ / 3★ 面板、装备增幅、可解析技能系数与目标抗性后的预计伤害。", "Compare two item loadouts on the same champion across 1★ / 2★ / 3★ sheet stats, item gains, parseable ability scaling and estimated post-resist damage.")}</p>
+          <h1>{tr("英雄装备属性、伤害与坦度实验室", "Champion Item, Damage & Defense Lab")}</h1>
+          <p>{tr("同一英雄同时对比 A/B 两套装备，查看 1★ / 2★ / 3★ 面板、装备增幅、EHP/承伤时间、可解析技能系数与目标抗性后的预计伤害。", "Compare two item loadouts on the same champion across 1★ / 2★ / 3★ sheet stats, item gains, EHP/survival, parseable ability scaling and estimated post-resist damage.")}</p>
         </div>
         <span className={styles.patch}>Patch {catalog?.tftPatch ?? "18.1"}</span>
       </header>
@@ -384,6 +385,8 @@ export default function StatSimulator({ initialChampionId = "" }: { initialChamp
         ) : null}
       </section>
 
+      <DefenseLab comparisons={starComparisons} hasLoadoutB={hasLoadoutB} />
+
       <section className={styles.targetLab}>
         <div className={styles.targetHeader}>
           <div><strong>{tr("目标抗性与预计结算伤害", "Target Resists & Estimated Damage")}</strong><span>{tr("输入目标当前有效护甲 / 魔抗；如已被破甲、削弱，请直接填削弱后的数值", "Enter the target's effective Armor / MR. If shred or sunder is active, enter the already-reduced value.")}</span></div>
@@ -478,7 +481,7 @@ export default function StatSimulator({ initialChampionId = "" }: { initialChamp
 
       <section className={styles.method}>
         <strong>{tr("计算口径", "Calculation rules")}</strong>
-        <p>{tr("星级只按 TFT 面板规则放大英雄基础生命与攻击力：2★ 生命 ×1.8、攻击力 ×1.5；3★ 生命 ×3.24、攻击力 ×2.25。装备固定面板加成会计入 A/B。物理伤害按护甲、魔法伤害按魔抗使用标准抗性倍率 100/(100+抗性)；负抗性使用对应的增伤公式。技能只有在 CommunityDragon 明确暴露出可解析变量和伤害类型时才给出抗性后估值。鬼索叠层、石像鬼按攻击者数量增抗、低血触发、暴击、羁绊、破甲过程、目标减伤和特殊技能逻辑仍不会被预先假设。", "Star level scales only base HP and AD for the sheet: 2★ HP ×1.8 / AD ×1.5; 3★ HP ×3.24 / AD ×2.25. Direct item sheet modifiers feed both A and B. Physical damage uses Armor and magic damage uses MR with the standard 100/(100+resistance) multiplier; negative resistance uses the corresponding amplification formula. Post-resist ability estimates are only shown when CommunityDragon exposes a parseable term and identifiable damage type. Rageblade stacks, Gargoyle target-count resists, low-health triggers, crits, traits, shred sequencing, target-side reduction and special spell logic remain excluded.")}</p>
+        <p>{tr("星级只按 TFT 面板规则放大英雄基础生命与攻击力：2★ 生命 ×1.8、攻击力 ×1.5；3★ 生命 ×3.24、攻击力 ×2.25。装备固定面板加成会计入 A/B。物理伤害按护甲、魔法伤害按魔抗使用标准抗性倍率 100/(100+抗性)；负抗性使用对应的增伤公式。EHP 使用英雄自身装备后的生命、护甲、魔抗与可解析的固定耐久度计算；承伤时间再按输入的持续物理/魔法 DPS 推算。技能只有在 CommunityDragon 明确暴露出可解析变量和伤害类型时才给出抗性后估值。鬼索叠层、石像鬼按攻击者数量增抗、动态护盾/治疗、全能吸血、低血触发、暴击、羁绊、破甲过程、真实伤害承伤与特殊技能逻辑仍不会被预先假设。", "Star level scales only base HP and AD for the sheet: 2★ HP ×1.8 / AD ×1.5; 3★ HP ×3.24 / AD ×2.25. Direct item sheet modifiers feed both A and B. Physical damage uses Armor and magic damage uses MR with the standard 100/(100+resistance) multiplier; negative resistance uses the corresponding amplification formula. EHP uses the champion's equipped HP, Armor, MR and parseable fixed Durability, while survival time applies the entered continuous physical/magic DPS mix. Post-resist ability estimates are only shown when CommunityDragon exposes a parseable term and identifiable damage type. Rageblade stacks, Gargoyle target-count resists, dynamic shields/healing, omnivamp, low-health triggers, crits, traits, shred sequencing, incoming true damage and special spell logic remain excluded.")}</p>
       </section>
     </div>
   );
