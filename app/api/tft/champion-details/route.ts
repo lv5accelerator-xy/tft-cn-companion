@@ -89,14 +89,10 @@ function setNumber() {
   return match ? Number(match[1]) : 18;
 }
 
-function assetUrl(path?: string) {
-  if (!path) return undefined;
-  const normalized = path
-    .replace(/^\/+/, "")
-    .toLocaleLowerCase("en-US")
-    .replace(/\.tex$/i, ".png")
-    .replace(/\.dds$/i, ".png");
-  return `${CDRAGON}/game/${normalized}`;
+function abilityIconProxyUrl(apiName: string, sourcePath?: string) {
+  const params = new URLSearchParams({ champion: apiName });
+  if (sourcePath) params.set("source", sourcePath);
+  return `/api/tft/ability-icon?${params.toString()}`;
 }
 
 function formatValue(value: number | number[] | undefined, multiplier = 1) {
@@ -230,7 +226,7 @@ function normalizeChampion(champion: CDragonChampion, locale: "zh" | "en"): Cham
     traits: champion.traits,
     abilityName: champion.ability?.name,
     abilityDesc: cleanAbilityDescription(champion.ability?.desc, champion.ability?.variables, locale),
-    abilityIconUrl: assetUrl(champion.ability?.icon),
+    abilityIconUrl: champion.ability ? abilityIconProxyUrl(champion.apiName, champion.ability.icon) : undefined,
     abilityTerms: parseAbilityTerms(champion.ability?.desc, champion.ability?.variables),
     stats: champion.stats ? {
       hp: champion.stats.hp,
@@ -254,7 +250,7 @@ export async function GET(request: NextRequest) {
   try {
     const response = await fetch(`${CDRAGON}/cdragon/tft/${cdragonLocale}.json`, {
       next: { revalidate: 21600 },
-      headers: { "User-Agent": "TFT-CN-Companion/1.0" },
+      headers: { "User-Agent": "TFT-CN-Companion/1.1" },
     });
     if (!response.ok) throw new Error(`CommunityDragon request failed: ${response.status}`);
     const raw = await response.json() as CDragonPayload;
