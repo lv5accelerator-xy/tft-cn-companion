@@ -25,6 +25,7 @@ export type AbilityScale =
   | "None";
 
 export type AbilityTermKind = "damage" | "shield" | "heal" | "utility";
+export type AbilityDamageType = "physical" | "magic" | "true" | "unknown";
 
 export type ChampionAbilityTerm = {
   key: string;
@@ -32,6 +33,7 @@ export type ChampionAbilityTerm = {
   values: number[];
   scale: AbilityScale;
   kind: AbilityTermKind;
+  damageType?: AbilityDamageType;
 };
 
 export type ChampionDetail = {
