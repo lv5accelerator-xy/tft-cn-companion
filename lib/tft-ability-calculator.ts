@@ -1,4 +1,4 @@
-import type { AbilityScale, ChampionAbilityTerm } from "@/data/champion-details";
+import type { AbilityDamageType, AbilityScale, ChampionAbilityTerm } from "@/data/champion-details";
 import type { ComputedChampionStats, StarLevel } from "@/data/stat-simulator";
 
 export type AbilityProjection = {
@@ -7,6 +7,14 @@ export type AbilityProjection = {
   sourceStat?: number;
   contribution?: number;
   afterDamageAmp?: number;
+};
+
+export type EstimatedDamageProjection = {
+  damageType: AbilityDamageType;
+  preMitigation: number;
+  postMitigation?: number;
+  resistance?: number;
+  multiplier?: number;
 };
 
 function sourceStatForScale(scale: AbilityScale, stats: ComputedChampionStats) {
@@ -57,6 +65,48 @@ export function projectAbilityTerm(
   };
 }
 
+export function resistanceMultiplier(resistance: number) {
+  if (!Number.isFinite(resistance)) return 1;
+  if (resistance >= 0) return 100 / (100 + resistance);
+  return 2 - (100 / (100 - resistance));
+}
+
+export function estimateAbilityDamageTerm(
+  term: ChampionAbilityTerm,
+  star: StarLevel,
+  stats: ComputedChampionStats,
+  targetArmor: number,
+  targetMagicResist: number,
+): EstimatedDamageProjection | null {
+  if (term.kind !== "damage") return null;
+  const projected = projectAbilityTerm(term, star, stats);
+  const base = projected.contribution ?? projected.raw;
+  const preMitigation = projected.afterDamageAmp ?? base * (1 + stats.damageAmpPct);
+  const damageType = term.damageType ?? "unknown";
+
+  if (damageType === "true") {
+    return { damageType, preMitigation, postMitigation: preMitigation, multiplier: 1 };
+  }
+  if (damageType === "unknown") {
+    return { damageType, preMitigation };
+  }
+
+  const resistance = damageType === "physical" ? targetArmor : targetMagicResist;
+  const multiplier = resistanceMultiplier(resistance);
+  return {
+    damageType,
+    preMitigation,
+    postMitigation: preMitigation * multiplier,
+    resistance,
+    multiplier,
+  };
+}
+
+export function estimateAutoDps(stats: ComputedChampionStats, targetArmor: number) {
+  if (stats.dps === undefined) return undefined;
+  return stats.dps * (1 + stats.damageAmpPct) * resistanceMultiplier(targetArmor);
+}
+
 export function scaleLabel(scale: AbilityScale, locale: "zh" | "en") {
   const labels: Record<AbilityScale, [string, string]> = {
     AD: ["攻击力", "AD"],
@@ -73,6 +123,16 @@ export function scaleLabel(scale: AbilityScale, locale: "zh" | "en") {
     None: ["固定值", "Flat"],
   };
   return labels[scale][locale === "zh" ? 0 : 1];
+}
+
+export function damageTypeLabel(type: AbilityDamageType | undefined, locale: "zh" | "en") {
+  const labels: Record<AbilityDamageType, [string, string]> = {
+    physical: ["物理", "Physical"],
+    magic: ["魔法", "Magic"],
+    true: ["真实", "True"],
+    unknown: ["类型未知", "Unknown type"],
+  };
+  return labels[type ?? "unknown"][locale === "zh" ? 0 : 1];
 }
 
 export function termKindLabel(kind: ChampionAbilityTerm["kind"], locale: "zh" | "en") {
