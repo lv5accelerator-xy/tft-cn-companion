@@ -19,6 +19,7 @@ const metaNav: NavItem[] = [
 
 const toolNav: NavItem[] = [
   { href: "/builder", zh: "阵容编辑器", en: "Team Builder", glyph: "+" },
+  { href: "/stats", zh: "属性计算器", en: "Stat Calculator", glyph: "Σ" },
   { href: "/import", zh: "一图流导入", en: "Image Import", glyph: "▧" },
   { href: "/account", zh: "云同步", en: "Cloud Sync", glyph: "☁" },
   { href: "/sources", zh: "来源同步", en: "Sources", glyph: "↻" },
