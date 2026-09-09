@@ -1,5 +1,5 @@
-import CatalogRanking from "../components/CatalogRanking";
+import ChampionExplorer from "./ChampionExplorer";
 
 export default function ChampionsPage() {
-  return <CatalogRanking kind="champions" />;
+  return <ChampionExplorer />;
 }
