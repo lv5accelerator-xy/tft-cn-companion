@@ -1,5 +1,11 @@
 import Image from "next/image";
+import type { ReactNode } from "react";
 import type { CatalogEntry } from "@/data/tft";
+import ChampionHoverCard from "./ChampionHoverCard";
+
+function wrapChampion(entry: CatalogEntry, icon: ReactNode) {
+  return entry.type === "英雄" ? <ChampionHoverCard entry={entry}>{icon}</ChampionHoverCard> : icon;
+}
 
 export default function UnitIcon({
   entry,
@@ -11,7 +17,7 @@ export default function UnitIcon({
   className?: string;
 }) {
   if (!entry.imageUrl) {
-    return (
+    return wrapChampion(entry, (
       <span
         className={className}
         style={{
@@ -28,10 +34,10 @@ export default function UnitIcon({
       >
         {entry.nameZh.slice(0, 1)}
       </span>
-    );
+    ));
   }
 
-  return (
+  return wrapChampion(entry, (
     <Image
       className={className}
       src={entry.imageUrl}
@@ -41,5 +47,5 @@ export default function UnitIcon({
       unoptimized
       style={{ borderRadius: 8, objectFit: "cover", flex: "0 0 auto" }}
     />
-  );
+  ));
 }
