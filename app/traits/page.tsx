@@ -1,5 +1,5 @@
-import CatalogRanking from "../components/CatalogRanking";
+import ReferenceExplorer from "../components/ReferenceExplorer";
 
 export default function TraitsPage() {
-  return <CatalogRanking kind="traits" />;
+  return <ReferenceExplorer kind="traits" />;
 }
