@@ -10,6 +10,30 @@ export type ChampionStats = {
   range?: number;
 };
 
+export type AbilityScale =
+  | "AD"
+  | "AP"
+  | "AS"
+  | "Armor"
+  | "MR"
+  | "Health"
+  | "Crit"
+  | "CritDamage"
+  | "DamageAmp"
+  | "DamageReduction"
+  | "Omnivamp"
+  | "None";
+
+export type AbilityTermKind = "damage" | "shield" | "heal" | "utility";
+
+export type ChampionAbilityTerm = {
+  key: string;
+  label: string;
+  values: number[];
+  scale: AbilityScale;
+  kind: AbilityTermKind;
+};
+
 export type ChampionDetail = {
   id: string;
   name: string;
@@ -18,6 +42,7 @@ export type ChampionDetail = {
   abilityName?: string;
   abilityDesc?: string;
   abilityIconUrl?: string;
+  abilityTerms?: ChampionAbilityTerm[];
   stats?: ChampionStats;
 };
 
