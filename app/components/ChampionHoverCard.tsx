@@ -6,6 +6,8 @@ import { createPortal } from "react-dom";
 import type { CatalogEntry } from "@/data/tft";
 import type { ChampionDetail } from "@/data/champion-details";
 import { detailForEntry, loadChampionDetails } from "@/lib/champion-details-client";
+import { computeChampionStats } from "@/lib/tft-stat-calculator";
+import type { StarLevel } from "@/data/stat-simulator";
 import { useLocale } from "./LocaleProvider";
 import styles from "./champion-hover-card.module.css";
 
@@ -38,7 +40,7 @@ export default function ChampionHoverCard({ entry, children }: { entry: CatalogE
     if (!node || typeof window === "undefined") return;
     const rect = node.getBoundingClientRect();
     const width = Math.min(410, Math.max(300, window.innerWidth - 24));
-    const estimatedHeight = Math.min(560, Math.max(380, window.innerHeight - 24));
+    const estimatedHeight = Math.min(650, Math.max(450, window.innerHeight - 24));
     const gap = 12;
     const canRight = rect.right + gap + width <= window.innerWidth - 10;
     const left = canRight ? rect.right + gap : Math.max(10, rect.left - width - gap);
@@ -92,6 +94,11 @@ export default function ChampionHoverCard({ entry, children }: { entry: CatalogE
     ];
   }, [detail, tr]);
 
+  const starStats = useMemo(() => ([1, 2, 3] as StarLevel[]).map((star) => ({
+    star,
+    stats: computeChampionStats(detail?.stats, star),
+  })), [detail]);
+
   const tooltip = open && mounted ? createPortal(
     <aside className={`${styles.card} ${styles[position.side]}`} style={{ top: position.top, left: position.left }} role="tooltip">
       <div className={styles.header}>
@@ -115,6 +122,18 @@ export default function ChampionHoverCard({ entry, children }: { entry: CatalogE
           <div className={styles.stats}>
             {statRows.map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}
           </div>
+          <div className={styles.starSection}>
+            <div className={styles.starTitle}><strong>{tr("各星级基础面板", "Base sheet by star")}</strong><span>{tr("生命 / 攻击力", "HP / AD")}</span></div>
+            <div className={styles.stars}>
+              {starStats.map(({ star, stats }) => (
+                <div className={`${styles.star} ${styles[`star${star}`]}`} key={star}>
+                  <strong>{star}★</strong>
+                  <span>HP {formatNumber(stats.health)}</span>
+                  <span>AD {formatNumber(stats.attackDamage)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
           <div className={styles.ability}>
             <div className={styles.abilityHead}>
               {detail.abilityIconUrl ? <Image src={detail.abilityIconUrl} alt={detail.abilityName || "Ability"} width={38} height={38} unoptimized /> : <span className={styles.abilityFallback}>✦</span>}
@@ -122,7 +141,7 @@ export default function ChampionHoverCard({ entry, children }: { entry: CatalogE
             </div>
             {detail.abilityDesc ? <p>{detail.abilityDesc}</p> : <p className={styles.muted}>{tr("当前版本数据没有可显示的技能说明。", "No displayable ability description is available for this patch.")}</p>}
           </div>
-          <div className={styles.footer}>{tr("当前 Set 18 静态资料", "Current Set 18 static data")} · CommunityDragon</div>
+          <div className={styles.footer}>{tr("当前 Set 18 静态资料 · 装备后属性请使用属性计算器", "Current Set 18 static data · use Stat Calculator for equipped stats")} · CommunityDragon</div>
         </>
       ) : (
         <div className={styles.loading}>{tr("未找到该英雄的当前版本详细资料。", "No current-patch detail record was found for this champion.")}</div>
