@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import UnitIcon from "../components/UnitIcon";
 import { useLocale } from "../components/LocaleProvider";
 import { detailForEntry, loadChampionDetails, type ChampionDetailIndex } from "@/lib/champion-details-client";
+import { projectAbilityTerm, scaleLabel, termKindLabel } from "@/lib/tft-ability-calculator";
 import { computeChampionStats, mergeItemBonuses, STAR_SCALING } from "@/lib/tft-stat-calculator";
 import { EMPTY_ITEM_BONUSES, type ItemEffectRecord, type ItemEffectsPayload, type ItemStatBonuses, type StarLevel } from "@/data/stat-simulator";
 import type { CatalogEntry, ItemSubtype, TftCatalogPayload } from "@/data/tft";
@@ -56,14 +58,14 @@ function bonusLabels(bonus: ItemStatBonuses, locale: "zh" | "en") {
   return labels;
 }
 
-export default function StatSimulator() {
+export default function StatSimulator({ initialChampionId = "" }: { initialChampionId?: string }) {
   const { locale, tr, nameOf, secondaryNameOf, descriptionOf } = useLocale();
   const [catalog, setCatalog] = useState<TftCatalogPayload | null>(null);
   const [details, setDetails] = useState<ChampionDetailIndex | null>(null);
   const [effectRecords, setEffectRecords] = useState<ItemEffectRecord[]>([]);
   const [effectsLoading, setEffectsLoading] = useState(true);
   const [effectsError, setEffectsError] = useState(false);
-  const [selectedChampionId, setSelectedChampionId] = useState("");
+  const [selectedChampionId, setSelectedChampionId] = useState(initialChampionId);
   const [slots, setSlots] = useState<Array<string | null>>([null, null, null]);
   const [pickerSlot, setPickerSlot] = useState<number | null>(null);
   const [itemQuery, setItemQuery] = useState("");
@@ -106,7 +108,9 @@ export default function StatSimulator() {
   const champions = useMemo(() => (catalog?.champions ?? []).slice().sort((a, b) => (a.tier ?? 99) - (b.tier ?? 99) || a.nameEn.localeCompare(b.nameEn)), [catalog]);
 
   useEffect(() => {
-    if (!selectedChampionId && champions.length) setSelectedChampionId(champions[0].id);
+    if (!champions.length) return;
+    if (selectedChampionId && champions.some((entry) => entry.id === selectedChampionId)) return;
+    setSelectedChampionId(champions[0].id);
   }, [champions, selectedChampionId]);
 
   const selectedChampion = useMemo(() => champions.find((entry) => entry.id === selectedChampionId) ?? null, [champions, selectedChampionId]);
@@ -145,6 +149,7 @@ export default function StatSimulator() {
   })), [mergedBonuses, selectedDetail]);
 
   const summaryBonuses = useMemo(() => bonusLabels(mergedBonuses, locale), [locale, mergedBonuses]);
+  const abilityTerms = useMemo(() => (selectedDetail?.abilityTerms ?? []).slice(0, 12), [selectedDetail]);
 
   function setItem(slot: number, item: CatalogEntry) {
     setSlots((current) => current.map((value, index) => index === slot ? item.id : value));
@@ -174,7 +179,7 @@ export default function StatSimulator() {
         <div>
           <span className={styles.eyebrow}>SET 18 · STAT LAB</span>
           <h1>{tr("英雄装备属性模拟器", "Champion Item Stat Lab")}</h1>
-          <p>{tr("选择英雄与最多 3 件装备，对比 1★ / 2★ / 3★ 的装备后面板属性。", "Choose a champion and up to 3 items to compare equipped 1★ / 2★ / 3★ sheet stats.")}</p>
+          <p>{tr("选择英雄与最多 3 件装备，对比 1★ / 2★ / 3★ 的装备后面板属性和可解析技能系数。", "Choose a champion and up to 3 items to compare equipped 1★ / 2★ / 3★ sheet stats and parseable ability scaling.")}</p>
         </div>
         <span className={styles.patch}>Patch {catalog?.tftPatch ?? "18.1"}</span>
       </header>
@@ -279,6 +284,53 @@ export default function StatSimulator() {
         ) : null}
       </section>
 
+      <section className={styles.abilityLab}>
+        <div className={styles.abilityHeader}>
+          <div className={styles.abilityIdentity}>
+            {selectedDetail?.abilityIconUrl ? <Image src={selectedDetail.abilityIconUrl} alt={selectedDetail.abilityName || "Ability"} width={48} height={48} unoptimized /> : <span className={styles.abilityFallback}>✦</span>}
+            <div>
+              <span>{tr("技能数值实验室", "Ability Scaling Lab")}</span>
+              <strong>{selectedDetail?.abilityName || tr("技能资料载入中…", "Loading ability data…")}</strong>
+            </div>
+          </div>
+          <div className={styles.abilityLegend}>{tr("装备后的 AD / AP / 生命等会直接换算进可识别系数", "Equipped AD / AP / Health and other sheet stats are projected into recognized coefficients")}</div>
+        </div>
+
+        {selectedDetail?.abilityDesc ? <p className={styles.abilityDescription}>{selectedDetail.abilityDesc}</p> : null}
+
+        {abilityTerms.length ? (
+          <div className={styles.abilityTable}>
+            <div className={`${styles.abilityCell} ${styles.abilityCorner}`}>{tr("技能变量 / 系数", "Ability term / scaling")}</div>
+            {starComparisons.map(({ star }) => <div key={`ability-head-${star}`} className={`${styles.abilityCell} ${styles.abilityStarHead} ${styles[`star${star}`]}`}><strong>{star}★</strong><span>{tr("装备后换算", "equipped projection")}</span></div>)}
+
+            {abilityTerms.map((term, termIndex) => (
+              <div className={styles.abilityRow} key={`${term.key}-${term.scale}-${termIndex}`}>
+                <div className={`${styles.abilityCell} ${styles.abilityName}`}>
+                  <div><strong>{term.label}</strong><span>{termKindLabel(term.kind, locale)}</span></div>
+                  <em>{scaleLabel(term.scale, locale)}</em>
+                </div>
+                {starComparisons.map(({ star, equipped }) => {
+                  const projection = projectAbilityTerm(term, star, equipped);
+                  const hasProjection = projection.contribution !== undefined;
+                  const amplified = projection.afterDamageAmp !== undefined && Math.abs(projection.afterDamageAmp - (projection.contribution ?? 0)) > 0.0001;
+                  return (
+                    <div className={`${styles.abilityCell} ${styles.abilityValue}`} key={`${term.key}-${star}-${termIndex}`}>
+                      <strong>{hasProjection ? number(amplified ? projection.afterDamageAmp : projection.contribution, 1) : number(projection.raw, 1)}</strong>
+                      {hasProjection ? <span>{number(projection.raw, 1)}% {scaleLabel(term.scale, locale)} → {number(projection.contribution, 1)}</span> : <span>{tr("原始技能变量", "raw ability value")} {number(projection.raw, 1)}</span>}
+                      {amplified ? <em>{tr("含固定伤害增幅", "incl. static Damage Amp")} {percent(equipped.damageAmpPct, 1)}</em> : null}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className={styles.abilityEmpty}>{tr("该技能当前没有可稳定解析为 1★ / 2★ / 3★ 的数值变量；保留上方官方技能说明，不猜测数值。", "This ability currently exposes no values that can be safely parsed into 1★ / 2★ / 3★ terms. The official description is kept above without guessing numbers.")}</div>
+        )}
+
+        <div className={styles.abilityNote}>{tr("说明：这里显示的是 CommunityDragon 工具提示中可识别的技能变量与面板系数换算，不等于最终战斗伤害。目标护甲/魔抗、暴击、羁绊、动态叠层、目标数量、持续伤害跳数、处决/低血条件和特殊技能逻辑不会被凭空假设。", "This shows parseable CommunityDragon tooltip variables and sheet-stat coefficient projections, not guaranteed final combat damage. Enemy resists, crit rules, traits, dynamic stacks, target counts, DoT ticks, execute/low-health conditions and special spell logic are not guessed.")}</div>
+      </section>
+
       {selectedItems.some(Boolean) ? (
         <section className={styles.itemNotes}>
           <div className={styles.sectionTitle}><strong>{tr("所选装备效果", "Selected item effects")}</strong><span>{tr("用于核对动态效果；动态叠层不会直接加进上面的静态面板", "Use this to verify dynamic effects; combat stacking is not added to the static sheet above")}</span></div>
@@ -296,7 +348,7 @@ export default function StatSimulator() {
 
       <section className={styles.method}>
         <strong>{tr("计算口径", "Calculation rules")}</strong>
-        <p>{tr("星级只按 TFT 面板规则放大英雄基础生命与攻击力：2★ 生命 ×1.8、攻击力 ×1.5；3★ 生命 ×3.24、攻击力 ×2.25。护甲、魔抗、攻速、法力、射程等基础值不因星级自动放大。装备的固定生命、护甲、魔抗、法强、攻速、攻击力百分比、初始法力等会计入。鬼索叠层、石像鬼按目标增加双抗、低血触发、击杀触发等战斗中动态效果不会预先计入。", "Star level scales only base HP and AD for the sheet: 2★ HP ×1.8 / AD ×1.5; 3★ HP ×3.24 / AD ×2.25. Armor, MR, AS, mana and range do not automatically scale with stars. Direct item modifiers such as flat HP/resists/AP, AS, AD%, and starting mana are included. Combat-state effects such as Rageblade stacks, Gargoyle per-target resists, low-health triggers and takedown effects are intentionally excluded from the pre-combat sheet.")}</p>
+        <p>{tr("星级只按 TFT 面板规则放大英雄基础生命与攻击力：2★ 生命 ×1.8、攻击力 ×1.5；3★ 生命 ×3.24、攻击力 ×2.25。护甲、魔抗、攻速、法力、射程等基础值不因星级自动放大。装备的固定生命、护甲、魔抗、法强、攻速、攻击力百分比、初始法力等会计入。技能模块会把 CommunityDragon 明确标记为 AD/AP/生命/护甲/魔抗等比例的变量换算成当前装备后面板贡献；动态战斗逻辑仍不预先计入。", "Star level scales only base HP and AD for the sheet: 2★ HP ×1.8 / AD ×1.5; 3★ HP ×3.24 / AD ×2.25. Armor, MR, AS, mana and range do not automatically scale with stars. Direct item modifiers such as flat HP/resists/AP, AS, AD%, and starting mana are included. The ability module projects CommunityDragon variables explicitly tagged with AD/AP/Health/Armor/MR-style coefficients into the current equipped sheet; dynamic combat logic remains excluded.")}</p>
       </section>
     </div>
   );
