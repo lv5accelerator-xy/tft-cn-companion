@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import UnitIcon from "../components/UnitIcon";
 import { useLocale } from "../components/LocaleProvider";
@@ -87,9 +88,12 @@ export default function ChampionExplorer() {
           <h1>{tr("英雄资料库", "Champion Library")}</h1>
           <p>{tr("查看费用、羁绊、技能和基础属性；鼠标悬停任意英雄头像可展开完整详情。", "Browse cost, traits, abilities and base stats. Hover any champion portrait for the full detail card.")}</p>
         </div>
-        <div className={styles.summary}>
-          <strong>{champions.length || "—"}</strong>
-          <span>{tr("当前结果", "results")}</span>
+        <div className={styles.headingActions}>
+          <Link href="/stats" className={styles.simLink}>{tr("装备属性模拟器", "Item Stat Lab")} <span>→</span></Link>
+          <div className={styles.summary}>
+            <strong>{champions.length || "—"}</strong>
+            <span>{tr("当前结果", "results")}</span>
+          </div>
         </div>
       </header>
 
@@ -107,7 +111,7 @@ export default function ChampionExplorer() {
 
       <div className={styles.hint}>
         <span className={styles.dot} />
-        {detailsLoading ? tr("正在载入 CommunityDragon 当前版本英雄详情…", "Loading current-patch champion details from CommunityDragon…") : tr("悬停英雄头像：显示技能全文、羁绊、生命、法力、攻击力、攻速、护甲、魔抗、射程与暴击。", "Hover a champion portrait for full ability text, traits, health, mana, AD, AS, armor, MR, range and crit.")}
+        {detailsLoading ? tr("正在载入 CommunityDragon 当前版本英雄详情…", "Loading current-patch champion details from CommunityDragon…") : tr("悬停英雄头像可看 1★/2★/3★ 基础面板；装备后的各星级属性可进入属性计算器。", "Hover portraits for 1★/2★/3★ base sheets; use Stat Calculator for equipped stats at every star level.")}
       </div>
 
       <section className={styles.tableWrap}>
