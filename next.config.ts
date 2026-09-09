@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "raw.communitydragon.org",
-        pathname: "/latest/game/assets/characters/**",
+        pathname: "/latest/game/**",
       },
     ],
   },
