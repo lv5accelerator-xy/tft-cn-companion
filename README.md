@@ -1,84 +1,99 @@
 # TFT CN Companion
 
-美服《云顶之弈》中文副屏助手。目标是让英文客户端玩家在对局中更快查询英雄、装备、羁绊、强化与当前版本阵容信息，并为后续截图 / VOD 复盘模块预留结构。
+美服《Teamfight Tactics / 云顶之弈》中文副屏助手。默认中文显示，同时保留 Riot NA 英文名称，面向英文客户端玩家快速查询英雄、装备、羁绊、强化、阵容、站位与运营资料。
 
-## 当前版本
+## V1.0
 
-- V0.4
 - Set 18 · Enchanted Wilds
-- TFT Patch 18.1 / 阵容层按 18.1d 筛选
+- Patch 18.1
 - Next.js 16 + React 19 + TypeScript
+- Riot Data Dragon + CommunityDragon
+- OpenAI 图片一图流分析
+- Supabase Auth + Postgres workspace sync
 
-## V0.4 已完成
+## V1.0 核心功能
 
-- Riot 官方 Data Dragon（NA）数据接口
-- Set 18 英雄英文名 ↔ 中文名自动配对
-- Set 18 羁绊英文名 ↔ 中文名自动配对
-- **Set 18 强化符文英文名 ↔ 中文名自动配对（当前 34 条 `DA_18_*`）**
-- 英雄 / 装备 / 羁绊 / 强化统一中英搜索
-- 标准 8 散件与 36 个基础成装双语查询
-- 36 种基础散件组合的装备合成器
-- 近期改名装备支持旧英文名 / 旧中文名搜索
-- 英雄按费用显示
-- 阵容规划器：最多选择 10 名英雄
-- 阵容收藏：使用浏览器 LocalStorage 本地保存
-- 当前版本阵容库 `/comps`
-- 阵容 Fast 8 / 追三筛选
-- 每套阵容提供“什么时候玩、核心棋子、装备优先、关键说明、Stage 2–4 运营”
-- 当前阵容核心棋子自动匹配 Riot Data Dragon 中文名和头像
-- 紧凑副屏模式
-- `/` 快捷键聚焦搜索，`Esc` 清空搜索
-- 手机、平板、窄屏响应式布局
-- GitHub Actions：自动校验 Riot 在线数据并执行生产构建
+### OP.GG 风格资料区
 
-## 强化符文数据
+- 英雄 / 装备 / 羁绊 / 强化统一中英查询
+- Windows 桌面字号优化
+- 装备图鉴卡片化 + 右侧详情
+- 标准成装、转职纹章、神器装备、战术家装备分类
+- Spatula（金铲铲）/ Frying Pan（金锅锅）与 Set 18 转职合成
+- 装备合成路径与 Riot 当前说明
 
-Riot 官方 Data Dragon 的 `tft-augments.json` 提供强化 ID、翻译名称和图标。V0.4 同时读取 `en_US` 与 `zh_CN`，并只收录当前 Set 18 的 `DA_18_*` 记录，避免把旧赛季强化混进对局查询。
+### 阵容库
 
-当前 Data Dragon 16.17.1 实测：
+- 多来源阵容结构：兔顶之弈 / 神超不做人 / 林小北Lindo / TFT Academy
+- TFT ONLY：拒绝《金铲铲之战》数据
+- 4×7 参考站位，前排在上、后排在下
+- Stage 2 / Stage 3 / Stage 4 运营摘要
+- 一图流手动导入阵容可进入本地阵容库
 
-- Set 18 强化：34
-- `zh_CN` 对应：34 / 34
+### Builder Pro
 
-例如：`Blossom's Call`、`Nature's Shelter`、`Beast Within`、`Master of All Origins` 等均可直接用英文或中文搜索。
+- 最多 10 名英雄
+- 4×7 棋盘直接编辑
+- 英雄可拖入棋盘，也可先选英雄再点格子
+- 左右镜像
+- 双击棋子移除
+- 每名英雄最多 3 件装备
+- 主 C / 主坦 / 副 C 标记
+- 当前阵容实时羁绊数量、已激活档位和距离下一档数量
+- `TFTC2:` 分享码保存英雄、站位、装备和角色
+- 兼容旧 `TFTC1:` 分享码
+- 阵容推荐可直接载入 Builder
 
-## 当前阵容库
+### AI 一图流导入
 
-V0.4 当前按 Patch 18.1d 的活跃 Set 18 攻略人工筛选，包含：
+- JPG / PNG / WebP
+- AI 提取阵容、Tier、英雄、主 C / 主坦、装备、强化、4×7 站位、运营、阵容码
+- 人工校正工作台
+- 一张汇总图可解析多套阵容
+- 图片导入 → Builder 时同步站位、主 C / 主坦和装备
+- 金铲铲内容硬过滤
 
-- Malphite AP Flex
-- Primal Flex
-- Invoker Nidalee
-- Yi Rengar
-- Adaptor Reroll
-- Lunarwood Kha'Zix
-- Aphelios Nidalee
+### 中文 / English
 
-阵容层不是自动抓取后直接展示，而是人工核对当前补丁攻略后，把来源能够证明的核心棋子、灵活单位和运营节点整理为副屏快速阅读格式。网站中每张阵容卡保留原始来源入口。
+右上角可切换中文和 English。英雄、装备、棋盘标签、装备说明、Builder、顶部导航和核心工具页面会按选择切换；底层仍保留中英双字段，因此搜索始终支持两种语言。
 
-## 当前装备名称变化
+### 云同步
 
-Data Dragon 16.17.1 中，下列基础成装使用了新的英文名称：
+V1.0 使用 Supabase：
 
-- `Kraken's Fury`（旧称 `Runaan's Hurricane`）
-- `Spirit Visage`（旧称 `Redemption`）
-- `Striker's Flail`（旧称 `Guardbreaker`）
+- Magic Link 邮箱登录
+- 每个用户独立 `tft_workspaces` 记录
+- PostgreSQL Row Level Security
+- 同步 Builder、图片导入阵容和语言偏好
+- 支持智能同步、本机 → 云端、云端 → 本机和自动同步
 
-项目以 Riot 当前 NA Data Dragon 名称为准，同时保留旧称别名。
+数据库迁移：
 
-## 数据自检
-
-```bash
-npm run verify:data
+```text
+supabase/migrations/001_workspace.sql
 ```
 
-该命令会连接 Riot NA Data Dragon，确认当前 Set 18 英雄、羁绊、强化、8 个基础散件、36 个基础成装以及对应的 `zh_CN` 数据均可读取。GitHub Actions 会在每次推送后自动执行此检查，然后执行生产构建。
+需要的 Vercel 环境变量：
+
+```text
+OPENAI_API_KEY=
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+```
 
 ## 页面
 
 ```text
-/        资料助手 / 装备合成 / 强化查询 / 个人阵容规划
-/comps   Patch 18.1d 当前阵容快速查看
+/            概览
+/comps       当前阵容库
+/champions   英雄
+/items       装备图鉴 / 合成器
+/traits      羁绊
+/augments    强化
+/builder     Builder Pro
+/import      AI 一图流导入
+/account     登录与云同步
+/sources     数据来源状态
 ```
 
 ## 本地运行
@@ -88,35 +103,22 @@ npm install
 npm run dev
 ```
 
-浏览器打开：
-
-```text
-http://localhost:3000
-```
-
 生产构建：
 
 ```bash
+npm run verify:data
+npm run verify:meta
 npm run build
 npm start
 ```
 
-## Vercel
+## 发布流程
 
-项目代码本身可直接部署到 Vercel，V0.4 不需要环境变量。当前连接器曾返回一个 `INITIALIZING` Preview 记录，但随后 Vercel 项目 / Deployment 查询接口无法找到该记录，因此该次尝试不视为成功部署。
-
-## 下一步
-
-1. 加入 Spatula / Frying Pan 与转职合成
-2. 为当前阵容补站位示意和更完整的替代分支
-3. 建立强化符文与阵容的静态关联提示
-4. 加入个人 Riot ID 战绩导入与赛后复盘
-5. 建立截图 / VOD Coach 模块，用于训练和赛后分析
-6. Windows Tauri 悬浮小窗
+`dev` 分支只通过 GitHub Actions 做数据校验和 Next.js Production Build，不触发 Vercel Preview；完整功能通过 CI 后合并到 `main`，由 Vercel 只执行一次 Production Deployment，避免 Hobby 方案 build-rate-limit。
 
 ## Riot 使用边界
 
-Live 模式只提供赛前已知的静态资料、当前补丁公开攻略摘要、用户自己预先保存的阵容规划和快速查询，不读取当前棋盘来动态改变建议，不追踪对手棋盘，也不预测对手下一步。Riot 当前政策明确允许游戏内提供赛前已存在的静态数据，但不允许基于当前游戏状态提供动态实时指令。
+Live 模式以赛前已存在的静态资料、公开攻略摘要、用户主动保存的阵容规划和快速查询为主。AI 图片模块用于用户主动上传的攻略图与训练/复盘工作流，不自动扫描对手棋盘，也不替用户执行游戏操作。
 
 ## Disclaimer
 

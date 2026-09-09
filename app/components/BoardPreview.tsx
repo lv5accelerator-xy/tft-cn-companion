@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import UnitIcon from "./UnitIcon";
+import { useLocale } from "./LocaleProvider";
 import type { BoardPosition } from "@/data/comps";
 import type { CatalogEntry } from "@/data/tft";
 import styles from "./board-preview.module.css";
@@ -19,6 +20,7 @@ export default function BoardPreview({
   champions: CatalogEntry[];
   compact?: boolean;
 }) {
+  const { tr, nameOf } = useLocale();
   const byName = useMemo(() => {
     const map = new Map<string, CatalogEntry>();
     champions.forEach((unit) => {
@@ -35,7 +37,7 @@ export default function BoardPreview({
   }, [positions]);
 
   return (
-    <div className={`${styles.board} ${compact ? styles.compact : ""}`} aria-label="参考站位">
+    <div className={`${styles.board} ${compact ? styles.compact : ""}`} aria-label={tr("参考站位", "Positioning preview")}>
       {[0, 1, 2, 3].map((row) => (
         <div className={`${styles.row} ${row % 2 ? styles.shifted : ""}`} key={row}>
           {[0, 1, 2, 3, 4, 5, 6].map((col) => {
@@ -50,7 +52,7 @@ export default function BoardPreview({
                 {champion ? (
                   <>
                     <UnitIcon entry={champion} size={compact ? 25 : 34} />
-                    {!compact && <span>{champion.nameZh}</span>}
+                    {!compact && <span>{nameOf(champion)}</span>}
                   </>
                 ) : null}
               </div>

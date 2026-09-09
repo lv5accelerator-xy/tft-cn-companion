@@ -1,0 +1,88 @@
+"use client";
+
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { LOCALE_KEY, WORKSPACE_EVENT, markWorkspaceChanged } from "@/lib/workspace";
+
+export type AppLocale = "zh" | "en";
+
+type LocalizedEntry = {
+  nameZh?: string;
+  nameEn?: string;
+  descriptionZh?: string;
+  descriptionEn?: string;
+};
+
+type LocaleContextValue = {
+  locale: AppLocale;
+  setLocale: (locale: AppLocale) => void;
+  toggleLocale: () => void;
+  tr: (zh: string, en: string) => string;
+  nameOf: (entry: LocalizedEntry | null | undefined) => string;
+  secondaryNameOf: (entry: LocalizedEntry | null | undefined) => string;
+  descriptionOf: (entry: LocalizedEntry | null | undefined) => string;
+};
+
+const LocaleContext = createContext<LocaleContextValue | null>(null);
+
+function readLocale(): AppLocale {
+  try {
+    return window.localStorage.getItem(LOCALE_KEY) === "en" ? "en" : "zh";
+  } catch {
+    return "zh";
+  }
+}
+
+export function LocaleProvider({ children }: { children: ReactNode }) {
+  const [locale, setLocaleState] = useState<AppLocale>("zh");
+
+  useEffect(() => {
+    setLocaleState(readLocale());
+    const syncLocale = () => setLocaleState(readLocale());
+    window.addEventListener(WORKSPACE_EVENT, syncLocale);
+    return () => window.removeEventListener(WORKSPACE_EVENT, syncLocale);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = locale === "zh" ? "zh-CN" : "en";
+    document.documentElement.dataset.locale = locale;
+  }, [locale]);
+
+  const setLocale = useCallback((next: AppLocale) => {
+    setLocaleState(next);
+    try {
+      window.localStorage.setItem(LOCALE_KEY, next);
+      markWorkspaceChanged();
+    } catch {
+      // UI language can still switch for the current session.
+    }
+  }, []);
+
+  const value = useMemo<LocaleContextValue>(() => ({
+    locale,
+    setLocale,
+    toggleLocale: () => setLocale(locale === "zh" ? "en" : "zh"),
+    tr: (zh, en) => locale === "zh" ? zh : en,
+    nameOf: (entry) => {
+      if (!entry) return "";
+      return locale === "zh" ? (entry.nameZh || entry.nameEn || "") : (entry.nameEn || entry.nameZh || "");
+    },
+    secondaryNameOf: (entry) => {
+      if (!entry) return "";
+      return locale === "zh" ? (entry.nameEn || "") : (entry.nameZh || "");
+    },
+    descriptionOf: (entry) => {
+      if (!entry) return "";
+      return locale === "zh"
+        ? (entry.descriptionZh || entry.descriptionEn || "")
+        : (entry.descriptionEn || entry.descriptionZh || "");
+    },
+  }), [locale, setLocale]);
+
+  return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
+}
+
+export function useLocale() {
+  const value = useContext(LocaleContext);
+  if (!value) throw new Error("useLocale must be used inside LocaleProvider");
+  return value;
+}

@@ -3,21 +3,25 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FormEvent, ReactNode, useState } from "react";
+import { useLocale } from "./LocaleProvider";
 import styles from "./desktop-shell.module.css";
 
-const metaNav = [
-  { href: "/", label: "概览", glyph: "⌂" },
-  { href: "/comps", label: "阵容", glyph: "◆" },
-  { href: "/champions", label: "英雄", glyph: "♟" },
-  { href: "/items", label: "装备", glyph: "◈" },
-  { href: "/traits", label: "羁绊", glyph: "✦" },
-  { href: "/augments", label: "强化", glyph: "✧" },
+type NavItem = { href: string; zh: string; en: string; glyph: string };
+
+const metaNav: NavItem[] = [
+  { href: "/", zh: "概览", en: "Overview", glyph: "⌂" },
+  { href: "/comps", zh: "阵容", en: "Comps", glyph: "◆" },
+  { href: "/champions", zh: "英雄", en: "Champions", glyph: "♟" },
+  { href: "/items", zh: "装备", en: "Items", glyph: "◈" },
+  { href: "/traits", zh: "羁绊", en: "Traits", glyph: "✦" },
+  { href: "/augments", zh: "强化", en: "Augments", glyph: "✧" },
 ];
 
-const toolNav = [
-  { href: "/builder", label: "阵容编辑器", glyph: "+" },
-  { href: "/import", label: "一图流导入", glyph: "▧" },
-  { href: "/sources", label: "来源同步", glyph: "↻" },
+const toolNav: NavItem[] = [
+  { href: "/builder", zh: "阵容编辑器", en: "Team Builder", glyph: "+" },
+  { href: "/import", zh: "一图流导入", en: "Image Import", glyph: "▧" },
+  { href: "/account", zh: "云同步", en: "Cloud Sync", glyph: "☁" },
+  { href: "/sources", zh: "来源同步", en: "Sources", glyph: "↻" },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -25,7 +29,8 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function NavLinks({ items, pathname }: { items: typeof metaNav; pathname: string }) {
+function NavLinks({ items, pathname }: { items: NavItem[]; pathname: string }) {
+  const { locale } = useLocale();
   return items.map((item) => (
     <Link
       key={item.href}
@@ -33,7 +38,7 @@ function NavLinks({ items, pathname }: { items: typeof metaNav; pathname: string
       className={isActive(pathname, item.href) ? styles.active : ""}
     >
       <span className={styles.glyph}>{item.glyph}</span>
-      <span>{item.label}</span>
+      <span>{locale === "zh" ? item.zh : item.en}</span>
     </Link>
   ));
 }
@@ -41,6 +46,7 @@ function NavLinks({ items, pathname }: { items: typeof metaNav; pathname: string
 export default function DesktopShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { locale, toggleLocale, tr } = useLocale();
   const [query, setQuery] = useState("");
 
   function submitSearch(event: FormEvent<HTMLFormElement>) {
@@ -61,13 +67,13 @@ export default function DesktopShell({ children }: { children: ReactNode }) {
           </div>
         </Link>
 
-        <div className={styles.sectionLabel}>META TRENDS</div>
-        <nav className={styles.nav} aria-label="TFT 导航">
+        <div className={styles.sectionLabel}>{tr("版本资料", "META TRENDS")}</div>
+        <nav className={styles.nav} aria-label="TFT navigation">
           <NavLinks items={metaNav} pathname={pathname} />
         </nav>
 
-        <div className={styles.sectionLabel}>TOOLS</div>
-        <nav className={styles.nav} aria-label="TFT 工具">
+        <div className={styles.sectionLabel}>{tr("工具", "TOOLS")}</div>
+        <nav className={styles.nav} aria-label="TFT tools">
           <NavLinks items={toolNav} pathname={pathname} />
         </nav>
 
@@ -87,13 +93,14 @@ export default function DesktopShell({ children }: { children: ReactNode }) {
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="搜索英雄、装备、羁绊、强化或阵容"
-              aria-label="全局搜索"
+              placeholder={tr("搜索英雄、装备、羁绊、强化或阵容", "Search champions, items, traits, augments or comps")}
+              aria-label={tr("全局搜索", "Global search")}
             />
             <kbd>Enter</kbd>
           </form>
 
           <div className={styles.topActions}>
+            <button className={styles.language} onClick={toggleLocale} title={tr("切换到英文", "Switch to Chinese")}>{locale === "zh" ? "中 / EN" : "EN / 中"}</button>
             <span className={styles.pill}>NA</span>
             <span className={styles.patch}>Patch 18.1</span>
           </div>

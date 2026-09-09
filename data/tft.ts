@@ -13,6 +13,8 @@ export type CatalogEntry = {
   aliases?: string[];
   descriptionZh?: string;
   descriptionEn?: string;
+  traits?: string[];
+  thresholds?: number[];
 };
 
 export type Recipe = {
@@ -124,8 +126,6 @@ export const recipes: Recipe[] = [
   { a: "Giant's Belt", b: "Giant's Belt", result: "Warmog's Armor" },
   { a: "Giant's Belt", b: "Sparring Gloves", result: "Striker's Flail" },
   { a: "Sparring Gloves", b: "Sparring Gloves", result: "Thief's Gloves" },
-
-  // Set 18 craftable Spatula emblems.
   { a: "Spatula", b: "B.F. Sword", result: "Fae Emblem" },
   { a: "Spatula", b: "Recurve Bow", result: "Inferno Emblem" },
   { a: "Spatula", b: "Needlessly Large Rod", result: "Blossom Emblem" },
@@ -134,8 +134,6 @@ export const recipes: Recipe[] = [
   { a: "Spatula", b: "Negatron Cloak", result: "Sprykin Emblem" },
   { a: "Spatula", b: "Giant's Belt", result: "Blackthorn Emblem" },
   { a: "Spatula", b: "Sparring Gloves", result: "Primal Emblem" },
-
-  // Set 18 craftable Frying Pan emblems.
   { a: "Frying Pan", b: "B.F. Sword", result: "Hunter Emblem" },
   { a: "Frying Pan", b: "Recurve Bow", result: "Rapidfire Emblem" },
   { a: "Frying Pan", b: "Needlessly Large Rod", result: "Spellweaver Emblem" },
@@ -144,19 +142,14 @@ export const recipes: Recipe[] = [
   { a: "Frying Pan", b: "Negatron Cloak", result: "Ravager Emblem" },
   { a: "Frying Pan", b: "Giant's Belt", result: "Brawler Emblem" },
   { a: "Frying Pan", b: "Sparring Gloves", result: "Executioner Emblem" },
-
-  // Team-size items.
   { a: "Spatula", b: "Spatula", result: "Tactician's Crown" },
   { a: "Spatula", b: "Frying Pan", result: "Tactician's Cape" },
   { a: "Frying Pan", b: "Frying Pan", result: "Tactician's Shield" },
 ];
 
-export const standardItemNames = Array.from(
-  new Set([...componentNames, ...recipes.map((recipe) => recipe.result)]),
-);
-
-export const fallbackEntries: CatalogEntry[] = [
-  { id: "fallback-shojin", type: "装备", nameZh: "朔极之矛", nameEn: "Spear of Shojin", subtype: "completed" },
-  { id: "fallback-rageblade", type: "装备", nameZh: "鬼索的狂暴之刃", nameEn: "Guinsoo's Rageblade", subtype: "completed" },
-  { id: "fallback-ie", type: "装备", nameZh: "无尽之刃", nameEn: "Infinity Edge", subtype: "completed" },
-];
+export const standardItemNames = Array.from(new Set([
+  ...componentNames,
+  ...recipes.map((recipe) => recipe.result),
+  ...set18EmblemNames,
+  ...tacticianItemNames,
+]));
