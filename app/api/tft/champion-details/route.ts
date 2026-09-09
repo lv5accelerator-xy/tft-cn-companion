@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { patchInfo } from "@/data/tft";
-import type { ChampionDetail, ChampionDetailsPayload, ChampionStats } from "@/data/champion-details";
+import type {
+  AbilityDamageType,
+  AbilityScale,
+  AbilityTermKind,
+  ChampionAbilityTerm,
+  ChampionDetail,
+  ChampionDetailsPayload,
+  ChampionStats,
+} from "@/data/champion-details";
 
 type CDragonVariable = {
   name?: string;
@@ -62,6 +70,20 @@ const iconLabels = {
   },
 } as const;
 
+const scaleMap: Record<string, AbilityScale> = {
+  scaleAD: "AD",
+  scaleAP: "AP",
+  scaleAS: "AS",
+  scaleArmor: "Armor",
+  scaleCrit: "Crit",
+  scaleCritMult: "CritDamage",
+  scaleDA: "DamageAmp",
+  scaleDR: "DamageReduction",
+  scaleHealth: "Health",
+  scaleMR: "MR",
+  scaleSV: "Omnivamp",
+};
+
 function setNumber() {
   const match = patchInfo.set.match(/Set\s*(\d+)/i);
   return match ? Number(match[1]) : 18;
@@ -122,6 +144,79 @@ function cleanAbilityDescription(value: string | undefined, variables: CDragonVa
   return resolved || undefined;
 }
 
+function starValues(value: number | number[] | undefined, multiplier = 1) {
+  if (typeof value === "number") return [value * multiplier, value * multiplier, value * multiplier];
+  if (!Array.isArray(value)) return [];
+  let values = value.filter((entry) => Number.isFinite(entry));
+  if (values.length >= 4 && values[0] === 0) values = values.slice(1);
+  values = values.slice(0, 3);
+  if (!values.length) return [];
+  while (values.length < 3) values.push(values[values.length - 1]);
+  return values.map((entry) => Math.round(entry * multiplier * 10000) / 10000);
+}
+
+function termLabel(key: string) {
+  return key
+    .replace(/^m(?=[A-Z])/, "")
+    .replace(/[_-]+/g, " ")
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function termKind(label: string): AbilityTermKind {
+  const normalized = label.toLocaleLowerCase("en-US");
+  if (/(shield|barrier)/.test(normalized)) return "shield";
+  if (/(heal|healing|restore health|health restore)/.test(normalized)) return "heal";
+  if (/(damage|dmg|strike|hit damage|bonus damage|physical|magic)/.test(normalized)) return "damage";
+  return "utility";
+}
+
+function inferDamageType(label: string, following: string, kind: AbilityTermKind): AbilityDamageType | undefined {
+  if (kind !== "damage") return undefined;
+  const context = `${label} ${following}`.toLocaleLowerCase("en-US");
+  if (/(true\s+damage|真实伤害|真实)/.test(context)) return "true";
+  if (/(physical\s+damage|physical|物理伤害|物理)/.test(context)) return "physical";
+  if (/(magic\s+damage|magic|魔法伤害|魔法)/.test(context)) return "magic";
+  return "unknown";
+}
+
+function parseAbilityTerms(desc: string | undefined, variables: CDragonVariable[] | undefined): ChampionAbilityTerm[] {
+  if (!desc || !variables?.length) return [];
+
+  const byName = new Map<string, CDragonVariable>();
+  for (const variable of variables) {
+    if (variable.name && variable.value !== undefined) byName.set(variable.name.toLocaleLowerCase("en-US"), variable);
+  }
+
+  const terms: ChampionAbilityTerm[] = [];
+  const seen = new Set<string>();
+  for (const match of desc.matchAll(/@([^@]+)@([^@]*)/g)) {
+    const rawToken = match[1].trim();
+    const multiply = rawToken.match(/^(.+?)\*(\d+(?:\.\d+)?)$/);
+    const variableKey = (multiply?.[1] ?? rawToken).trim();
+    const multiplier = multiply ? Number(multiply[2]) : 1;
+    const variable = byName.get(variableKey.toLocaleLowerCase("en-US"));
+    if (!variable) continue;
+
+    const values = starValues(variable.value, multiplier);
+    if (!values.length) continue;
+
+    const following = match[2] ?? "";
+    const icon = following.match(/%i:(scaleAD|scaleAP|scaleAS|scaleArmor|scaleCrit|scaleCritMult|scaleDA|scaleDR|scaleHealth|scaleMR|scaleSV)%/)?.[1];
+    const scale = icon ? scaleMap[icon] ?? "None" : "None";
+    const label = termLabel(variableKey) || variableKey;
+    const kind = termKind(label);
+    const damageType = inferDamageType(label, following, kind);
+    const signature = `${variableKey}|${scale}|${values.join(",")}|${damageType ?? "none"}`;
+    if (seen.has(signature)) continue;
+    seen.add(signature);
+    terms.push({ key: variableKey, label, values, scale, kind, damageType });
+  }
+
+  return terms.slice(0, 16);
+}
+
 function normalizeChampion(champion: CDragonChampion, locale: "zh" | "en"): ChampionDetail | null {
   if (!champion.apiName || !champion.name) return null;
   if (!Array.isArray(champion.traits) || champion.traits.length === 0) return null;
@@ -136,6 +231,7 @@ function normalizeChampion(champion: CDragonChampion, locale: "zh" | "en"): Cham
     abilityName: champion.ability?.name,
     abilityDesc: cleanAbilityDescription(champion.ability?.desc, champion.ability?.variables, locale),
     abilityIconUrl: assetUrl(champion.ability?.icon),
+    abilityTerms: parseAbilityTerms(champion.ability?.desc, champion.ability?.variables),
     stats: champion.stats ? {
       hp: champion.stats.hp,
       mana: champion.stats.mana,

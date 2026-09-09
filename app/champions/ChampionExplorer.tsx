@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import UnitIcon from "../components/UnitIcon";
 import { useLocale } from "../components/LocaleProvider";
@@ -87,9 +88,12 @@ export default function ChampionExplorer() {
           <h1>{tr("英雄资料库", "Champion Library")}</h1>
           <p>{tr("查看费用、羁绊、技能和基础属性；鼠标悬停任意英雄头像可展开完整详情。", "Browse cost, traits, abilities and base stats. Hover any champion portrait for the full detail card.")}</p>
         </div>
-        <div className={styles.summary}>
-          <strong>{champions.length || "—"}</strong>
-          <span>{tr("当前结果", "results")}</span>
+        <div className={styles.headingActions}>
+          <Link href="/stats" className={styles.simLink}>{tr("装备属性模拟器", "Item Stat Lab")} <span>→</span></Link>
+          <div className={styles.summary}>
+            <strong>{champions.length || "—"}</strong>
+            <span>{tr("当前结果", "results")}</span>
+          </div>
         </div>
       </header>
 
@@ -107,7 +111,7 @@ export default function ChampionExplorer() {
 
       <div className={styles.hint}>
         <span className={styles.dot} />
-        {detailsLoading ? tr("正在载入 CommunityDragon 当前版本英雄详情…", "Loading current-patch champion details from CommunityDragon…") : tr("悬停英雄头像：显示技能全文、羁绊、生命、法力、攻击力、攻速、护甲、魔抗、射程与暴击。", "Hover a champion portrait for full ability text, traits, health, mana, AD, AS, armor, MR, range and crit.")}
+        {detailsLoading ? tr("正在载入 CommunityDragon 当前版本英雄详情…", "Loading current-patch champion details from CommunityDragon…") : tr("悬停英雄头像可看 1★/2★/3★ 基础面板；每个英雄都可直接进入装备与技能系数计算。", "Hover portraits for 1★/2★/3★ base sheets; every champion can open directly in the equipped stat and ability lab.")}
       </div>
 
       <section className={styles.tableWrap}>
@@ -120,7 +124,7 @@ export default function ChampionExplorer() {
               return (
                 <tr key={champion.id}>
                   <td className={styles.rank}>{index + 1}</td>
-                  <td><div className={styles.champion}><UnitIcon entry={champion} size={44} /><div><strong>{nameOf(champion)}</strong><span>{secondaryNameOf(champion)}</span></div></div></td>
+                  <td><div className={styles.champion}><UnitIcon entry={champion} size={44} /><div><strong>{nameOf(champion)}</strong><span>{secondaryNameOf(champion)}</span></div><Link className={styles.rowSim} href={`/stats?champion=${encodeURIComponent(champion.id)}`} title={tr("在属性计算器中打开", "Open in Stat Lab")}>Σ</Link></div></td>
                   <td><span className={`${styles.costBadge} ${styles[`cost${champion.tier ?? 1}`]}`}>{champion.tier ?? "—"}</span></td>
                   <td><div className={styles.traits}>{(detail?.traits ?? []).map((name) => <span key={name}>{name}</span>)}{!detailsLoading && !detail ? <em>—</em> : null}</div></td>
                   <td><div className={styles.ability}><strong>{detail?.abilityName || (detailsLoading ? tr("载入中…", "Loading…") : "—")}</strong>{detail?.abilityDesc ? <span>{detail.abilityDesc}</span> : null}</div></td>
