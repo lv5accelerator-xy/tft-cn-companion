@@ -179,13 +179,11 @@ export default function StatSimulator({ initialChampionId = "" }: { initialChamp
   }, [effectRecords]);
 
   const equippableItems = useMemo(() => (catalog?.items ?? []).filter((item) => item.subtype !== "tactician"), [catalog]);
-  const itemForId = (id: string | null) => id ? equippableItems.find((item) => item.id === id) ?? null : null;
-  const effectForItem = (item: CatalogEntry | null) => item ? effectIndex.get(normalize(item.id)) ?? effectIndex.get(normalize(item.nameEn)) ?? null : null;
-
-  const selectedItemsA = useMemo(() => slotsA.map(itemForId), [equippableItems, slotsA]);
-  const selectedItemsB = useMemo(() => slotsB.map(itemForId), [equippableItems, slotsB]);
-  const selectedEffectsA = useMemo(() => selectedItemsA.map(effectForItem), [effectIndex, selectedItemsA]);
-  const selectedEffectsB = useMemo(() => selectedItemsB.map(effectForItem), [effectIndex, selectedItemsB]);
+  const itemIndex = useMemo(() => new Map(equippableItems.map((item) => [item.id, item])), [equippableItems]);
+  const selectedItemsA = useMemo(() => slotsA.map((id) => id ? itemIndex.get(id) ?? null : null), [itemIndex, slotsA]);
+  const selectedItemsB = useMemo(() => slotsB.map((id) => id ? itemIndex.get(id) ?? null : null), [itemIndex, slotsB]);
+  const selectedEffectsA = useMemo(() => selectedItemsA.map((item) => item ? effectIndex.get(normalize(item.id)) ?? effectIndex.get(normalize(item.nameEn)) ?? null : null), [effectIndex, selectedItemsA]);
+  const selectedEffectsB = useMemo(() => selectedItemsB.map((item) => item ? effectIndex.get(normalize(item.id)) ?? effectIndex.get(normalize(item.nameEn)) ?? null : null), [effectIndex, selectedItemsB]);
   const bonusesA = useMemo(() => mergeItemBonuses(selectedEffectsA.map((record) => record?.bonuses)), [selectedEffectsA]);
   const bonusesB = useMemo(() => mergeItemBonuses(selectedEffectsB.map((record) => record?.bonuses)), [selectedEffectsB]);
   const hasLoadoutB = slotsB.some(Boolean);
