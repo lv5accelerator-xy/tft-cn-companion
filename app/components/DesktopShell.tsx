@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { FormEvent, ReactNode, useState } from "react";
+import { usePathname } from "next/navigation";
+import { ReactNode } from "react";
 import { useLocale } from "./LocaleProvider";
+import QuickSearch from "./QuickSearch";
 import styles from "./desktop-shell.module.css";
 
 type NavItem = { href: string; zh: string; en: string; glyph: string };
@@ -18,6 +19,7 @@ const metaNav: NavItem[] = [
 ];
 
 const toolNav: NavItem[] = [
+  { href: "/focus", zh: "对局模式", en: "Game Focus", glyph: "◉" },
   { href: "/builder", zh: "阵容编辑器", en: "Team Builder", glyph: "+" },
   { href: "/stats", zh: "属性计算器", en: "Stat Calculator", glyph: "Σ" },
   { href: "/import", zh: "一图流导入", en: "Image Import", glyph: "▧" },
@@ -46,16 +48,7 @@ function NavLinks({ items, pathname }: { items: NavItem[]; pathname: string }) {
 
 export default function DesktopShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
   const { locale, toggleLocale, tr } = useLocale();
-  const [query, setQuery] = useState("");
-
-  function submitSearch(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const value = query.trim();
-    if (!value) return;
-    router.push(`/search?q=${encodeURIComponent(value)}`);
-  }
 
   return (
     <div className={styles.app}>
@@ -89,24 +82,13 @@ export default function DesktopShell({ children }: { children: ReactNode }) {
 
       <div className={styles.workspace}>
         <header className={styles.topbar}>
-          <form onSubmit={submitSearch} className={styles.searchForm}>
-            <span className={styles.searchIcon}>⌕</span>
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder={tr("搜索英雄、装备、羁绊、强化或阵容", "Search champions, items, traits, augments or comps")}
-              aria-label={tr("全局搜索", "Global search")}
-            />
-            <kbd>Enter</kbd>
-          </form>
-
+          <QuickSearch />
           <div className={styles.topActions}>
             <button className={styles.language} onClick={toggleLocale} title={tr("切换到英文", "Switch to Chinese")}>{locale === "zh" ? "中 / EN" : "EN / 中"}</button>
             <span className={styles.pill}>NA</span>
             <span className={styles.patch}>Patch 18.1</span>
           </div>
         </header>
-
         <main className={styles.content}>{children}</main>
       </div>
     </div>
