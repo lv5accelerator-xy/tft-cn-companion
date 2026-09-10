@@ -9,6 +9,7 @@ import { useLocale } from "../components/LocaleProvider";
 import { metaComps, type UnifiedMetaComp } from "@/data/meta";
 import type { BoardPosition } from "@/data/comps";
 import type { CatalogEntry, TftCatalogPayload } from "@/data/tft";
+import { deriveTacticalBoardPlan } from "@/lib/tactical-board";
 import {
   BUILDER_KEY,
   FOCUS_COMPACT_KEY,
@@ -130,6 +131,7 @@ export default function FocusPage() {
 
   const trayComps = useMemo(() => candidateSlots.map((ref) => ref ? allComps.find((entry) => sameRef(ref, entry)) ?? null : null), [allComps, candidateSlots]);
   const champions = catalog?.champions ?? [];
+  const allItems = catalog?.items ?? [];
   const championByName = useMemo(() => {
     const map = new Map<string, CatalogEntry>();
     champions.forEach((champion) => { map.set(normalize(champion.id), champion); map.set(normalize(champion.nameEn), champion); map.set(normalize(champion.nameZh), champion); });
@@ -138,9 +140,11 @@ export default function FocusPage() {
 
   const units = useMemo(() => !comp ? [] : [...comp.coreUnits, ...comp.flexUnits].map((name) => championByName.get(normalize(name))).filter((entry): entry is CatalogEntry => Boolean(entry)).filter((entry, index, array) => array.findIndex((candidate) => candidate.id === entry.id) === index).slice(0, 10), [championByName, comp]);
   const board = useMemo<BoardPosition[]>(() => !comp ? [] : mirrored ? comp.board.map((position) => ({ ...position, col: (6 - position.col) as BoardPosition["col"] })) : comp.board, [comp, mirrored]);
+  const tacticalPlan = useMemo(() => comp ? deriveTacticalBoardPlan(comp, champions, allItems) : null, [allItems, champions, comp]);
   const safeStageIndex = comp?.stages.length ? Math.min(stageIndex, comp.stages.length - 1) : 0;
   const activeStage = comp?.stages[safeStageIndex] ?? comp?.stages[0] ?? null;
-  const primaryCarry = comp ? championByName.get(normalize(comp.coreUnits[0] ?? "")) ?? null : null;
+  const primaryCarryName = tacticalPlan ? Object.entries(tacticalPlan.rolesByName).find(([, role]) => role === "CARRY")?.[0] : undefined;
+  const primaryCarry = primaryCarryName ? championByName.get(normalize(primaryCarryName)) ?? null : comp ? championByName.get(normalize(comp.coreUnits[0] ?? "")) ?? null : null;
   const currentRef = comp ? { sourceId: comp.sourceId, id: comp.id } : null;
 
   useEffect(() => {
@@ -172,11 +176,16 @@ export default function FocusPage() {
   const openBuilder = useCallback(() => {
     if (!comp) return;
     try {
+      const builderRolesByName = tacticalPlan
+        ? Object.fromEntries(Object.entries(tacticalPlan.rolesByName).filter(([, role]) => role !== "FLEX"))
+        : {};
       window.localStorage.setItem(BUILDER_KEY, JSON.stringify({
         name: locale === "zh" ? comp.nameZh : comp.name,
         championIds: units.map((unit) => unit.id),
         champions: [...comp.coreUnits, ...comp.flexUnits],
         board,
+        itemsByName: tacticalPlan?.itemsByName ?? {},
+        rolesByName: builderRolesByName,
         sourceCompId: comp.id,
         sourceId: comp.sourceId,
         updatedAt: Date.now(),
@@ -184,7 +193,7 @@ export default function FocusPage() {
       markWorkspaceChanged();
     } catch {}
     router.push("/builder");
-  }, [board, comp, locale, router, units]);
+  }, [board, comp, locale, router, tacticalPlan, units]);
 
   function saveCurrentToSlot(index: number) {
     if (!currentRef) return;
@@ -245,7 +254,7 @@ export default function FocusPage() {
     <div className={`${styles.page} ${compact ? styles.compact : ""}`}>
       <header className={styles.heading}>
         <div>
-          <div className={styles.titleMeta}><span className={styles.focusBadge}>SECOND SCREEN HUD</span><span>Patch {comp.patch}</span><span>{comp.source}</span></div>
+          <div className={styles.titleMeta}><span className={styles.focusBadge}>TACTICAL BOARD</span><span>Patch {comp.patch}</span><span>{comp.source}</span></div>
           <div className={styles.titleLine}><span className={`${styles.tier} ${styles[`tier${comp.tier}`]}`}>{comp.tier === "ACTIVE" ? "·" : comp.tier}</span><div><h1>{locale === "zh" ? comp.nameZh : comp.name}</h1><p>{locale === "zh" ? comp.name : comp.nameZh} · {comp.playstyle}</p></div></div>
         </div>
         <div className={styles.headingActions}>
@@ -283,8 +292,8 @@ export default function FocusPage() {
 
       <div className={styles.focusGrid}>
         <section className={styles.card}>
-          <div className={styles.cardHead}><div><h2>{tr("本局站位", "Positioning")}</h2><p>{tr("前排在上 · 后排在下；对位变化时一键镜像。", "Frontline on top, backline below; mirror for matchup changes.")}</p></div><button className={mirrored ? styles.mirrorActive : ""} onClick={() => setMirrored((value) => !value)} title={tr("快捷键 M", "Shortcut M")}>⇄ {mirrored ? tr("已镜像", "Mirrored") : tr("左右镜像", "Mirror")} <kbd>M</kbd></button></div>
-          <div className={styles.boardWrap}><BoardPreview positions={board} champions={champions} /></div>
+          <div className={styles.cardHead}><div><h2>{tr("战术棋盘", "Tactical Board")}</h2><p>{tr("C 主C · T 主坦 · 2C 副C · F Flex；边框表示 1–5 费，来源有装备时直接显示图标。", "C carry · T tank · 2C secondary · F flex; border shows cost and source-backed items appear as icons.")}</p></div><button className={mirrored ? styles.mirrorActive : ""} onClick={() => setMirrored((value) => !value)} title={tr("快捷键 M", "Shortcut M")}>⇄ {mirrored ? tr("已镜像", "Mirrored") : tr("左右镜像", "Mirror")} <kbd>M</kbd></button></div>
+          <div className={styles.boardWrap}><BoardPreview positions={board} champions={champions} items={allItems} rolesByName={tacticalPlan?.rolesByName} itemsByName={tacticalPlan?.itemsByName} compact={compact} /></div>
           <div className={styles.note}>{comp.positioningNote}</div>
         </section>
 
