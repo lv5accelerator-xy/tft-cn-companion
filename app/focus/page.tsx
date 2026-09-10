@@ -9,34 +9,29 @@ import { useLocale } from "../components/LocaleProvider";
 import { metaComps, type UnifiedMetaComp } from "@/data/meta";
 import type { BoardPosition } from "@/data/comps";
 import type { CatalogEntry, TftCatalogPayload } from "@/data/tft";
+import { formatFreshness } from "@/lib/freshness";
 import { deriveStageBoardPlans, type RollMode } from "@/lib/stage-board";
 import { deriveTacticalBoardPlan, type TacticalRole } from "@/lib/tactical-board";
 import {
   BUILDER_KEY,
   FOCUS_COMPACT_KEY,
+  FOCUS_COMP_STATES_KEY,
   FOCUS_KEY,
   FOCUS_STAGE_OVERRIDES_KEY,
   FOCUS_TRAY_KEY,
   LOCAL_IMPORT_KEY,
+  compRefKey,
   markWorkspaceChanged,
+  parseFocusCompStates,
+  rememberRecentComp,
+  type StoredFocusCompStateStore,
 } from "@/lib/workspace";
 import styles from "./focus.module.css";
 
 type FocusRef = { sourceId: string; id: string };
 type CandidateSlot = FocusRef | null;
-
-type FocusState = FocusRef & {
-  stageIndex?: number;
-  mirrored?: boolean;
-  updatedAt?: number;
-};
-
-type StageOverride = {
-  rolesByName: Record<string, TacticalRole>;
-  itemsByName: Record<string, string[]>;
-  updatedAt: number;
-};
-
+type FocusState = FocusRef & { stageIndex?: number; mirrored?: boolean; updatedAt?: number };
+type StageOverride = { rolesByName: Record<string, TacticalRole>; itemsByName: Record<string, string[]>; updatedAt: number };
 type StageOverrideStore = Record<string, Record<string, StageOverride>>;
 
 function normalize(value: string) {
@@ -129,13 +124,13 @@ export default function FocusPage() {
   const [candidateSlots, setCandidateSlots] = useState<CandidateSlot[]>([null, null, null]);
   const [compact, setCompact] = useState(false);
   const [stageOverrides, setStageOverrides] = useState<StageOverrideStore>({});
+  const [focusCompStates, setFocusCompStates] = useState<StoredFocusCompStateStore>({});
   const [selectedUnitName, setSelectedUnitName] = useState("");
   const [itemPickerValue, setItemPickerValue] = useState("");
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     fetch("/api/tft").then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject()).then(setCatalog).catch(() => setCatalog(null));
-
     const params = new URLSearchParams(window.location.search);
     const sourceId = params.get("source");
     const id = params.get("id");
@@ -145,20 +140,26 @@ export default function FocusPage() {
       setLocalComps(imported.filter(isManualComp));
       setCandidateSlots(parseCandidateSlots(window.localStorage.getItem(FOCUS_TRAY_KEY)));
       setStageOverrides(parseStageOverrides(window.localStorage.getItem(FOCUS_STAGE_OVERRIDES_KEY)));
+      const storedStates = parseFocusCompStates(JSON.parse(window.localStorage.getItem(FOCUS_COMP_STATES_KEY) || "{}"));
+      setFocusCompStates(storedStates);
 
       const compactValue = window.localStorage.getItem(FOCUS_COMPACT_KEY);
       setCompact(compactValue === null ? window.innerWidth >= 1200 && window.innerHeight <= 1100 : compactValue === "1");
 
       if (sourceId && id) {
-        setRequested({ sourceId, id });
-        setStageIndex(0);
-        setMirrored(false);
+        const ref = { sourceId, id };
+        const savedForComp = storedStates[compRefKey(ref)];
+        setRequested(ref);
+        setStageIndex(savedForComp?.stageIndex ?? 0);
+        setMirrored(savedForComp?.mirrored ?? false);
       } else {
         const saved = JSON.parse(window.localStorage.getItem(FOCUS_KEY) || "null") as FocusState | null;
         if (saved?.sourceId && saved?.id) {
-          setRequested({ sourceId: saved.sourceId, id: saved.id });
-          setStageIndex(Number.isInteger(saved.stageIndex) ? Math.max(0, Number(saved.stageIndex)) : 0);
-          setMirrored(Boolean(saved.mirrored));
+          const ref = { sourceId: saved.sourceId, id: saved.id };
+          const savedForComp = storedStates[compRefKey(ref)];
+          setRequested(ref);
+          setStageIndex(savedForComp?.stageIndex ?? (Number.isInteger(saved.stageIndex) ? Math.max(0, Number(saved.stageIndex)) : 0));
+          setMirrored(savedForComp?.mirrored ?? Boolean(saved.mirrored));
         }
       }
     } catch {
@@ -225,6 +226,7 @@ export default function FocusPage() {
   const selectedUnit = selectedUnitName ? championByName.get(normalize(selectedUnitName)) ?? null : null;
   const selectedItems = selectedUnit ? activeItems[selectedUnit.nameEn] ?? [] : [];
   const equipableItems = useMemo(() => allItems.filter((item) => item.subtype !== "component" && item.subtype !== "tactician"), [allItems]);
+  const freshness = comp ? formatFreshness(comp.sourceUpdatedAt, locale) : null;
 
   useEffect(() => {
     if (!ready) return;
@@ -244,8 +246,19 @@ export default function FocusPage() {
   useEffect(() => {
     if (!ready || !comp) return;
     if (safeStageIndex !== stageIndex) setStageIndex(safeStageIndex);
+    const state = { stageIndex: safeStageIndex, mirrored, updatedAt: Date.now() };
+    setFocusCompStates((current) => {
+      const key = compRefKey(comp);
+      const previous = current[key];
+      if (previous?.stageIndex === state.stageIndex && previous?.mirrored === state.mirrored) return current;
+      const next = { ...current, [key]: state };
+      try { window.localStorage.setItem(FOCUS_COMP_STATES_KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
     try {
-      window.localStorage.setItem(FOCUS_KEY, JSON.stringify({ sourceId: comp.sourceId, id: comp.id, stageIndex: safeStageIndex, mirrored, updatedAt: Date.now() } satisfies FocusState));
+      window.localStorage.setItem(FOCUS_KEY, JSON.stringify({ sourceId: comp.sourceId, id: comp.id, stageIndex: safeStageIndex, mirrored, updatedAt: state.updatedAt } satisfies FocusState));
+      rememberRecentComp(comp);
+      markWorkspaceChanged();
     } catch {}
   }, [comp, mirrored, ready, safeStageIndex, stageIndex]);
 
@@ -255,12 +268,13 @@ export default function FocusPage() {
   }, [compOverrideKey, safeStageIndex]);
 
   const switchComp = useCallback((ref: FocusRef) => {
+    const saved = focusCompStates[compRefKey(ref)];
     setRequested(ref);
-    setStageIndex(0);
-    setMirrored(false);
+    setStageIndex(saved?.stageIndex ?? 0);
+    setMirrored(saved?.mirrored ?? false);
     const nextUrl = `/focus?source=${encodeURIComponent(ref.sourceId)}&id=${encodeURIComponent(ref.id)}`;
     window.history.replaceState(null, "", nextUrl);
-  }, []);
+  }, [focusCompStates]);
 
   const openBuilder = useCallback(() => {
     if (!comp || !activeStage) return;
@@ -304,23 +318,16 @@ export default function FocusPage() {
       ...current,
       [key]: {
         ...(current[key] ?? {}),
-        [activeStage.stage]: {
-          rolesByName: { ...nextRoles },
-          itemsByName: copyItems(nextItems),
-          updatedAt: Date.now(),
-        },
+        [activeStage.stage]: { rolesByName: { ...nextRoles }, itemsByName: copyItems(nextItems), updatedAt: Date.now() },
       },
     }));
+    markWorkspaceChanged();
   }
 
   function setSelectedRole(role: TacticalRole) {
     if (!selectedUnit) return;
     const nextRoles: Record<string, TacticalRole> = { ...activeRoles };
-    if (role !== "FLEX") {
-      Object.keys(nextRoles).forEach((unit) => {
-        if (nextRoles[unit] === role) nextRoles[unit] = "FLEX";
-      });
-    }
+    if (role !== "FLEX") Object.keys(nextRoles).forEach((unit) => { if (nextRoles[unit] === role) nextRoles[unit] = "FLEX"; });
     nextRoles[selectedUnit.nameEn] = role;
     saveActiveOverride(nextRoles, activeItems);
   }
@@ -351,44 +358,24 @@ export default function FocusPage() {
       else delete next[key];
       return next;
     });
+    markWorkspaceChanged();
   }
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (!comp || isTypingTarget(event.target) || event.ctrlKey || event.metaKey || event.altKey) return;
       const key = event.key.toLowerCase();
-      if (key === "m") {
-        event.preventDefault();
-        setMirrored((value) => !value);
-        return;
-      }
-      if (key === "b") {
-        event.preventDefault();
-        openBuilder();
-        return;
-      }
-      if (key === "c") {
-        event.preventDefault();
-        setCompact((value) => !value);
-        return;
-      }
-      const stageKeys = ["q", "w", "e"];
-      const stageKeyIndex = stageKeys.indexOf(key);
-      if (stageKeyIndex >= 0 && stageKeyIndex < comp.stages.length) {
-        event.preventDefault();
-        setStageIndex(stageKeyIndex);
-        return;
-      }
+      if (key === "m") { event.preventDefault(); setMirrored((value) => !value); return; }
+      if (key === "b") { event.preventDefault(); openBuilder(); return; }
+      if (key === "c") { event.preventDefault(); setCompact((value) => !value); return; }
+      const stageKeyIndex = ["q", "w", "e"].indexOf(key);
+      if (stageKeyIndex >= 0 && stageKeyIndex < comp.stages.length) { event.preventDefault(); setStageIndex(stageKeyIndex); return; }
       const numeric = Number(key);
       if (Number.isInteger(numeric) && numeric >= 1 && numeric <= 3) {
         const ref = candidateSlots[numeric - 1];
-        if (ref) {
-          event.preventDefault();
-          switchComp(ref);
-        }
+        if (ref) { event.preventDefault(); switchComp(ref); }
       }
     }
-
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [candidateSlots, comp, openBuilder, switchComp]);
@@ -407,29 +394,29 @@ export default function FocusPage() {
     <div className={`${styles.page} ${compact ? styles.compact : ""}`}>
       <header className={styles.heading}>
         <div>
-          <div className={styles.titleMeta}><span className={styles.focusBadge}>STAGE BOARD</span><span>Patch {comp.patch}</span><span>{comp.source}</span></div>
+          <div className={styles.titleMeta}><span className={styles.focusBadge}>STAGE BOARD</span><span>Patch {comp.patch}</span><span>{comp.source}</span><span>{freshness?.stale ? "⚠ " : ""}{freshness?.label}</span></div>
           <div className={styles.titleLine}><span className={`${styles.tier} ${styles[`tier${comp.tier}`]}`}>{comp.tier === "ACTIVE" ? "·" : comp.tier}</span><div><h1>{locale === "zh" ? comp.nameZh : comp.name}</h1><p>{locale === "zh" ? comp.name : comp.nameZh} · {comp.playstyle}</p></div></div>
         </div>
         <div className={styles.headingActions}>
           <button className={compact ? styles.compactActive : ""} onClick={() => setCompact((value) => !value)} title={tr("快捷键 C", "Shortcut C")}>{compact ? tr("紧凑 HUD", "Compact HUD") : tr("标准 HUD", "Standard HUD")} <kbd>C</kbd></button>
-          <Link href="/comps">{tr("阵容库", "Comps")}</Link>
+          <Link href="/review">{tr("赛后复盘", "Review")}</Link>
           <button onClick={openBuilder} title={tr("把当前阶段载入 Builder · 快捷键 B", "Load the current stage into Builder · Shortcut B")}>{tr("阶段 Builder", "Stage Builder")} <kbd>B</kbd></button>
         </div>
       </header>
 
       <section className={styles.trayBar}>
-        <div className={styles.trayIntro}><strong>{tr("候选阵容夹", "Candidate Tray")}</strong><span>{tr("把开局可能玩的 3 套阵容固定在这里，实战按 1 / 2 / 3 直接切。", "Pin up to three likely comps here and switch instantly with 1 / 2 / 3.")}</span></div>
+        <div className={styles.trayIntro}><strong>{tr("候选阵容夹", "Candidate Tray")}</strong><span>{tr("每套阵容会记住自己的阶段与镜像状态，按 1 / 2 / 3 切回即可继续。", "Each candidate remembers its own stage and mirror state; switch back with 1 / 2 / 3.")}</span></div>
         <div className={styles.traySlots}>
           {[0, 1, 2].map((index) => {
             const ref = candidateSlots[index];
             const trayComp = trayComps[index];
             const active = Boolean(ref && currentRef && sameRef(ref, currentRef));
-            if (!ref || !trayComp) {
-              return <button className={styles.trayEmpty} key={index} onClick={() => saveCurrentToSlot(index)} title={tr("把当前阵容保存到这个槽位", "Save the current comp to this slot")}><kbd>{index + 1}</kbd><span>+ {tr("保存当前", "Save current")}</span></button>;
-            }
+            if (!ref || !trayComp) return <button className={styles.trayEmpty} key={index} onClick={() => saveCurrentToSlot(index)} title={tr("把当前阵容保存到这个槽位", "Save the current comp to this slot")}><kbd>{index + 1}</kbd><span>+ {tr("保存当前", "Save current")}</span></button>;
+            const savedState = focusCompStates[compRefKey(ref)];
+            const savedStage = trayComp.stages[Math.min(savedState?.stageIndex ?? 0, Math.max(0, trayComp.stages.length - 1))]?.stage;
             return (
               <div className={`${styles.traySlot} ${active ? styles.traySlotActive : ""}`} key={index}>
-                <button className={styles.traySelect} onClick={() => switchComp(ref)}><kbd>{index + 1}</kbd><span><strong>{locale === "zh" ? trayComp.nameZh : trayComp.name}</strong><small>{trayComp.source} · {trayComp.playstyle}</small></span></button>
+                <button className={styles.traySelect} onClick={() => switchComp(ref)}><kbd>{index + 1}</kbd><span><strong>{locale === "zh" ? trayComp.nameZh : trayComp.name}</strong><small>{savedStage ?? trayComp.playstyle}{savedState?.mirrored ? " · M" : ""} · {trayComp.source}</small></span></button>
                 <button className={styles.trayRemove} onClick={() => removeCandidate(index)} aria-label={tr("移出候选", "Remove candidate")}>×</button>
               </div>
             );
@@ -453,38 +440,21 @@ export default function FocusPage() {
       <div className={styles.focusGrid}>
         <section className={styles.card}>
           <div className={styles.cardHead}>
-            <div><h2>{tr("阶段战术棋盘", "Stage Tactical Board")}</h2><p>{tr("Q/W/E 会真正切换棋盘。点击英雄可单独修改本阶段角色与三件装备。", "Q/W/E now switches the actual board. Click a unit to edit this stage's role and three items.")}</p></div>
+            <div><h2>{tr("阶段战术棋盘", "Stage Tactical Board")}</h2><p>{tr("Q/W/E 会真正切换棋盘。点击英雄可单独修改本阶段角色与三件装备。", "Q/W/E switches the actual board. Click a unit to edit this stage's role and three items.")}</p></div>
             <div className={styles.boardActions}>
               {stageOverride ? <span className={styles.customBadge}>{tr("用户修改", "Customized")}</span> : null}
               {stageOverride ? <button onClick={resetStageOverride}>{tr("恢复阶段推荐", "Reset stage")}</button> : null}
               <button className={mirrored ? styles.mirrorActive : ""} onClick={() => setMirrored((value) => !value)} title={tr("快捷键 M", "Shortcut M")}>⇄ {mirrored ? tr("已镜像", "Mirrored") : tr("左右镜像", "Mirror")} <kbd>M</kbd></button>
             </div>
           </div>
-          <div className={styles.boardWrap}>
-            <BoardPreview
-              positions={board}
-              champions={champions}
-              items={allItems}
-              rolesByName={activeRoles}
-              itemsByName={activeItems}
-              compact={compact}
-              selectedUnit={selectedUnitName}
-              onUnitClick={(unit) => setSelectedUnitName(unit.nameEn)}
-            />
-          </div>
+          <div className={styles.boardWrap}><BoardPreview positions={board} champions={champions} items={allItems} rolesByName={activeRoles} itemsByName={activeItems} compact={compact} selectedUnit={selectedUnitName} onUnitClick={(unit) => setSelectedUnitName(unit.nameEn)} /></div>
           {selectedUnit ? (
             <div className={styles.tacticalEditor}>
               <div className={styles.editorIdentity}><UnitIcon entry={selectedUnit} size={38} /><div><strong>{nameOf(selectedUnit)}</strong><span>{secondaryNameOf(selectedUnit)} · {selectedUnit.tier ?? "—"} {tr("费", "cost")}</span></div></div>
               <div className={styles.roleEditor}><span>{tr("角色", "Role")}</span><div>{(["CARRY", "TANK", "SECONDARY", "FLEX"] as TacticalRole[]).map((role) => <button key={role} className={activeRoles[selectedUnit.nameEn] === role ? styles.editorActive : ""} onClick={() => setSelectedRole(role)}>{roleText(role, locale)}</button>)}</div></div>
-              <div className={styles.itemEditor}>
-                <span>{tr("本阶段装备", "Stage items")}</span>
-                <div className={styles.assignedItems}>{selectedItems.length ? selectedItems.map((itemName) => <button key={itemName} onClick={() => removeSelectedItem(itemName)} title={tr("点击移除", "Click to remove")}>{itemName} ×</button>) : <em>{tr("暂无指定装备", "No assigned items")}</em>}</div>
-                <select value={itemPickerValue} onChange={addSelectedItem} disabled={selectedItems.length >= 3}><option value="">{selectedItems.length >= 3 ? tr("已满 3 件", "3 items equipped") : tr("+ 添加装备", "+ Add item")}</option>{equipableItems.map((item) => <option value={item.id} key={item.id}>{nameOf(item)} / {item.nameEn}</option>)}</select>
-              </div>
+              <div className={styles.itemEditor}><span>{tr("本阶段装备", "Stage items")}</span><div className={styles.assignedItems}>{selectedItems.length ? selectedItems.map((itemName) => <button key={itemName} onClick={() => removeSelectedItem(itemName)} title={tr("点击移除", "Click to remove")}>{itemName} ×</button>) : <em>{tr("暂无指定装备", "No assigned items")}</em>}</div><select value={itemPickerValue} onChange={addSelectedItem} disabled={selectedItems.length >= 3}><option value="">{selectedItems.length >= 3 ? tr("已满 3 件", "3 items equipped") : tr("+ 添加装备", "+ Add item")}</option>{equipableItems.map((item) => <option value={item.id} key={item.id}>{nameOf(item)} / {item.nameEn}</option>)}</select></div>
             </div>
-          ) : (
-            <div className={styles.editorHint}>{tr("点击棋盘中的英雄即可调整该阶段的 C / T / 2C / Flex 与装备；修改只保存在你的本地覆盖层。", "Click a board unit to edit C / T / 2C / Flex and items for this stage. Changes are stored only in your local override layer.")}</div>
-          )}
+          ) : <div className={styles.editorHint}>{tr("点击棋盘中的英雄即可调整该阶段的 C / T / 2C / Flex 与装备；修改只保存在你的本地覆盖层。", "Click a board unit to edit C / T / 2C / Flex and items for this stage. Changes are stored only in your local override layer.")}</div>}
           <div className={styles.note}>{activeStagePlan?.provenance === "source-final" ? comp.positioningNote : tr("此阶段为过渡参考棋盘；不会覆盖来源最终站位，实战临时牌仍按你的来牌与血量调整。", "This stage is a transition reference. It does not overwrite the source final board; adjust temporary units to your actual shops and HP.")}</div>
         </section>
 
@@ -496,12 +466,12 @@ export default function FocusPage() {
         </section>
       </div>
 
-      <section className={styles.unitsCard}>
+      {!compact && <section className={styles.unitsCard}>
         <div className={styles.cardHead}><div><h2>{tr("核心与可替换单位", "Core and flex units")}</h2><p>{tr("点英雄直接进入属性实验室。", "Open a champion directly in Stat Lab.")}</p></div>{primaryCarry ? <Link href={`/stats?champion=${encodeURIComponent(primaryCarry.id)}`}>Σ {tr("当前主 C 属性实验室", "Current carry Stat Lab")}</Link> : null}</div>
-        <div className={styles.unitList}>{units.map((unit) => { const core = comp.coreUnits.some((name) => normalize(name) === normalize(unit.nameEn) || normalize(name) === normalize(unit.nameZh)); return <Link href={`/stats?champion=${encodeURIComponent(unit.id)}`} className={`${styles.unitCard} ${core ? styles.coreUnit : ""}`} key={unit.id}><UnitIcon entry={unit} size={compact ? 36 : 42} /><span><strong>{nameOf(unit)}</strong><small>{secondaryNameOf(unit)}</small></span><em>{core ? tr("核心", "Core") : tr("可替换", "Flex")}</em></Link>; })}</div>
-      </section>
+        <div className={styles.unitList}>{units.map((unit) => { const core = comp.coreUnits.some((name) => normalize(name) === normalize(unit.nameEn) || normalize(name) === normalize(unit.nameZh)); return <Link href={`/stats?champion=${encodeURIComponent(unit.id)}`} className={`${styles.unitCard} ${core ? styles.coreUnit : ""}`} key={unit.id}><UnitIcon entry={unit} size={42} /><span><strong>{nameOf(unit)}</strong><small>{secondaryNameOf(unit)}</small></span><em>{core ? tr("核心", "Core") : tr("可替换", "Flex")}</em></Link>; })}</div>
+      </section>}
 
-      <footer className={styles.footer}><span>{tr("副屏快捷键：1/2/3 候选阵容 · Q/W/E 阶段棋盘 · M 镜像 · B 当前阶段 Builder · C 紧凑模式 · Ctrl + K 搜索。", "Second-screen shortcuts: 1/2/3 candidates · Q/W/E stage boards · M mirror · B current-stage Builder · C compact · Ctrl + K search.")}</span>{comp.sourceUrl ? <a href={comp.sourceUrl} target="_blank" rel="noreferrer">{tr("查看来源原文", "Original source")}</a> : null}</footer>
+      <footer className={styles.footer}><span>{tr("副屏快捷键：1/2/3 候选阵容 · Q/W/E 阶段棋盘 · M 镜像 · B 当前阶段 Builder · C 紧凑模式 · ? 帮助。", "Second-screen shortcuts: 1/2/3 candidates · Q/W/E stage boards · M mirror · B current-stage Builder · C compact · ? help.")}</span>{comp.sourceUrl ? <a href={comp.sourceUrl} target="_blank" rel="noreferrer">{tr("查看来源原文", "Original source")}</a> : null}</footer>
     </div>
   );
 }
