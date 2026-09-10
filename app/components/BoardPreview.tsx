@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo } from "react";
+import { KeyboardEvent, useMemo } from "react";
 import UnitIcon from "./UnitIcon";
 import { useLocale } from "./LocaleProvider";
 import type { BoardPosition } from "@/data/comps";
@@ -27,6 +27,8 @@ export default function BoardPreview({
   rolesByName = {},
   itemsByName = {},
   compact = false,
+  selectedUnit = "",
+  onUnitClick,
 }: {
   positions: BoardPosition[];
   champions: CatalogEntry[];
@@ -34,6 +36,8 @@ export default function BoardPreview({
   rolesByName?: Record<string, TacticalRole>;
   itemsByName?: Record<string, string[]>;
   compact?: boolean;
+  selectedUnit?: string;
+  onUnitClick?: (unit: CatalogEntry) => void;
 }) {
   const { tr, nameOf } = useLocale();
   const byName = useMemo(() => {
@@ -81,6 +85,12 @@ export default function BoardPreview({
     return "Flex";
   };
 
+  const activate = (event: KeyboardEvent<HTMLDivElement>, champion: CatalogEntry) => {
+    if (!onUnitClick || (event.key !== "Enter" && event.key !== " ")) return;
+    event.preventDefault();
+    onUnitClick(champion);
+  };
+
   return (
     <div className={`${styles.board} ${compact ? styles.compact : ""}`} aria-label={tr("参考站位", "Positioning preview")}>
       {[0, 1, 2, 3].map((row) => (
@@ -100,12 +110,14 @@ export default function BoardPreview({
               .filter((entry, index, array) => array.findIndex((candidate) => candidate.id === entry.id) === index)
               .slice(0, 3);
             const cost = champion?.tier ? Math.min(5, Math.max(1, champion.tier)) : null;
+            const selected = Boolean(champion && selectedUnit && [champion.id, champion.nameEn, champion.nameZh].some((name) => normalize(name) === normalize(selectedUnit)));
             const tacticalTitle = champion
               ? [
                   `${champion.nameZh} / ${champion.nameEn}`,
                   role ? roleLabel(role) : "",
                   cost ? `${cost} ${tr("费", "cost")}` : "",
                   assignedItems.length ? assignedItems.map((item) => nameOf(item)).join(" · ") : "",
+                  onUnitClick ? tr("点击编辑角色与装备", "Click to edit role and items") : "",
                 ].filter(Boolean).join(" · ")
               : "";
 
@@ -116,9 +128,16 @@ export default function BoardPreview({
                   champion ? styles.filled : "",
                   cost ? styles[`cost${cost}`] ?? "" : "",
                   role ? styles[`role${role}`] ?? "" : "",
+                  champion && onUnitClick ? styles.interactive : "",
+                  selected ? styles.selected : "",
                 ].filter(Boolean).join(" ")}
                 key={`${row}-${col}`}
                 title={tacticalTitle}
+                role={champion && onUnitClick ? "button" : undefined}
+                tabIndex={champion && onUnitClick ? 0 : undefined}
+                aria-pressed={champion && onUnitClick ? selected : undefined}
+                onClick={champion && onUnitClick ? () => onUnitClick(champion) : undefined}
+                onKeyDown={champion ? (event) => activate(event, champion) : undefined}
               >
                 {champion ? (
                   <>
