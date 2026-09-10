@@ -51,8 +51,18 @@ export default function BoardPreview({
               >
                 {champion ? (
                   <>
-                    <UnitIcon entry={champion} size={compact ? 25 : 34} />
-                    {!compact && <span>{nameOf(champion)}</span>}
+                    <div className={styles.portrait}>
+                      <UnitIcon
+                        entry={champion}
+                        size={compact ? 72 : 112}
+                        className={styles.portraitImage}
+                      />
+                    </div>
+                    {!compact && (
+                      <div className={styles.namePlate}>
+                        <span>{nameOf(champion)}</span>
+                      </div>
+                    )}
                   </>
                 ) : null}
               </div>
