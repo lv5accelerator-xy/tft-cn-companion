@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { useLocale } from "./LocaleProvider";
 import QuickSearch from "./QuickSearch";
+import ShortcutHelp from "./ShortcutHelp";
 import styles from "./desktop-shell.module.css";
 
 type NavItem = { href: string; zh: string; en: string; glyph: string };
@@ -36,11 +37,7 @@ function isActive(pathname: string, href: string) {
 function NavLinks({ items, pathname }: { items: NavItem[]; pathname: string }) {
   const { locale } = useLocale();
   return items.map((item) => (
-    <Link
-      key={item.href}
-      href={item.href}
-      className={isActive(pathname, item.href) ? styles.active : ""}
-    >
+    <Link key={item.href} href={item.href} className={isActive(pathname, item.href) ? styles.active : ""}>
       <span className={styles.glyph}>{item.glyph}</span>
       <span>{locale === "zh" ? item.zh : item.en}</span>
     </Link>
@@ -56,35 +53,23 @@ export default function DesktopShell({ children }: { children: ReactNode }) {
       <aside className={styles.sidebar}>
         <Link href="/" className={styles.gameHeader} aria-label="TFT CN Companion home">
           <div className={styles.gameIcon}>TFT</div>
-          <div>
-            <strong>Teamfight Tactics</strong>
-            <span>Set 18 · NA</span>
-          </div>
+          <div><strong>Teamfight Tactics</strong><span>Set 18 · NA</span></div>
         </Link>
 
         <div className={styles.sectionLabel}>{tr("版本资料", "META TRENDS")}</div>
-        <nav className={styles.nav} aria-label="TFT navigation">
-          <NavLinks items={metaNav} pathname={pathname} />
-        </nav>
+        <nav className={styles.nav} aria-label="TFT navigation"><NavLinks items={metaNav} pathname={pathname} /></nav>
 
         <div className={styles.sectionLabel}>{tr("工具", "TOOLS")}</div>
-        <nav className={styles.nav} aria-label="TFT tools">
-          <NavLinks items={toolNav} pathname={pathname} />
-        </nav>
+        <nav className={styles.nav} aria-label="TFT tools"><NavLinks items={toolNav} pathname={pathname} /></nav>
 
-        <Link href="/sources" className={styles.sidebarFoot}>
-          <span className={styles.dot} />
-          <div>
-            <strong>Live sources</strong>
-            <span>Riot + Meta feeds</span>
-          </div>
-        </Link>
+        <Link href="/sources" className={styles.sidebarFoot}><span className={styles.dot} /><div><strong>Live sources</strong><span>Riot + Meta feeds</span></div></Link>
       </aside>
 
       <div className={styles.workspace}>
         <header className={styles.topbar}>
           <QuickSearch />
           <div className={styles.topActions}>
+            <ShortcutHelp pathname={pathname} />
             <button className={styles.language} onClick={toggleLocale} title={tr("切换到英文", "Switch to Chinese")}>{locale === "zh" ? "中 / EN" : "EN / 中"}</button>
             <span className={styles.pill}>NA</span>
             <span className={styles.patch}>Patch 18.1</span>
