@@ -20,6 +20,7 @@ const metaNav: NavItem[] = [
 
 const toolNav: NavItem[] = [
   { href: "/focus", zh: "对局模式", en: "Game Focus", glyph: "◉" },
+  { href: "/review", zh: "赛后复盘", en: "Review Center", glyph: "◎" },
   { href: "/builder", zh: "阵容编辑器", en: "Team Builder", glyph: "+" },
   { href: "/stats", zh: "属性计算器", en: "Stat Calculator", glyph: "Σ" },
   { href: "/import", zh: "一图流导入", en: "Image Import", glyph: "▧" },
