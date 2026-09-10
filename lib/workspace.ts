@@ -7,6 +7,7 @@ export const WORKSPACE_EVENT = "tft-workspace-changed";
 export const FOCUS_KEY = "tft-cn-companion-focus-v1";
 export const FOCUS_TRAY_KEY = "tft-cn-companion-focus-tray-v1";
 export const FOCUS_COMPACT_KEY = "tft-cn-companion-focus-compact-v1";
+export const FOCUS_STAGE_OVERRIDES_KEY = "tft-cn-companion-focus-stage-overrides-v1";
 
 export type WorkspaceSnapshot = {
   version: 1;
