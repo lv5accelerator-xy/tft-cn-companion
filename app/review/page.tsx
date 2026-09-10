@@ -186,7 +186,7 @@ export default function ReviewPage() {
     let rolesByName = { ...(override?.rolesByName ?? stagePlan?.rolesByName ?? tactical.rolesByName) };
     let itemsByName = Object.fromEntries(Object.entries(override?.itemsByName ?? stagePlan?.itemsByName ?? tactical.itemsByName).map(([unit, items]) => [unit, [...items].slice(0, 3)]));
     let captureSource: ReviewDraft["captureSource"] = "focus";
-    let focusStage = activeStage?.stage ?? stagePlan?.stage ?? "Stage 4";
+    let focusStage: string = activeStage?.stage ?? stagePlan?.stage ?? "Stage 4";
 
     const builderValue = safeParse(window.localStorage.getItem(BUILDER_KEY));
     const builder = builderValue && typeof builderValue === "object" && !Array.isArray(builderValue) ? builderValue as BuilderSnapshot : null;
