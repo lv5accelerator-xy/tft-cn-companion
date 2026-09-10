@@ -5,6 +5,8 @@ export const AUTO_SYNC_KEY = "tft-cn-companion-auto-sync-v1";
 export const WORKSPACE_UPDATED_KEY = "tft-cn-companion-workspace-updated-v1";
 export const WORKSPACE_EVENT = "tft-workspace-changed";
 export const FOCUS_KEY = "tft-cn-companion-focus-v1";
+export const FOCUS_TRAY_KEY = "tft-cn-companion-focus-tray-v1";
+export const FOCUS_COMPACT_KEY = "tft-cn-companion-focus-compact-v1";
 
 export type WorkspaceSnapshot = {
   version: 1;
