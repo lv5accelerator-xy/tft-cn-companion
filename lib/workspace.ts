@@ -8,12 +8,15 @@ export const FOCUS_KEY = "tft-cn-companion-focus-v1";
 export const FOCUS_TRAY_KEY = "tft-cn-companion-focus-tray-v1";
 export const FOCUS_COMPACT_KEY = "tft-cn-companion-focus-compact-v1";
 export const FOCUS_STAGE_OVERRIDES_KEY = "tft-cn-companion-focus-stage-overrides-v1";
+export const REVIEW_HISTORY_KEY = "tft-cn-companion-review-history-v1";
+export const REVIEW_DRAFT_KEY = "tft-cn-companion-review-draft-v1";
 
 export type WorkspaceSnapshot = {
   version: 1;
   savedAt: number;
   builder: unknown | null;
   imports: unknown[];
+  reviews: unknown[];
   locale: "zh" | "en";
 };
 
@@ -41,16 +44,18 @@ export function getWorkspaceUpdatedAt() {
 
 export function readWorkspaceSnapshot(): WorkspaceSnapshot {
   if (typeof window === "undefined") {
-    return { version: 1, savedAt: 0, builder: null, imports: [], locale: "zh" };
+    return { version: 1, savedAt: 0, builder: null, imports: [], reviews: [], locale: "zh" };
   }
   const builder = safeParse(window.localStorage.getItem(BUILDER_KEY));
   const importsValue = safeParse(window.localStorage.getItem(LOCAL_IMPORT_KEY));
+  const reviewsValue = safeParse(window.localStorage.getItem(REVIEW_HISTORY_KEY));
   const localeValue = window.localStorage.getItem(LOCALE_KEY);
   return {
     version: 1,
     savedAt: getWorkspaceUpdatedAt(),
     builder,
     imports: Array.isArray(importsValue) ? importsValue : [],
+    reviews: Array.isArray(reviewsValue) ? reviewsValue : [],
     locale: localeValue === "en" ? "en" : "zh",
   };
 }
@@ -60,6 +65,7 @@ export function writeWorkspaceSnapshot(snapshot: WorkspaceSnapshot) {
   if (snapshot.builder === null) window.localStorage.removeItem(BUILDER_KEY);
   else window.localStorage.setItem(BUILDER_KEY, JSON.stringify(snapshot.builder));
   window.localStorage.setItem(LOCAL_IMPORT_KEY, JSON.stringify(Array.isArray(snapshot.imports) ? snapshot.imports : []));
+  window.localStorage.setItem(REVIEW_HISTORY_KEY, JSON.stringify(Array.isArray(snapshot.reviews) ? snapshot.reviews : []));
   window.localStorage.setItem(LOCALE_KEY, snapshot.locale === "en" ? "en" : "zh");
   window.localStorage.setItem(WORKSPACE_UPDATED_KEY, String(snapshot.savedAt || Date.now()));
   window.dispatchEvent(new CustomEvent(WORKSPACE_EVENT, { detail: { restored: true } }));
