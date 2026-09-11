@@ -38,9 +38,11 @@ export default function FocusPlanTrail({ pathname }: { pathname: string }) {
     if (!pathname.startsWith("/focus")) return;
     const reload = () => setState(readState());
     reload();
+    const timer = window.setInterval(reload, 800);
     window.addEventListener(WORKSPACE_EVENT, reload);
     window.addEventListener("popstate", reload);
     return () => {
+      window.clearInterval(timer);
       window.removeEventListener(WORKSPACE_EVENT, reload);
       window.removeEventListener("popstate", reload);
     };
