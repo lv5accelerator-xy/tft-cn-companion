@@ -9,7 +9,8 @@ import { metaComps, type UnifiedMetaComp } from "@/data/meta";
 import type { CatalogEntry, TftCatalogPayload } from "@/data/tft";
 import { formatFreshness } from "@/lib/freshness";
 import { rankOpeningComps, type OpeningChampionPick, type OpeningComponentPick } from "@/lib/opening-assistant";
-import { FOCUS_TRAY_KEY, LOCAL_IMPORT_KEY, markWorkspaceChanged } from "@/lib/workspace";
+import { parseOpeningSession } from "@/lib/opening-session";
+import { FOCUS_TRAY_KEY, LOCAL_IMPORT_KEY, OPENING_SESSION_KEY, markWorkspaceChanged } from "@/lib/workspace";
 import styles from "./opening.module.css";
 
 type FocusRef = { sourceId: string; id: string };
@@ -49,6 +50,7 @@ export default function OpeningPage() {
   const [showAllCosts, setShowAllCosts] = useState(false);
   const [tray, setTray] = useState<CandidateSlot[]>([null, null, null]);
   const [message, setMessage] = useState("");
+  const [restored, setRestored] = useState(false);
 
   useEffect(() => {
     fetch("/api/tft").then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject()).then(setCatalog).catch(() => setCatalog(null));
@@ -56,10 +58,23 @@ export default function OpeningPage() {
       const imported = JSON.parse(window.localStorage.getItem(LOCAL_IMPORT_KEY) || "[]") as unknown[];
       setLocalComps(imported.filter(isManualComp));
       setTray(parseTray(JSON.parse(window.localStorage.getItem(FOCUS_TRAY_KEY) || "[]")));
+      const session = parseOpeningSession(JSON.parse(window.localStorage.getItem(OPENING_SESSION_KEY) || "null") as unknown);
+      setChampionPicks(session.championPicks);
+      setComponentPicks(session.componentPicks);
     } catch {
       setLocalComps([]);
+    } finally {
+      setRestored(true);
     }
   }, []);
+
+  useEffect(() => {
+    if (!restored) return;
+    try {
+      window.localStorage.setItem(OPENING_SESSION_KEY, JSON.stringify({ championPicks, componentPicks, updatedAt: Date.now() }));
+      markWorkspaceChanged();
+    } catch {}
+  }, [championPicks, componentPicks, restored]);
 
   const champions = catalog?.champions ?? [];
   const items = catalog?.items ?? [];
@@ -136,10 +151,14 @@ export default function OpeningPage() {
     setMessage(tr(`已加入候选 ${target + 1}`, `Added to candidate ${target + 1}`));
   }
 
-  function pinTopThree() {
+  function pinTopThree(goCompare = false) {
     if (!topMatches.length) return;
     const next: CandidateSlot[] = [0, 1, 2].map((index) => topMatches[index] ? { sourceId: topMatches[index].comp.sourceId, id: topMatches[index].comp.id } : null);
     persistTray(next);
+    if (goCompare) {
+      window.location.assign("/compare");
+      return;
+    }
     setMessage(tr("Top 3 已写入候选 1 / 2 / 3。", "Top 3 saved to candidates 1 / 2 / 3."));
   }
 
@@ -153,14 +172,14 @@ export default function OpeningPage() {
   return (
     <div className={styles.page}>
       <header className={styles.heading}>
-        <div><span className={styles.eyebrow}>V1.3.2 · OPENING ASSISTANT</span><h1>{tr("开局决策助手", "Opening Assistant")}</h1><p>{tr("把你实际拿到的英雄和散件填进来，按核心单位命中、可合成推荐装备、阵容强度与来源新鲜度给出候选。不是实时读盘，也不会替你自动操作。", "Enter the units and components you actually have. Recommendations combine core-unit hits, craftable item fit, comp strength and source freshness. No live game reading or automated play.")}</p></div>
-        <div className={styles.headingActions}><button onClick={clearInput}>{tr("清空输入", "Clear")}</button>{hasSignals ? <button className={styles.primary} onClick={pinTopThree}>{tr("Top 3 → 候选夹", "Top 3 → Tray")}</button> : null}</div>
+        <div><span className={styles.eyebrow}>V1.3.3 · OPENING ASSISTANT</span><h1>{tr("开局决策助手", "Opening Assistant")}</h1><p>{tr("把你实际拿到的英雄和散件填进来，按核心单位命中、可合成推荐装备、阵容强度与来源新鲜度给出候选。不是实时读盘，也不会替你自动操作。", "Enter the units and components you actually have. Recommendations combine core-unit hits, craftable item fit, comp strength and source freshness. No live game reading or automated play.")}</p></div>
+        <div className={styles.headingActions}><button onClick={clearInput}>{tr("清空输入", "Clear")}</button>{hasSignals ? <><button onClick={() => pinTopThree(false)}>{tr("Top 3 → 候选夹", "Top 3 → Tray")}</button><button className={styles.primary} onClick={() => pinTopThree(true)}>{tr("Top 3 → 候选对比", "Top 3 → Compare")}</button></> : null}</div>
       </header>
 
       <section className={styles.trayStrip}>
         <strong>{tr("当前候选", "Current candidates")}</strong>
         {[0, 1, 2].map((index) => <span key={index}><b>{index + 1}</b>{tray[index] ? `${tray[index]?.sourceId} · ${tray[index]?.id}` : tr("空", "Empty")}</span>)}
-        {message ? <em>{message}</em> : null}
+        {message ? <em>{message}</em> : tray.filter(Boolean).length >= 2 ? <em><Link href="/compare">⇄ {tr("打开候选对比", "Compare candidates")}</Link></em> : null}
       </section>
 
       <div className={styles.inputGrid}>
