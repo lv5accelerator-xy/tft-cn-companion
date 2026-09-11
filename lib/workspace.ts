@@ -11,6 +11,7 @@ export const FOCUS_STAGE_OVERRIDES_KEY = "tft-cn-companion-focus-stage-overrides
 export const FOCUS_COMP_STATES_KEY = "tft-cn-companion-focus-comp-states-v1";
 export const FAVORITE_COMPS_KEY = "tft-cn-companion-favorite-comps-v1";
 export const RECENT_COMPS_KEY = "tft-cn-companion-recent-comps-v1";
+export const OPENING_SESSION_KEY = "tft-cn-companion-opening-session-v1";
 export const REVIEW_HISTORY_KEY = "tft-cn-companion-review-history-v1";
 export const REVIEW_DRAFT_KEY = "tft-cn-companion-review-draft-v1";
 
@@ -37,6 +38,8 @@ export type WorkspaceSnapshot = {
   favorites: unknown[];
   recents: unknown[];
   focusStates: Record<string, unknown>;
+  tray?: unknown[];
+  opening?: unknown | null;
   locale: "zh" | "en";
 };
 
@@ -129,7 +132,7 @@ export function getWorkspaceUpdatedAt() {
 
 export function readWorkspaceSnapshot(): WorkspaceSnapshot {
   if (typeof window === "undefined") {
-    return { version: 1, savedAt: 0, builder: null, imports: [], reviews: [], favorites: [], recents: [], focusStates: {}, locale: "zh" };
+    return { version: 1, savedAt: 0, builder: null, imports: [], reviews: [], favorites: [], recents: [], focusStates: {}, tray: [], opening: null, locale: "zh" };
   }
   const builder = safeParse(window.localStorage.getItem(BUILDER_KEY));
   const importsValue = safeParse(window.localStorage.getItem(LOCAL_IMPORT_KEY));
@@ -137,6 +140,8 @@ export function readWorkspaceSnapshot(): WorkspaceSnapshot {
   const favoritesValue = safeParse(window.localStorage.getItem(FAVORITE_COMPS_KEY));
   const recentsValue = safeParse(window.localStorage.getItem(RECENT_COMPS_KEY));
   const focusStatesValue = safeParse(window.localStorage.getItem(FOCUS_COMP_STATES_KEY));
+  const trayValue = safeParse(window.localStorage.getItem(FOCUS_TRAY_KEY));
+  const openingValue = safeParse(window.localStorage.getItem(OPENING_SESSION_KEY));
   const localeValue = window.localStorage.getItem(LOCALE_KEY);
   return {
     version: 1,
@@ -147,6 +152,8 @@ export function readWorkspaceSnapshot(): WorkspaceSnapshot {
     favorites: Array.isArray(favoritesValue) ? favoritesValue : [],
     recents: Array.isArray(recentsValue) ? recentsValue : [],
     focusStates: focusStatesValue && typeof focusStatesValue === "object" && !Array.isArray(focusStatesValue) ? focusStatesValue as Record<string, unknown> : {},
+    tray: Array.isArray(trayValue) ? trayValue : [],
+    opening: openingValue,
     locale: localeValue === "en" ? "en" : "zh",
   };
 }
@@ -160,6 +167,9 @@ export function writeWorkspaceSnapshot(snapshot: WorkspaceSnapshot) {
   window.localStorage.setItem(FAVORITE_COMPS_KEY, JSON.stringify(Array.isArray(snapshot.favorites) ? snapshot.favorites : []));
   window.localStorage.setItem(RECENT_COMPS_KEY, JSON.stringify(Array.isArray(snapshot.recents) ? snapshot.recents : []));
   window.localStorage.setItem(FOCUS_COMP_STATES_KEY, JSON.stringify(snapshot.focusStates && typeof snapshot.focusStates === "object" ? snapshot.focusStates : {}));
+  window.localStorage.setItem(FOCUS_TRAY_KEY, JSON.stringify(Array.isArray(snapshot.tray) ? snapshot.tray : []));
+  if (snapshot.opening === null || snapshot.opening === undefined) window.localStorage.removeItem(OPENING_SESSION_KEY);
+  else window.localStorage.setItem(OPENING_SESSION_KEY, JSON.stringify(snapshot.opening));
   window.localStorage.setItem(LOCALE_KEY, snapshot.locale === "en" ? "en" : "zh");
   window.localStorage.setItem(WORKSPACE_UPDATED_KEY, String(snapshot.savedAt || Date.now()));
   window.dispatchEvent(new CustomEvent(WORKSPACE_EVENT, { detail: { restored: true } }));
