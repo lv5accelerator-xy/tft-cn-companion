@@ -6,6 +6,7 @@ import { ReactNode } from "react";
 import { useLocale } from "./LocaleProvider";
 import QuickSearch from "./QuickSearch";
 import ShortcutHelp from "./ShortcutHelp";
+import FocusPlanTrail from "./FocusPlanTrail";
 import styles from "./desktop-shell.module.css";
 
 type NavItem = { href: string; zh: string; en: string; glyph: string };
@@ -21,6 +22,7 @@ const metaNav: NavItem[] = [
 
 const toolNav: NavItem[] = [
   { href: "/opening", zh: "开局助手", en: "Opening Assistant", glyph: "◇" },
+  { href: "/compare", zh: "候选对比", en: "Candidate Compare", glyph: "⇄" },
   { href: "/focus", zh: "对局模式", en: "Game Focus", glyph: "◉" },
   { href: "/review", zh: "赛后复盘", en: "Review Center", glyph: "◎" },
   { href: "/builder", zh: "阵容编辑器", en: "Team Builder", glyph: "+" },
@@ -54,7 +56,7 @@ export default function DesktopShell({ children }: { children: ReactNode }) {
         <Link href="/sources" className={styles.sidebarFoot}><span className={styles.dot} /><div><strong>Live sources</strong><span>Riot + Meta feeds</span></div></Link>
       </aside>
       <div className={styles.workspace}>
-        <header className={styles.topbar}><QuickSearch /><div className={styles.topActions}><ShortcutHelp pathname={pathname} /><button className={styles.language} onClick={toggleLocale} title={tr("切换到英文", "Switch to Chinese")}>{locale === "zh" ? "中 / EN" : "EN / 中"}</button><span className={styles.pill}>NA</span><span className={styles.patch}>Patch 18.1</span></div></header>
+        <header className={styles.topbar}><QuickSearch /><FocusPlanTrail pathname={pathname} /><div className={styles.topActions}><ShortcutHelp pathname={pathname} /><button className={styles.language} onClick={toggleLocale} title={tr("切换到英文", "Switch to Chinese")}>{locale === "zh" ? "中 / EN" : "EN / 中"}</button><span className={styles.pill}>NA</span><span className={styles.patch}>Patch 18.1</span></div></header>
         <main className={styles.content}>{children}</main>
       </div>
     </div>
