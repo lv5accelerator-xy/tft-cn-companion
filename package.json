@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "verify:data": "node scripts/verify-data.mjs",
-    "verify:meta": "node scripts/verify-meta.mjs"
+    "verify:meta": "node scripts/verify-meta.mjs",
+    "verify:ui": "node scripts/verify-ui.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
