@@ -7,6 +7,7 @@ import { useLocale } from "./LocaleProvider";
 import QuickSearch from "./QuickSearch";
 import ShortcutHelp from "./ShortcutHelp";
 import FocusPlanTrail from "./FocusPlanTrail";
+import AppExperience from "./AppExperience";
 import styles from "./desktop-shell.module.css";
 
 type NavItem = { href: string; zh: string; en: string; glyph: string };
@@ -33,7 +34,7 @@ const toolNav: NavItem[] = [
 ];
 
 function isActive(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
+  if (href === "/") return pathname === href;
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -56,7 +57,7 @@ export default function DesktopShell({ children }: { children: ReactNode }) {
         <Link href="/sources" className={styles.sidebarFoot}><span className={styles.dot} /><div><strong>Live sources</strong><span>Riot + Meta feeds</span></div></Link>
       </aside>
       <div className={styles.workspace}>
-        <header className={styles.topbar}><QuickSearch /><FocusPlanTrail pathname={pathname} /><div className={styles.topActions}><ShortcutHelp pathname={pathname} /><button className={styles.language} onClick={toggleLocale} title={tr("切换到英文", "Switch to Chinese")}>{locale === "zh" ? "中 / EN" : "EN / 中"}</button><span className={styles.pill}>NA</span><span className={styles.patch}>Patch 18.1</span></div></header>
+        <header className={styles.topbar}><QuickSearch /><FocusPlanTrail pathname={pathname} /><div className={styles.topActions}><AppExperience pathname={pathname} /><ShortcutHelp pathname={pathname} /><button className={styles.language} onClick={toggleLocale} title={tr("切换到英文", "Switch to Chinese")}>{locale === "zh" ? "中 / EN" : "EN / 中"}</button><span className={styles.pill}>NA</span><span className={styles.patch}>Patch 18.1</span></div></header>
         <main className={styles.content}>{children}</main>
       </div>
     </div>
