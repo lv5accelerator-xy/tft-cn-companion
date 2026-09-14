@@ -44,6 +44,9 @@ jobs:
       - name: Verify release safety contract
         run: npm run verify:release
 
+      - name: Verify product evolution contract
+        run: npm run verify:product
+
       - name: Build
         run: npm run build
 

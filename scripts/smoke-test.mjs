@@ -6,9 +6,14 @@ const requiredRoutes = [
   "/api/health",
   "/",
   "/opening",
+  "/coach",
   "/compare",
   "/focus",
   "/review",
+  "/insights",
+  "/preferences",
+  "/share",
+  "/demo",
   "/builder",
   "/manifest.webmanifest",
   "/sw.js",
@@ -27,7 +32,7 @@ async function request(path) {
     return await fetch(`${baseUrl}${path}`, {
       redirect: "follow",
       signal: controller.signal,
-      headers: { "user-agent": "tft-cn-companion-release-smoke/1.0" },
+      headers: { "user-agent": "tft-cn-companion-release-smoke/1.1" },
     });
   } finally {
     clearTimeout(timer);

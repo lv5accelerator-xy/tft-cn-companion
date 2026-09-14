@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./theme.css";
 import "./polish.css";
+import "./v16.css";
 import CloudSyncAgent from "./components/CloudSyncAgent";
 import DesktopShell from "./components/DesktopShell";
 import { LocaleProvider } from "./components/LocaleProvider";

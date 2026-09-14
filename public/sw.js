@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "tft-cn-companion-";
-const BUILD_CACHE = `${CACHE_PREFIX}v1.3.4-set18`;
+const BUILD_CACHE = `${CACHE_PREFIX}v1.6-set18`;
 const SHELL_CACHE = `${BUILD_CACHE}-shell`;
 const DATA_CACHE = `${BUILD_CACHE}-data`;
 const RUNTIME_CACHE = `${BUILD_CACHE}-runtime`;
@@ -8,9 +8,14 @@ const APP_SHELL = [
   "/",
   "/resume",
   "/opening",
+  "/coach",
   "/compare",
   "/focus",
   "/review",
+  "/insights",
+  "/preferences",
+  "/share",
+  "/demo",
   "/comps",
   "/champions",
   "/items",

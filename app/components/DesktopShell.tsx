@@ -17,9 +17,11 @@ type NavItem = { href: string; zh: string; en: string; glyph: string };
 const coreNav: NavItem[] = [
   { href: "/", zh: "首页", en: "Home", glyph: "⌂" },
   { href: "/opening", zh: "开局助手", en: "Opening", glyph: "◇" },
+  { href: "/coach", zh: "智能指导", en: "Smart Guidance", glyph: "✦" },
   { href: "/compare", zh: "候选对比", en: "Compare", glyph: "⇄" },
   { href: "/focus", zh: "对局模式", en: "Game Focus", glyph: "◉" },
   { href: "/review", zh: "赛后复盘", en: "Review", glyph: "◎" },
+  { href: "/insights", zh: "个人洞察", en: "Insights", glyph: "↗" },
 ];
 
 const metaNav: NavItem[] = [
@@ -34,8 +36,8 @@ const toolNav: NavItem[] = [
   { href: "/builder", zh: "阵容编辑器", en: "Builder", glyph: "+" },
   { href: "/stats", zh: "属性实验室", en: "Stat Lab", glyph: "Σ" },
   { href: "/import", zh: "一图流导入", en: "Image Import", glyph: "▧" },
+  { href: "/share", zh: "分享中心", en: "Share", glyph: "↗" },
   { href: "/account", zh: "云同步", en: "Cloud Sync", glyph: "☁" },
-  { href: "/sources", zh: "来源同步", en: "Sources", glyph: "↻" },
 ];
 
 const SIDEBAR_KEY = "tft-cn-companion-sidebar-collapsed-v1";
@@ -115,7 +117,7 @@ export default function DesktopShell({ children }: { children: ReactNode }) {
             <button className={styles.language} onClick={toggleLocale} title={tr("切换到英文", "Switch to Chinese")}>{locale === "zh" ? "中 / EN" : "EN / 中"}</button>
             <span className={styles.region} data-ui-tip={tr("北美服务器", "North America server")}>NA</span>
             <span className={styles.patch} data-ui-tip={tr("当前资料版本 Patch 18.1", "Current data patch 18.1")}>18.1</span>
-            <span className={styles.version} data-ui-tip={tr("发布安全与稳定性版本", "Release Safety & Reliability")}>V1.4.2</span>
+            <span className={styles.version} data-ui-tip={tr("智能指导与个人洞察版本", "Smart Guidance & Personal Intelligence")}>V1.6</span>
           </div>
         </header>
         <main className={styles.content} data-ui-content>
