@@ -8,7 +8,10 @@
     "start": "next start",
     "verify:data": "node scripts/verify-data.mjs",
     "verify:meta": "node scripts/verify-meta.mjs",
-    "verify:ui": "node scripts/verify-ui.mjs"
+    "verify:ui": "node scripts/verify-ui.mjs",
+    "verify:release": "node scripts/verify-release.mjs",
+    "smoke": "node scripts/smoke-test.mjs",
+    "release:check": "npm run verify:data && npm run verify:meta && npm run verify:ui && npm run verify:release && npm run build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
