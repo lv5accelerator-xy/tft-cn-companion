@@ -31,5 +31,8 @@ jobs:
       - name: Verify TFT-only meta sources
         run: npm run verify:meta
 
+      - name: Verify UI polish contract
+        run: npm run verify:ui
+
       - name: Build
         run: npm run build
