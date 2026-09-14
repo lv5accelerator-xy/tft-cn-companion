@@ -1,0 +1,7 @@
+/* V1.6.5 maintenance guardrails */
+[data-ui-shell]{min-width:0}[data-ui-content]{min-width:0}[data-ui-topbar]{min-width:0;overflow:hidden}[data-ui-top-actions]{min-width:0;flex:0 1 auto}[data-ui-sidebar]{overflow-x:hidden;overflow-y:auto;scrollbar-width:thin}
+@media(max-width:1366px){[data-ui-secondary-status]{display:none!important}[data-ui-top-actions]{gap:4px!important}[data-ui-topbar]{padding-left:12px!important;padding-right:12px!important}}
+@media(max-width:1180px){[data-ui-version-status]{display:none!important}}
+@media(max-height:760px){[data-ui-sidebar]{padding-top:8px!important;padding-bottom:8px!important}[data-ui-sidebar] nav{gap:1px!important}[data-ui-sidebar] nav a{padding-top:6px!important;padding-bottom:6px!important}}
+@media(max-height:680px){[data-ui-sidebar] [data-ui-section-label]{display:none!important}[data-ui-sidebar] nav a{padding-top:5px!important;padding-bottom:5px!important}}
+@media(max-width:760px){[data-ui-topbar]{overflow:visible}}

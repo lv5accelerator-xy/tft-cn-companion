@@ -47,6 +47,9 @@ jobs:
       - name: Verify product evolution contract
         run: npm run verify:product
 
+      - name: Verify V1.6 maintenance contract
+        run: npm run verify:maintenance
+
       - name: Build
         run: npm run build
 

@@ -1,6 +1,6 @@
 {
   "name": "tft-cn-companion",
-  "version": "1.6.0",
+  "version": "1.6.5",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,8 +11,9 @@
     "verify:ui": "node scripts/verify-ui.mjs",
     "verify:release": "node scripts/verify-release.mjs",
     "verify:product": "node scripts/verify-product.mjs",
+    "verify:maintenance": "node scripts/verify-maintenance.mjs",
     "smoke": "node scripts/smoke-test.mjs",
-    "release:check": "npm run verify:data && npm run verify:meta && npm run verify:ui && npm run verify:release && npm run verify:product && npm run build"
+    "release:check": "npm run verify:data && npm run verify:meta && npm run verify:ui && npm run verify:release && npm run verify:product && npm run verify:maintenance && npm run build"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
