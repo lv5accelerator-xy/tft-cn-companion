@@ -8,6 +8,8 @@ import QuickSearch from "./QuickSearch";
 import ShortcutHelp from "./ShortcutHelp";
 import FocusPlanTrail from "./FocusPlanTrail";
 import AppExperience from "./AppExperience";
+import DensityControl from "./DensityControl";
+import ReviewPulse from "./ReviewPulse";
 import styles from "./desktop-shell.module.css";
 
 type NavItem = { href: string; zh: string; en: string; glyph: string };
@@ -57,9 +59,17 @@ export default function DesktopShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const { locale, toggleLocale, tr } = useLocale();
   const [collapsed, setCollapsed] = useState(false);
+  const route = pathname.split("/").filter(Boolean)[0] || "home";
 
   useEffect(() => {
-    try { setCollapsed(window.localStorage.getItem(SIDEBAR_KEY) === "1"); } catch {}
+    const autoCompact = window.innerWidth <= 1440 && window.innerHeight <= 900;
+    try {
+      const saved = window.localStorage.getItem(SIDEBAR_KEY);
+      if (saved === "1" || saved === "0") setCollapsed(saved === "1");
+      else setCollapsed(autoCompact);
+    } catch {
+      setCollapsed(autoCompact);
+    }
   }, []);
 
   function toggleSidebar() {
@@ -71,8 +81,8 @@ export default function DesktopShell({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className={`${styles.app} ${collapsed ? styles.collapsed : ""}`}>
-      <aside className={styles.sidebar}>
+    <div className={`${styles.app} ${collapsed ? styles.collapsed : ""}`} data-ui-shell data-ui-route={route}>
+      <aside className={styles.sidebar} data-ui-sidebar>
         <div className={styles.brandRow}>
           <Link href="/" className={styles.gameHeader} aria-label="TFT CN Companion home">
             <div className={styles.gameIcon}>TFT</div>
@@ -95,19 +105,23 @@ export default function DesktopShell({ children }: { children: ReactNode }) {
       </aside>
 
       <div className={styles.workspace}>
-        <header className={styles.topbar}>
+        <header className={styles.topbar} data-ui-topbar>
           <QuickSearch />
           <FocusPlanTrail pathname={pathname} />
           <div className={styles.topActions}>
             <AppExperience pathname={pathname} />
+            <DensityControl />
             <ShortcutHelp pathname={pathname} />
             <button className={styles.language} onClick={toggleLocale} title={tr("切换到英文", "Switch to Chinese")}>{locale === "zh" ? "中 / EN" : "EN / 中"}</button>
-            <span className={styles.region}>NA</span>
-            <span className={styles.patch}>18.1</span>
-            <span className={styles.version}>V1.4</span>
+            <span className={styles.region} data-ui-tip={tr("北美服务器", "North America server")}>NA</span>
+            <span className={styles.patch} data-ui-tip={tr("当前资料版本 Patch 18.1", "Current data patch 18.1")}>18.1</span>
+            <span className={styles.version} data-ui-tip={tr("UI Polish 版本", "UI Polish release")}>V1.4.1</span>
           </div>
         </header>
-        <main className={styles.content}>{children}</main>
+        <main className={styles.content} data-ui-content>
+          {route === "review" ? <ReviewPulse /> : null}
+          {children}
+        </main>
       </div>
     </div>
   );
