@@ -1,0 +1,79 @@
+/* V1.4.1 interaction and responsive polish. Keep this file structural so page CSS modules stay independent. */
+
+[data-ui-tip]{position:relative}
+[data-ui-tip]::after{content:attr(data-ui-tip);position:absolute;top:calc(100% + 8px);right:0;z-index:120;max-width:260px;padding:7px 9px;border:1px solid #3b4251;border-radius:7px;background:#10131a;color:#d6dae2;box-shadow:0 12px 32px rgba(0,0,0,.38);font-size:9px;font-weight:700;line-height:1.4;letter-spacing:0;white-space:normal;opacity:0;pointer-events:none;transform:translateY(-3px);transition:opacity var(--ui-transition),transform var(--ui-transition)}
+[data-ui-tip]:hover::after,[data-ui-tip]:focus-visible::after{opacity:1;transform:translateY(0)}
+
+[data-ui-content] button:active,[data-ui-content] a:active{transform:translateY(1px)}
+[data-ui-content] input::placeholder,[data-ui-content] textarea::placeholder{color:#606878}
+
+html[data-ui-density="compact"] [data-ui-topbar]{height:56px;padding-left:16px;padding-right:16px}
+html[data-ui-density="compact"] [data-ui-content]{padding:14px 16px}
+html[data-ui-density="compact"] [data-ui-sidebar]{padding-top:10px;padding-bottom:10px}
+html[data-ui-density="compact"] [data-ui-route="home"] [data-ui-content]>div,
+html[data-ui-density="compact"] [data-ui-route="opening"] [data-ui-content]>div,
+html[data-ui-density="compact"] [data-ui-route="compare"] [data-ui-content]>div,
+html[data-ui-density="compact"] [data-ui-route="review"] [data-ui-content]>div{gap:11px}
+html[data-ui-density="compact"] [data-ui-route="opening"] [data-ui-content]>div>header,
+html[data-ui-density="compact"] [data-ui-route="compare"] [data-ui-content]>div>header,
+html[data-ui-density="compact"] [data-ui-route="review"] [data-ui-content]>div>header{padding-top:0;padding-bottom:0}
+
+@media(min-width:1800px){
+  [data-ui-content]{max-width:1780px}
+  [data-ui-route="focus"] [data-ui-content]{max-width:1840px}
+}
+
+@media(max-width:1440px){
+  [data-ui-content]{padding:16px;max-width:none}
+  [data-ui-topbar]{padding-left:14px;padding-right:14px;gap:10px}
+  [data-ui-route="opening"] [data-ui-content],
+  [data-ui-route="compare"] [data-ui-content],
+  [data-ui-route="focus"] [data-ui-content],
+  [data-ui-route="review"] [data-ui-content]{padding:13px 14px}
+}
+
+@media(min-width:1100px) and (max-height:900px){
+  [data-ui-route="focus"] [data-ui-content]{padding-top:9px;padding-bottom:9px}
+  [data-ui-route="focus"] [data-ui-content]>div{gap:7px!important}
+  [data-ui-route="focus"] [data-ui-content]>div>header{min-height:44px}
+  [data-ui-route="focus"] [data-ui-content]>div>header p{display:none}
+  [data-ui-route="focus"] [data-ui-content]>div>section:nth-of-type(1){padding-top:6px;padding-bottom:6px}
+  [data-ui-route="focus"] [data-ui-content]>div>section:nth-of-type(1)>div:first-child>span{display:none}
+  [data-ui-route="focus"] [data-ui-content]>div>section:nth-of-type(2){top:59px!important;padding-top:7px!important;padding-bottom:7px!important}
+  [data-ui-route="focus"] [data-ui-content]>div>section:nth-of-type(3){gap:5px!important}
+  [data-ui-route="focus"] [data-ui-content]>div>section:nth-of-type(3)>div{padding-top:6px!important;padding-bottom:6px!important}
+  [data-ui-route="focus"] [data-ui-content]>div>div{grid-template-columns:minmax(0,1.62fr) minmax(280px,.38fr)!important;gap:7px!important}
+  [data-ui-route="focus"] [data-ui-content]>div>div>section:last-child p,
+  [data-ui-route="focus"] [data-ui-content]>div>div>section:last-child li{font-size:9px!important;line-height:1.38!important}
+  [data-ui-route="focus"] [data-ui-content]>div>footer{padding-top:3px;padding-bottom:3px}
+
+  [data-ui-route="opening"] [data-ui-content]>div>header p,
+  [data-ui-route="compare"] [data-ui-content]>div>header p,
+  [data-ui-route="review"] [data-ui-content]>div>header p{max-width:720px;line-height:1.45}
+}
+
+@media(max-width:1366px) and (max-height:820px){
+  [data-ui-topbar]{height:54px}
+  [data-ui-content]{padding:10px 12px}
+  [data-ui-route="focus"] [data-ui-content]{padding:7px 10px}
+  [data-ui-route="focus"] [data-ui-content]>div>header>div:first-child>div:first-child{display:none}
+  [data-ui-route="focus"] [data-ui-content]>div>section:nth-of-type(1){grid-template-columns:115px minmax(0,1fr)!important}
+  [data-ui-route="focus"] [data-ui-content]>div>section:nth-of-type(2){top:55px!important}
+  [data-ui-route="focus"] [data-ui-content]>div>section:nth-of-type(3)>div:nth-child(3){display:none}
+  [data-ui-route="focus"] [data-ui-content]>div>section:nth-of-type(3){grid-template-columns:78px minmax(0,1fr) auto!important}
+  [data-ui-route="focus"] [data-ui-content]>div>div{grid-template-columns:minmax(0,1.7fr) minmax(250px,.3fr)!important}
+  [data-ui-route="focus"] [data-ui-content]>div>section:nth-of-type(4){display:none}
+
+  [data-ui-route="opening"] [data-ui-content]>div>header h1,
+  [data-ui-route="compare"] [data-ui-content]>div>header h1,
+  [data-ui-route="review"] [data-ui-content]>div>header h1{font-size:22px!important}
+}
+
+@media(max-width:1080px){
+  [data-ui-tip]::after{display:none}
+}
+
+@media(max-width:760px){
+  html[data-ui-density="compact"] [data-ui-topbar]{height:58px;padding-left:8px;padding-right:8px}
+  html[data-ui-density="compact"] [data-ui-content]{padding:10px}
+}
