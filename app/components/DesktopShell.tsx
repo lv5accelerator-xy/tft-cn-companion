@@ -115,7 +115,7 @@ export default function DesktopShell({ children }: { children: ReactNode }) {
             <button className={styles.language} onClick={toggleLocale} title={tr("切换到英文", "Switch to Chinese")}>{locale === "zh" ? "中 / EN" : "EN / 中"}</button>
             <span className={styles.region} data-ui-tip={tr("北美服务器", "North America server")}>NA</span>
             <span className={styles.patch} data-ui-tip={tr("当前资料版本 Patch 18.1", "Current data patch 18.1")}>18.1</span>
-            <span className={styles.version} data-ui-tip={tr("UI Polish 版本", "UI Polish release")}>V1.4.1</span>
+            <span className={styles.version} data-ui-tip={tr("发布安全与稳定性版本", "Release Safety & Reliability")}>V1.4.2</span>
           </div>
         </header>
         <main className={styles.content} data-ui-content>

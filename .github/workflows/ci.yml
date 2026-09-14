@@ -6,13 +6,20 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
+
+env:
+  NEXT_TELEMETRY_DISABLED: 1
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,7 +30,7 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --no-audit --no-fund
 
       - name: Verify Riot TFT data
         run: npm run verify:data
@@ -34,5 +41,17 @@ jobs:
       - name: Verify UI polish contract
         run: npm run verify:ui
 
+      - name: Verify release safety contract
+        run: npm run verify:release
+
       - name: Build
         run: npm run build
+
+      - name: Smoke test production build
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm start > /tmp/tft-next.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          npm run smoke || { cat /tmp/tft-next.log; exit 1; }
