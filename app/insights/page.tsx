@@ -3,75 +3,88 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { buildReviewIntelligence } from "@/lib/review-intelligence";
-import { parseReviewHistory, reviewTagLabel, type ReviewRecord } from "@/lib/review";
+import { parseReviewHistory, reviewTagLabel, type ReviewIssueTag, type ReviewRecord } from "@/lib/review";
 import { REVIEW_HISTORY_KEY, WORKSPACE_EVENT } from "@/lib/workspace";
 import { useLocale } from "../components/LocaleProvider";
-import styles from "./insights.module.css";
+import styles from "./insights-maintenance.module.css";
+
+type WindowSize = 10 | 20 | 50;
+
+function avg(records: ReviewRecord[]) {
+  return records.length ? records.reduce((sum, record) => sum + record.placement, 0) / records.length : 0;
+}
 
 export default function InsightsPage() {
   const { locale, tr } = useLocale();
   const [history, setHistory] = useState<ReviewRecord[]>([]);
+  const [windowSize, setWindowSize] = useState<WindowSize>(20);
+  const [compFilter, setCompFilter] = useState("all");
 
   useEffect(() => {
     const load = () => {
       try {
         const raw = window.localStorage.getItem(REVIEW_HISTORY_KEY);
         setHistory(parseReviewHistory(raw ? JSON.parse(raw) : []));
-      } catch {
-        setHistory([]);
-      }
+      } catch { setHistory([]); }
     };
     const onStorage = (event: StorageEvent) => { if (event.key === REVIEW_HISTORY_KEY) load(); };
     load();
     window.addEventListener(WORKSPACE_EVENT, load);
     window.addEventListener("storage", onStorage);
-    return () => {
-      window.removeEventListener(WORKSPACE_EVENT, load);
-      window.removeEventListener("storage", onStorage);
-    };
+    return () => { window.removeEventListener(WORKSPACE_EVENT, load); window.removeEventListener("storage", onStorage); };
   }, []);
 
-  const data = useMemo(() => buildReviewIntelligence(history, locale), [history, locale]);
+  const compOptions = useMemo(() => {
+    const map = new Map<string, { zh: string; en: string }>();
+    history.forEach((record) => map.set(`${record.sourceId}:${record.compId}`, { zh: record.plannedNameZh, en: record.plannedNameEn }));
+    return [...map.entries()];
+  }, [history]);
 
-  if (!history.length) {
-    return <div className={styles.empty}><span>V1.5 · REVIEW INTELLIGENCE</span><h1>{tr("先积累第一局复盘", "Save your first review")}</h1><p>{tr("个人洞察只基于你自己保存的赛后记录。先完成一局复盘，这里就会开始形成趋势。", "Personal insights are based only on your saved post-game records. Save one review to start building your trend history.")}</p><Link href="/review">{tr("去赛后复盘", "Open Review Center")}</Link></div>;
-  }
+  const windowed = useMemo(() => history.slice(0, windowSize).filter((record) => compFilter === "all" || `${record.sourceId}:${record.compId}` === compFilter), [history, windowSize, compFilter]);
+  const data = useMemo(() => buildReviewIntelligence(windowed, locale), [windowed, locale]);
+
+  const comparison = useMemo(() => {
+    const half = Math.floor(windowed.length / 2);
+    if (half < 3) return null;
+    const recent = windowed.slice(0, half);
+    const older = windowed.slice(half, half * 2);
+    const recentAvg = avg(recent);
+    const olderAvg = avg(older);
+    return { recentAvg, olderAvg, delta: recentAvg - olderAvg };
+  }, [windowed]);
+
+  const issueChange = useMemo(() => {
+    const half = Math.floor(windowed.length / 2);
+    if (half < 3) return [] as Array<{ tag: ReviewIssueTag; recent: number; older: number; delta: number }>;
+    const count = (records: ReviewRecord[]) => {
+      const map = new Map<ReviewIssueTag, number>();
+      records.forEach((record) => record.tags.forEach((tag) => map.set(tag, (map.get(tag) ?? 0) + 1)));
+      return map;
+    };
+    const recent = count(windowed.slice(0, half));
+    const older = count(windowed.slice(half, half * 2));
+    return [...new Set([...recent.keys(), ...older.keys()])].map((tag) => ({ tag, recent: recent.get(tag) ?? 0, older: older.get(tag) ?? 0, delta: (recent.get(tag) ?? 0) - (older.get(tag) ?? 0) })).sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
+  }, [windowed]);
+
+  if (!history.length) return <div className={styles.empty}><span>V1.6.2 · REVIEW INTELLIGENCE</span><h1>{tr("先积累第一局复盘", "Save your first review")}</h1><p>{tr("个人洞察只读取你自己保存的复盘。", "Personal insights only read your saved reviews.")}</p><Link href="/review">{tr("去赛后复盘", "Open Review Center")}</Link></div>;
 
   return (
     <div className={styles.page}>
-      <header className={styles.heading}>
-        <div><span>V1.5 · REVIEW INTELLIGENCE</span><h1>{tr("个人复盘洞察", "Personal Review Intelligence")}</h1><p>{tr("把你自己记录的名次、问题标签和阵容样本变成趋势。这里描述相关记录，不把问题标签当作输赢因果。", "Turn your own placement, issue tags and comp samples into trends. This describes recorded patterns and does not treat issue tags as causes of outcomes.")}</p></div>
-        <div><Link href="/review">{tr("继续复盘", "Add review")}</Link><Link href="/share">{tr("分享最近一局", "Share latest")}</Link></div>
-      </header>
+      <header className={styles.heading}><div><span>V1.6.2 · REVIEW INTELLIGENCE</span><h1>{tr("个人复盘洞察", "Personal Review Intelligence")}</h1><p>{tr("用 10 / 20 / 50 局窗口观察名次、问题标签和单阵容样本变化。只描述记录，不做因果推断。", "Use 10 / 20 / 50-game windows to inspect placement, issue-tag and comp-sample trends. This describes records, not causes.")}</p></div><div className={styles.actions}><Link href="/review/history">{tr("管理历史", "Manage history")}</Link><Link href="/review">{tr("记录新一局", "Add review")}</Link><Link href="/share">{tr("分享", "Share")}</Link></div></header>
 
-      <section className={styles.kpis}>
-        <article><span>{tr("记录局数", "Recorded")}</span><strong>{data.games}</strong><small>{tr("你的样本", "your sample")}</small></article>
-        <article><span>{tr("平均名次", "Average")}</span><strong>{data.average.toFixed(2)}</strong><small>{tr("越低越好", "lower is better")}</small></article>
-        <article><span>Top 4</span><strong>{Math.round(data.top4Rate * 100)}%</strong><small>{tr("前四率", "rate")}</small></article>
-        <article><span>{tr("吃鸡率", "Win rate")}</span><strong>{Math.round(data.winRate * 100)}%</strong><small>1st</small></article>
-      </section>
+      <section className={styles.controls}><label><span>{tr("趋势窗口", "Trend window")}</span><select value={windowSize} onChange={(event) => setWindowSize(Number(event.target.value) as WindowSize)}><option value={10}>10</option><option value={20}>20</option><option value={50}>50</option></select></label><label><span>{tr("阵容样本", "Comp sample")}</span><select value={compFilter} onChange={(event) => setCompFilter(event.target.value)}><option value="all">{tr("全部阵容", "All comps")}</option>{compOptions.map(([key, name]) => <option key={key} value={key}>{locale === "zh" ? name.zh : name.en}</option>)}</select></label></section>
 
-      <section className={styles.trendCard}>
-        <div className={styles.cardHead}><div><h2>{tr("最近 10 局", "Last 10 games")}</h2><p>{tr("柱子越高代表名次越靠前；只展示你已经保存的复盘。", "Taller bars indicate better placement; only saved reviews are included.")}</p></div><div className={styles.delta}><span>{tr("近 5 局平均", "Last-5 avg")}</span><strong>{data.recentFiveAverage?.toFixed(2) ?? "—"}</strong><small>{data.recentDelta === null ? tr("需要 10 局比较", "10 games needed for comparison") : data.recentDelta < 0 ? tr(`较前 5 局改善 ${Math.abs(data.recentDelta).toFixed(2)}`, `Improved by ${Math.abs(data.recentDelta).toFixed(2)}`) : data.recentDelta > 0 ? tr(`较前 5 局回落 ${data.recentDelta.toFixed(2)}`, `Worse by ${data.recentDelta.toFixed(2)}`) : tr("与前 5 局持平", "Flat vs previous five")}</small></div></div>
-        <div className={styles.chart}>{data.recentPlacements.map((placement, index) => <div key={`${placement}-${index}`}><span style={{ height: `${28 + (9 - placement) * 8}px` }} className={placement <= 4 ? styles.top4 : styles.bottom4}><b>{placement}</b></span><small>#{placement}</small></div>)}</div>
-      </section>
+      <section className={styles.kpis}><article><span>{tr("当前样本", "Sample")}</span><strong>{data.games}</strong></article><article><span>{tr("平均名次", "Average")}</span><strong>{data.games ? data.average.toFixed(2) : "—"}</strong></article><article><span>Top 4</span><strong>{data.games ? `${Math.round(data.top4Rate * 100)}%` : "—"}</strong></article><article><span>{tr("吃鸡率", "Win rate")}</span><strong>{data.games ? `${Math.round(data.winRate * 100)}%` : "—"}</strong></article></section>
 
-      <div className={styles.grid}>
-        <section className={styles.card}>
-          <div className={styles.cardHead}><div><h2>{tr("最常记录的问题", "Most recorded issues")}</h2><p>{tr("统计最近最多 20 局的手动标签。", "Counts manual tags across up to your latest 20 games.")}</p></div></div>
-          <div className={styles.issueList}>{data.issues.length ? data.issues.slice(0, 6).map((issue) => <div key={issue.tag}><span><strong>{reviewTagLabel(issue.tag, locale)}</strong><small>{issue.count} {tr("次", "times")}</small></span><b>{Math.round(issue.rate * 100)}%</b></div>) : <p>{tr("暂时没有问题标签。", "No issue tags recorded yet.")}</p>}</div>
-        </section>
+      <section className={styles.trendCard}><div className={styles.cardHead}><div><h2>{tr(`最近 ${windowSize} 局趋势`, `Last ${windowSize} trend`)}</h2><p>{tr("柱子越高表示名次越靠前。", "Taller bars mean a better placement.")}</p></div>{comparison ? <div className={styles.delta}><span>{tr("前后半窗比较", "Half-window comparison")}</span><strong className={comparison.delta < 0 ? styles.goodText : comparison.delta > 0 ? styles.badText : ""}>{comparison.delta < 0 ? "↓" : comparison.delta > 0 ? "↑" : "→"} {Math.abs(comparison.delta).toFixed(2)}</strong><small>{tr(`近期 ${comparison.recentAvg.toFixed(2)} / 较早 ${comparison.olderAvg.toFixed(2)}`, `recent ${comparison.recentAvg.toFixed(2)} / older ${comparison.olderAvg.toFixed(2)}`)}</small></div> : null}</div><div className={styles.chart}>{windowed.slice().reverse().map((record) => <div key={record.id}><span style={{ height: `${24 + (9 - record.placement) * 7}px` }} className={record.placement <= 4 ? styles.top4 : styles.bottom4}><b>{record.placement}</b></span><small>#{record.placement}</small></div>)}</div></section>
 
-        <section className={styles.card}>
-          <div className={styles.cardHead}><div><h2>{tr("个人阵容表现", "Your comp performance")}</h2><p>{tr("按你的复盘样本统计，不是全服胜率。", "Based on your reviews, not global ladder win rates.")}</p></div></div>
-          <div className={styles.compList}>{data.comps.map((comp) => <div key={comp.key}><span><strong>{locale === "zh" ? comp.nameZh : comp.nameEn}</strong><small>{comp.games} {tr("局", "games")}</small></span><b>{comp.average.toFixed(2)}</b><em>{Math.round(comp.top4Rate * 100)}% Top4</em></div>)}</div>
-        </section>
-      </div>
+      <div className={styles.grid}><section className={styles.card}><div className={styles.cardHead}><div><h2>{tr("问题标签频率", "Issue-tag frequency")}</h2><p>{tr("显示当前窗口中最常记录的问题。", "Shows the most frequently recorded issues in this window.")}</p></div></div><div className={styles.issueList}>{data.issues.length ? data.issues.slice(0, 6).map((issue) => <div key={issue.tag}><span><strong>{reviewTagLabel(issue.tag, locale)}</strong><small>{issue.count} {tr("次", "times")}</small></span><b>{Math.round(issue.rate * 100)}%</b></div>) : <p>{tr("暂无标签。", "No tags yet.")}</p>}</div></section>
 
-      <section className={styles.observations}>
-        <div className={styles.cardHead}><div><h2>{tr("数据观察", "Recorded observations")}</h2><p>{tr("只陈述样本里已经发生的事情。", "Factual summaries of what appears in your saved sample.")}</p></div><Link href="/preferences">{tr("设置个人偏好", "Personalize")}</Link></div>
-        <ol>{data.observations.map((observation) => <li key={observation}>{observation}</li>)}</ol>
-      </section>
+      <section className={styles.card}><div className={styles.cardHead}><div><h2>{tr("标签变化", "Issue changes")}</h2><p>{tr("最近半窗与较早半窗的手动标签次数差。", "Difference in manual tag counts between the recent and older half of the window.")}</p></div></div><div className={styles.issueList}>{issueChange.length ? issueChange.slice(0, 6).map((issue) => <div key={issue.tag}><span><strong>{reviewTagLabel(issue.tag, locale)}</strong><small>{tr(`近期 ${issue.recent} / 较早 ${issue.older}`, `recent ${issue.recent} / older ${issue.older}`)}</small></span><b className={issue.delta < 0 ? styles.goodText : issue.delta > 0 ? styles.badText : ""}>{issue.delta > 0 ? "+" : ""}{issue.delta}</b></div>) : <p>{tr("需要更多样本进行比较。", "More samples are needed for comparison.")}</p>}</div></section></div>
+
+      <section className={styles.card}><div className={styles.cardHead}><div><h2>{tr("个人阵容表现", "Your comp performance")}</h2><p>{tr("这是你的个人复盘样本，不是全服数据。", "This is your personal review sample, not global ladder data.")}</p></div></div><div className={styles.compList}>{data.comps.map((comp) => <div key={comp.key}><span><strong>{locale === "zh" ? comp.nameZh : comp.nameEn}</strong><small>{comp.games} {tr("局", "games")}</small></span><b>{comp.average.toFixed(2)}</b><em>{Math.round(comp.top4Rate * 100)}% Top4</em></div>)}</div></section>
+
+      <section className={styles.observations}><h2>{tr("数据观察", "Recorded observations")}</h2><ol>{data.observations.map((item) => <li key={item}>{item}</li>)}</ol></section>
     </div>
   );
 }

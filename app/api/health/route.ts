@@ -5,22 +5,8 @@ export const dynamic = "force-dynamic";
 
 export function GET() {
   const release = process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 12) || process.env.VERCEL_DEPLOYMENT_ID || "local";
-
   return NextResponse.json(
-    {
-      status: "ok",
-      app: "tft-cn-companion",
-      version: "1.6.0",
-      release,
-      patch: metaPatch,
-      metaUpdatedAt,
-      compCount: metaComps.length,
-      timestamp: new Date().toISOString(),
-    },
-    {
-      headers: {
-        "Cache-Control": "no-store, max-age=0",
-      },
-    },
+    { status: "ok", app: "tft-cn-companion", version: "1.6.5", release, patch: metaPatch, metaUpdatedAt, compCount: metaComps.length, timestamp: new Date().toISOString() },
+    { headers: { "Cache-Control": "no-store, max-age=0" } },
   );
 }
