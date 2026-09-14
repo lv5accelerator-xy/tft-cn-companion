@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import CloudSyncAgent from "./components/CloudSyncAgent";
 import DesktopShell from "./components/DesktopShell";
@@ -7,6 +7,20 @@ import { LocaleProvider } from "./components/LocaleProvider";
 export const metadata: Metadata = {
   title: "TFT CN Companion",
   description: "美服云顶之弈中文副屏助手 / NA Teamfight Tactics companion",
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: "/tft-companion.svg",
+    apple: "/tft-companion.svg",
+  },
+  appleWebApp: {
+    capable: true,
+    title: "TFT Companion",
+    statusBarStyle: "black-translucent",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1b1c21",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

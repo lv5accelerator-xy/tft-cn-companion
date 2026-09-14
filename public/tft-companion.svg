@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="TFT CN Companion">
+  <rect width="512" height="512" rx="104" fill="#1b1c21"/>
+  <rect x="42" y="42" width="428" height="428" rx="82" fill="#25272d" stroke="#6f61a7" stroke-width="14"/>
+  <path d="M119 146h274v60H286v160h-60V206H119z" fill="#dcd6ff"/>
+  <path d="M137 244h105v54H137zm135 0h103v54H272z" fill="#9b8de1"/>
+  <circle cx="389" cy="389" r="37" fill="#4fc58c"/>
+</svg>

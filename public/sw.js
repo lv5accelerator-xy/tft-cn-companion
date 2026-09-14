@@ -1,0 +1,126 @@
+const CACHE_PREFIX = "tft-cn-companion-";
+const BUILD_CACHE = `${CACHE_PREFIX}v1.3.4-set18`;
+const SHELL_CACHE = `${BUILD_CACHE}-shell`;
+const DATA_CACHE = `${BUILD_CACHE}-data`;
+const RUNTIME_CACHE = `${BUILD_CACHE}-runtime`;
+
+const APP_SHELL = [
+  "/",
+  "/resume",
+  "/opening",
+  "/compare",
+  "/focus",
+  "/review",
+  "/comps",
+  "/champions",
+  "/items",
+  "/traits",
+  "/augments",
+  "/builder",
+  "/stats",
+  "/tft-companion.svg",
+  "/manifest.webmanifest",
+];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(SHELL_CACHE);
+    await Promise.all(APP_SHELL.map(async (path) => {
+      try {
+        const response = await fetch(path, { cache: "reload" });
+        if (response.ok) await cache.put(path, response.clone());
+      } catch {
+        // A partial shell is still useful when one route is temporarily unavailable.
+      }
+    }));
+    await self.skipWaiting();
+  })());
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil((async () => {
+    const names = await caches.keys();
+    await Promise.all(names
+      .filter((name) => name.startsWith(CACHE_PREFIX) && !name.startsWith(BUILD_CACHE))
+      .map((name) => caches.delete(name)));
+    await self.clients.claim();
+  })());
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "SKIP_WAITING") void self.skipWaiting();
+});
+
+async function staleWhileRevalidate(request, cacheName, stableKey) {
+  const cache = await caches.open(cacheName);
+  const key = stableKey || request;
+  const cached = await cache.match(key);
+  const refresh = fetch(request)
+    .then(async (response) => {
+      if (response.ok || response.type === "opaque") await cache.put(key, response.clone());
+      return response;
+    })
+    .catch(() => null);
+
+  if (cached) {
+    void refresh;
+    return cached;
+  }
+
+  const response = await refresh;
+  if (response) return response;
+  throw new Error("offline");
+}
+
+async function networkFirstNavigation(request) {
+  const cache = await caches.open(SHELL_CACHE);
+  const url = new URL(request.url);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 2800);
+
+  try {
+    const response = await fetch(request, { signal: controller.signal });
+    clearTimeout(timeout);
+    if (response.ok) {
+      await cache.put(url.pathname, response.clone());
+    }
+    return response;
+  } catch {
+    clearTimeout(timeout);
+    return await cache.match(request)
+      || await cache.match(url.pathname)
+      || await cache.match("/")
+      || Response.error();
+  }
+}
+
+self.addEventListener("fetch", (event) => {
+  const request = event.request;
+  if (request.method !== "GET") return;
+
+  const url = new URL(request.url);
+
+  if (request.mode === "navigate") {
+    event.respondWith(networkFirstNavigation(request));
+    return;
+  }
+
+  if (url.origin === self.location.origin && url.pathname === "/api/tft") {
+    event.respondWith(staleWhileRevalidate(request, DATA_CACHE, "/api/tft"));
+    return;
+  }
+
+  if (url.origin === self.location.origin && url.pathname.startsWith("/_next/static/")) {
+    event.respondWith(staleWhileRevalidate(request, RUNTIME_CACHE));
+    return;
+  }
+
+  if (request.destination === "image") {
+    const allowedRemoteImage = url.origin === self.location.origin
+      || url.hostname === "ddragon.leagueoflegends.com"
+      || url.hostname === "raw.communitydragon.org";
+    if (allowedRemoteImage) {
+      event.respondWith(staleWhileRevalidate(request, RUNTIME_CACHE));
+    }
+  }
+});
