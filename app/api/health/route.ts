@@ -10,6 +10,7 @@ export function GET() {
     {
       status: "ok",
       app: "tft-cn-companion",
+      version: "1.6.0",
       release,
       patch: metaPatch,
       metaUpdatedAt,

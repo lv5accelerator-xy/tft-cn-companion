@@ -1,10 +1,11 @@
 import fs from "node:fs";
 
 const checks = [
-  ["app/components/DesktopShell.tsx", ["DensityControl", "ReviewPulse", "data-ui-route", "V1.4.2"]],
+  ["app/components/DesktopShell.tsx", ["DensityControl", "ReviewPulse", "data-ui-route", "V1.6"]],
   ["app/components/DensityControl.tsx", ["tft-cn-companion-ui-density-v1", "uiDensity", "compact", "comfortable"]],
   ["app/components/ReviewPulse.tsx", ["REVIEW_HISTORY_KEY", "WORKSPACE_EVENT", "recentAverage"]],
   ["app/polish.css", ["max-width:1366px", "max-height:820px", "min-width:1800px", "data-ui-density", "data-ui-tip"]],
+  ["app/v16.css", ["max-width:1366px", "max-height:900px", "overflow-y:auto", "data-ui-topbar"]],
   ["app/theme.css", ["--ui-purple", "--ui-gold", "--ui-green", "prefers-reduced-motion"]],
 ];
 
@@ -20,4 +21,4 @@ for (const [file, needles] of checks) {
 }
 
 if (failed) process.exit(1);
-console.log("UI polish contract verified: density, responsive breakpoints, review trend and design tokens are present.");
+console.log("UI contract verified: density, responsive breakpoints, topbar/sidebar overflow safety, review trend and design tokens are present.");
