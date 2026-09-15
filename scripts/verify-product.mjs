@@ -9,7 +9,7 @@ const checks = [
   ["app/preferences/page.tsx", ["V1.5.1", "个人偏好", "Smart Guidance"]],
   ["lib/smart-guidance.ts", ["buildSmartGuidance", "guidanceScore", "familiarityAdjustment"]],
   ["app/coach/page.tsx", ["V1.6", "可解释智能指导", "No live opponent"]],
-  ["app/components/DesktopShell.tsx", ["/coach", "/insights", "/share", "/preferences", "V1.6.5"]],
+  ["app/components/DesktopShell.tsx", ["/coach", "/insights", "/share", "/preferences", "V1.6.6"]],
   ["app/v16.css", ["max-width:1366px", "overflow-y:auto", "data-ui-topbar"]],
 ];
 
@@ -26,4 +26,4 @@ if (/(opponent scouting|hidden information|screen capture|real-time opponent)/i.
   failed = true;
 }
 if (failed) process.exit(1);
-console.log("Product evolution contract verified: V1.4.3 → V1.6 features remain present through the V1.6.5 maintenance line.");
+console.log("Product evolution contract verified: V1.4.3 → V1.6 features remain present through the V1.6.6 Neon Command maintenance line.");

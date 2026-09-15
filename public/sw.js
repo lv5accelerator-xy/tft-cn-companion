@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "tft-cn-companion-";
-const BUILD_CACHE = `${CACHE_PREFIX}v1.6.5-set18`;
+const BUILD_CACHE = `${CACHE_PREFIX}v1.6.6-set18`;
 const SHELL_CACHE = `${BUILD_CACHE}-shell`;
 const DATA_CACHE = `${BUILD_CACHE}-data`;
 const RUNTIME_CACHE = `${BUILD_CACHE}-runtime`;
