@@ -8,7 +8,7 @@ const checks = [
   ["app/review/history/page.tsx", ["Undo", "exportCsv", "WindowSize", "markWorkspaceChanged"]],
   ["app/insights/page.tsx", ["10", "20", "50", "Issue changes"]],
   ["app/opengraph-image.tsx", ["ImageResponse", "1200", "630", "V1.6.6"]],
-  ["app/maintenance.css", ["max-width:1366px", "max-height:760px", "data-ui-secondary-status"]],
+  ["app/maintenance.css", ["max-width:1366px", "max-height:760px", "data-ui-secondary-status", "[data-ui-topbar]{min-width:0;overflow:visible}"]],
   ["public/sw.js", ["v1.6.6-set18", "trimCache", "/review/history"]],
   ["app/components/UnitIcon.tsx", ["sizes={`${size}px`}", "loading=\"lazy\""]],
   ["app/robots.ts", ["sitemap"]],
@@ -30,4 +30,4 @@ if (pkg.version !== "1.6.6") { console.error(`Maintenance verification failed: e
 if (!pkg.scripts?.["verify:maintenance"] || !pkg.scripts?.["release:check"]?.includes("verify:maintenance")) { console.error("Maintenance verification failed: verify:maintenance must be part of release:check."); failed = true; }
 
 if (failed) process.exit(1);
-console.log("V1.6.1–V1.6.6 maintenance contract verified: QA guardrails, one-click session reset, review management, trial, share metadata, bounded offline caches and Neon Command UI are present.");
+console.log("V1.6.1–V1.6.6 maintenance contract verified: QA guardrails, visible topbar overlays, one-click session reset, review management, trial, share metadata, bounded offline caches and Neon Command UI are present.");
