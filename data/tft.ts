@@ -39,8 +39,8 @@ export type TftCatalogPayload = {
 
 export const patchInfo = {
   set: "Set 18 · Enchanted Wilds",
-  patch: "18.1",
-  updated: "2026-09-08",
+  patch: "18.2",
+  updated: "2026-09-15",
 };
 
 export const componentNames = [
