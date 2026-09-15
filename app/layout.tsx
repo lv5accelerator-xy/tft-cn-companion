@@ -4,6 +4,7 @@ import "./theme.css";
 import "./polish.css";
 import "./v16.css";
 import "./maintenance.css";
+import "./command-ui.css";
 import CloudSyncAgent from "./components/CloudSyncAgent";
 import DesktopShell from "./components/DesktopShell";
 import ToastHost from "./components/ToastHost";
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, title: "TFT Companion", statusBarStyle: "black-translucent" },
 };
 
-export const viewport: Viewport = { themeColor: "#0d0f14" };
+export const viewport: Viewport = { themeColor: "#080b12" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="zh-CN"><body><LocaleProvider><CloudSyncAgent /><DesktopShell>{children}</DesktopShell><ToastHost /></LocaleProvider></body></html>;
