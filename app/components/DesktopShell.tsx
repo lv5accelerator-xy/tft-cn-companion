@@ -12,6 +12,7 @@ import DensityControl from "./DensityControl";
 import ReviewPulse from "./ReviewPulse";
 import TrialWelcome from "./TrialWelcome";
 import ReviewMaintenanceBar from "./ReviewMaintenanceBar";
+import SessionResetButton from "./SessionResetButton";
 import styles from "./desktop-shell.module.css";
 
 type NavItem = { href: string; zh: string; en: string; glyph: string };
@@ -88,7 +89,7 @@ export default function DesktopShell({ children }: { children: ReactNode }) {
     </aside>
 
     <div className={styles.workspace}>
-      <header className={styles.topbar} data-ui-topbar><QuickSearch /><FocusPlanTrail pathname={pathname} /><div className={styles.topActions} data-ui-top-actions><AppExperience pathname={pathname} /><DensityControl /><ShortcutHelp pathname={pathname} /><button className={styles.language} onClick={toggleLocale} title={tr("切换到英文", "Switch to Chinese")}>{locale === "zh" ? "中 / EN" : "EN / 中"}</button><span className={styles.region} data-ui-secondary-status data-ui-tip={tr("北美服务器", "North America server")}>NA</span><span className={styles.patch} data-ui-secondary-status data-ui-tip={tr("当前资料版本 Patch 18.2", "Current data patch 18.2")}>18.2</span><span className={styles.version} data-ui-version-status data-ui-tip={tr("Neon Command 视觉升级", "Neon Command visual refresh")}>V1.6.6</span></div></header>
+      <header className={styles.topbar} data-ui-topbar><QuickSearch /><FocusPlanTrail pathname={pathname} /><div className={styles.topActions} data-ui-top-actions><AppExperience pathname={pathname} /><DensityControl /><ShortcutHelp pathname={pathname} /><SessionResetButton /><button className={styles.language} onClick={toggleLocale} title={tr("切换到英文", "Switch to Chinese")}>{locale === "zh" ? "中 / EN" : "EN / 中"}</button><span className={styles.region} data-ui-secondary-status data-ui-tip={tr("北美服务器", "North America server")}>NA</span><span className={styles.patch} data-ui-secondary-status data-ui-tip={tr("当前资料版本 Patch 18.2", "Current data patch 18.2")}>18.2</span><span className={styles.version} data-ui-version-status data-ui-tip={tr("Neon Command 视觉升级", "Neon Command visual refresh")}>V1.6.6</span></div></header>
       <main className={styles.content} data-ui-content>{route === "home" ? <TrialWelcome /> : null}{route === "review" ? <ReviewMaintenanceBar /> : null}{route === "review" ? <ReviewPulse /> : null}{children}</main>
     </div>
   </div>;
