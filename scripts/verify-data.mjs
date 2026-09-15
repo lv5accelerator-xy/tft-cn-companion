@@ -30,6 +30,19 @@ const expectedTacticianItems = [
   "Tactician's Crown", "Tactician's Cape", "Tactician's Shield",
 ];
 
+const specialSet18Champions = [
+  { id: "DA_18_ElderDragon", nameEn: "Elder Dragon", nameZh: "远古巨龙", tier: 5, aliases: [] },
+  { id: "DA_18_Sentry", nameEn: "Pebbles", nameZh: "苍蓝哨戒", tier: 1, aliases: [] },
+  { id: "DA_Krug18", nameEn: "Krug", nameZh: "远古石甲虫", tier: 3, aliases: ["石甲虫"] },
+  { id: "DA_Murkwolf18", nameEn: "Murk Wolf", nameZh: "暗影狼", tier: 2, aliases: [] },
+  { id: "DA_Sentinel18", nameEn: "Blue Sentinel", nameZh: "苍蓝雕纹魔像", tier: 4, aliases: ["蓝霸符", "苍蓝雕像"] },
+  { id: "DA_Scuttlecrab18", nameEn: "Scuttle Crab", nameZh: "峡谷迅捷蟹", tier: 3, aliases: ["迅捷蟹", "河蟹"] },
+  { id: "DA_Brambleback18", nameEn: "Red Brambleback", nameZh: "绯红印记树怪", tier: 4, aliases: ["红霸符"] },
+  { id: "DA_Cinderling18", nameEn: "Cinderling", nameZh: "绯红树怪", tier: 1, aliases: ["小绯红怪"] },
+  { id: "DA_Gromp18_AP", nameEn: "Gromp", nameZh: "魔沼蛙", tier: 2, aliases: [] },
+  { id: "DA_CrimsonRaptor18", nameEn: "Crimson Raptor", nameZh: "深红锋喙鸟", tier: 3, aliases: ["锋喙鸟"] },
+];
+
 function normalize(value) {
   return String(value || "")
     .trim()
@@ -42,7 +55,7 @@ function isSet18Champion(id) {
   return /\/Sets\/TFTSet18\/Shop\//i.test(id)
     || /^TFT18[_-]/i.test(id)
     || /^TFTSet18[_-]/i.test(id)
-    || /^DA_(?:18_|.*18$)/i.test(id);
+    || /^DA_(?:18_|.*18(?:_|$))/i.test(id);
 }
 
 function isSet18Trait(id) {
@@ -73,6 +86,11 @@ function tftShopPortraitUrl(image) {
 function championPortraitUrl(version, image) {
   if (!image?.full) return null;
   return tftShopPortraitUrl(image) || `${DDRAGON}/cdn/${version}/img/tft-champion/${image.full}`;
+}
+
+function specialPortraitUrl(id) {
+  const stem = id.toLocaleLowerCase("en-US");
+  return `${CDRAGON}/game/assets/characters/${stem}/${stem}_square.png`;
 }
 
 function aliasesForChampion(nameZh) {
@@ -131,7 +149,9 @@ const artifactEntries = Object.entries(enItems.data || {}).filter(([id, entry]) 
 const championIds = championEntries.map(([id]) => id);
 const traitIds = traitEntries.map(([id]) => id);
 const augmentIds = augmentEntries.map(([id]) => id);
-const championPortraitUrls = championEntries.map(([, entry]) => championPortraitUrl(version, entry.image));
+const dragonPortraitUrls = championEntries.map(([, entry]) => championPortraitUrl(version, entry.image));
+const specialPortraitUrls = specialSet18Champions.map((entry) => specialPortraitUrl(entry.id));
+const championPortraitUrls = [...dragonPortraitUrls, ...specialPortraitUrls];
 const missingChampionPortraits = championPortraitUrls.filter((url) => !url).length;
 const zhChampionIds = new Set(Object.keys(zhChampions.data || {}));
 const zhTraitIds = new Set(Object.keys(zhTraits.data || {}));
@@ -165,6 +185,9 @@ for (const [id, entry] of championEntries) {
     if (name) championLookup.add(normalize(name));
   });
 }
+for (const entry of specialSet18Champions) {
+  [entry.id, entry.nameEn, entry.nameZh, ...(entry.aliases || [])].forEach((name) => championLookup.add(normalize(name)));
+}
 
 const snapshotPath = path.join(process.cwd(), "data", "live-meta.generated.json");
 const snapshot = JSON.parse(await readFile(snapshotPath, "utf8"));
@@ -180,8 +203,9 @@ for (const record of snapshot.records || []) {
   }
 }
 
+const displayChampionCount = championEntries.length + specialSet18Champions.length;
 console.log(`Data Dragon: ${version}`);
-console.log(`Display champions: ${championIds.length} (raw Set 18 candidates ${rawChampionEntries.length})`);
+console.log(`Display champions: ${displayChampionCount} (${championEntries.length} Data Dragon + ${specialSet18Champions.length} CommunityDragon Rift units)`);
 console.log(`Champion portrait URLs: ${championPortraitUrls.length - missingChampionPortraits}/${championPortraitUrls.length}`);
 console.log(`Display traits: ${traitIds.length}`);
 console.log(`Display augments: ${augmentIds.length} (raw ${rawAugmentEntries.length})`);
@@ -192,7 +216,7 @@ console.log(`Tactician items found: ${expectedTacticianItems.length - missingTac
 console.log(`Artifact item records found: ${artifactEntries.length}`);
 console.log(`Reviewed comp unit references resolved: ${unresolvedSourceUnits.length ? "NO" : "YES"}`);
 
-if (championIds.length < 50) throw new Error(`Too few display champions: ${championIds.length}`);
+if (displayChampionCount < 60) throw new Error(`Too few display champions after Rift supplement: ${displayChampionCount}`);
 if (championEntries.some(([, entry]) => /^Lux \(/i.test(entry.name || ""))) throw new Error("Lux form variants leaked into display catalog");
 if (missingChampionPortraits) throw new Error(`Missing TFT champion portraits: ${missingChampionPortraits}`);
 if (traitIds.length < 5) throw new Error(`Too few display traits: ${traitIds.length}`);
@@ -209,10 +233,10 @@ if (artifactEntries.length < 15) throw new Error(`Too few artifact item records:
 if (missingZhItemIds.length) throw new Error(`Missing zh_CN item IDs: ${missingZhItemIds.join(", ")}`);
 if (unresolvedSourceUnits.length) throw new Error(`Reviewed comp units missing from TFT catalog: ${unresolvedSourceUnits.join(", ")}`);
 
-const portraitSamples = championPortraitUrls.filter(Boolean).slice(0, 3);
-for (const url of portraitSamples) {
+const portraitSamples = dragonPortraitUrls.filter(Boolean).slice(0, 3);
+for (const url of [...portraitSamples, ...specialPortraitUrls]) {
   const response = await fetch(url, { method: "HEAD" });
   if (!response.ok) throw new Error(`Missing TFT champion portrait: ${response.status} ${url}`);
 }
-console.log(`TFT champion portrait samples verified: ${portraitSamples.length}/${portraitSamples.length}`);
+console.log(`TFT champion portrait samples verified: ${portraitSamples.length} standard + ${specialPortraitUrls.length} Rift units`);
 console.log("Riot TFT cleaned catalog verification passed, including reviewed comp unit resolution.");

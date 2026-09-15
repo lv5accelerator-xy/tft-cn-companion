@@ -40,9 +40,30 @@ type RealmPayload = {
   n?: Record<string, string>;
 };
 
+type SpecialChampion = {
+  id: string;
+  nameEn: string;
+  nameZh: string;
+  tier: number;
+  aliases?: string[];
+};
+
 const DDRAGON = "https://ddragon.leagueoflegends.com";
 const CDRAGON = "https://raw.communitydragon.org/latest";
 const FALLBACK_VERSION = "16.17.1";
+
+const SPECIAL_SET18_CHAMPIONS: SpecialChampion[] = [
+  { id: "DA_18_ElderDragon", nameEn: "Elder Dragon", nameZh: "远古巨龙", tier: 5 },
+  { id: "DA_18_Sentry", nameEn: "Pebbles", nameZh: "苍蓝哨戒", tier: 1 },
+  { id: "DA_Krug18", nameEn: "Krug", nameZh: "远古石甲虫", tier: 3, aliases: ["石甲虫"] },
+  { id: "DA_Murkwolf18", nameEn: "Murk Wolf", nameZh: "暗影狼", tier: 2 },
+  { id: "DA_Sentinel18", nameEn: "Blue Sentinel", nameZh: "苍蓝雕纹魔像", tier: 4, aliases: ["蓝霸符", "苍蓝雕像"] },
+  { id: "DA_Scuttlecrab18", nameEn: "Scuttle Crab", nameZh: "峡谷迅捷蟹", tier: 3, aliases: ["迅捷蟹", "河蟹"] },
+  { id: "DA_Brambleback18", nameEn: "Red Brambleback", nameZh: "绯红印记树怪", tier: 4, aliases: ["红霸符"] },
+  { id: "DA_Cinderling18", nameEn: "Cinderling", nameZh: "绯红树怪", tier: 1, aliases: ["小绯红怪"] },
+  { id: "DA_Gromp18_AP", nameEn: "Gromp", nameZh: "魔沼蛙", tier: 2 },
+  { id: "DA_CrimsonRaptor18", nameEn: "Crimson Raptor", nameZh: "深红锋喙鸟", tier: 3, aliases: ["锋喙鸟"] },
+];
 
 async function getJson<T>(url: string): Promise<T> {
   const response = await fetch(url, { next: { revalidate: 21600 } });
@@ -56,7 +77,7 @@ function isSet18ChampionId(id: string) {
   return /\/Sets\/TFTSet18\/Shop\//i.test(id)
     || /^TFT18[_-]/i.test(id)
     || /^TFTSet18[_-]/i.test(id)
-    || /^DA_(?:18_|.*18$)/i.test(id);
+    || /^DA_(?:18_|.*18(?:_|$))/i.test(id);
 }
 
 function isSet18TraitId(id: string) {
@@ -83,6 +104,23 @@ function tftShopPortraitUrl(image?: DragonImage) {
 
   if (!stem.startsWith("tft18_")) return undefined;
   return `${CDRAGON}/game/assets/characters/${stem}/${stem}_square.png`;
+}
+
+function specialPortraitUrl(id: string) {
+  const stem = id.toLocaleLowerCase("en-US");
+  return `${CDRAGON}/game/assets/characters/${stem}/${stem}_square.png`;
+}
+
+function specialChampionEntries(): CatalogEntry[] {
+  return SPECIAL_SET18_CHAMPIONS.map((entry) => ({
+    id: entry.id,
+    type: "英雄",
+    nameEn: entry.nameEn,
+    nameZh: entry.nameZh,
+    tier: entry.tier,
+    aliases: entry.aliases,
+    imageUrl: specialPortraitUrl(entry.id),
+  }));
 }
 
 function normalizeName(value: string) {
@@ -278,8 +316,8 @@ export async function GET() {
       getJson<DragonPayload>(`${base}/zh_CN/tft-augments.json`),
     ]);
 
-    const champions = dedupeByVisibleName(
-      pairLocalizedEntries(
+    const champions = dedupeByVisibleName([
+      ...pairLocalizedEntries(
         version,
         "英雄",
         enChampions,
@@ -288,7 +326,8 @@ export async function GET() {
         (id, entry) =>
           isSet18ChampionId(id) && !/^Lux \(/i.test(entry.name ?? ""),
       ),
-    );
+      ...specialChampionEntries(),
+    ]).sort((a, b) => (a.tier ?? 99) - (b.tier ?? 99) || a.nameEn.localeCompare(b.nameEn));
 
     const traits = pairLocalizedEntries(
       version,
@@ -315,7 +354,7 @@ export async function GET() {
       .map((name) => items.find((item) => normalizeName(item.nameEn) === normalizeName(name)))
       .filter((item): item is CatalogEntry => Boolean(item));
 
-    if (champions.length < 50 || traits.length < 5 || augments.length < 30 || components.length < 10) {
+    if (champions.length < 60 || traits.length < 5 || augments.length < 30 || components.length < 10) {
       throw new Error(
         `Incomplete TFT catalog: champions=${champions.length}, traits=${traits.length}, augments=${augments.length}, components=${components.length}`,
       );
