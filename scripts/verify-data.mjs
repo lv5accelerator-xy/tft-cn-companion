@@ -1,3 +1,6 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+
 const DDRAGON = "https://ddragon.leagueoflegends.com";
 const CDRAGON = "https://raw.communitydragon.org/latest";
 
@@ -28,7 +31,7 @@ const expectedTacticianItems = [
 ];
 
 function normalize(value) {
-  return value
+  return String(value || "")
     .trim()
     .toLocaleLowerCase("en-US")
     .replace(/[’']/g, "")
@@ -36,7 +39,10 @@ function normalize(value) {
 }
 
 function isSet18Champion(id) {
-  return /\/Sets\/TFTSet18\/Shop\//i.test(id) || /^TFT18[_-]/i.test(id) || /^TFTSet18[_-]/i.test(id);
+  return /\/Sets\/TFTSet18\/Shop\//i.test(id)
+    || /^TFT18[_-]/i.test(id)
+    || /^TFTSet18[_-]/i.test(id)
+    || /^DA_(?:18_|.*18$)/i.test(id);
 }
 
 function isSet18Trait(id) {
@@ -62,6 +68,22 @@ function tftShopPortraitUrl(image) {
 
   if (!stem.startsWith("tft18_")) return null;
   return `${CDRAGON}/game/assets/characters/${stem}/${stem}_square.png`;
+}
+
+function championPortraitUrl(version, image) {
+  if (!image?.full) return null;
+  return tftShopPortraitUrl(image) || `${DDRAGON}/cdn/${version}/img/tft-champion/${image.full}`;
+}
+
+function aliasesForChampion(nameZh) {
+  const aliases = [];
+  if (/苍蓝.*雕.*魔像/.test(nameZh)) aliases.push("蓝霸符", "苍蓝雕像");
+  if (/远古.*石甲虫/.test(nameZh)) aliases.push("石甲虫");
+  if (/迅捷蟹/.test(nameZh)) aliases.push("迅捷蟹", "河蟹");
+  if (/绯红.*印记.*树怪/.test(nameZh)) aliases.push("红霸符");
+  if (nameZh === "绯红树怪") aliases.push("小绯红怪");
+  if (/锋喙鸟/.test(nameZh)) aliases.push("锋喙鸟");
+  return aliases;
 }
 
 function dedupeVisibleNames(entries, zhData) {
@@ -97,9 +119,10 @@ const [enChampions, zhChampions, enTraits, zhTraits, enItems, zhItems, enAugment
   getJson(`${base}/zh_CN/tft-augments.json`),
 ]);
 
-const championEntries = Object.entries(enChampions.data || {}).filter(
+const rawChampionEntries = Object.entries(enChampions.data || {}).filter(
   ([id, entry]) => isSet18Champion(id) && entry.name && !/^Lux \(/i.test(entry.name),
 );
+const championEntries = dedupeVisibleNames(rawChampionEntries, zhChampions.data || {});
 const traitEntries = Object.entries(enTraits.data || {}).filter(([id, entry]) => isSet18Trait(id) && entry.name);
 const rawAugmentEntries = Object.entries(enAugments.data || {}).filter(([id, entry]) => isSet18Augment(id) && entry.name);
 const augmentEntries = dedupeVisibleNames(rawAugmentEntries, zhAugments.data || {});
@@ -108,8 +131,8 @@ const artifactEntries = Object.entries(enItems.data || {}).filter(([id, entry]) 
 const championIds = championEntries.map(([id]) => id);
 const traitIds = traitEntries.map(([id]) => id);
 const augmentIds = augmentEntries.map(([id]) => id);
-const shopPortraitUrls = championEntries.map(([, entry]) => tftShopPortraitUrl(entry.image));
-const missingShopPortraitMappings = shopPortraitUrls.filter((url) => !url).length;
+const championPortraitUrls = championEntries.map(([, entry]) => championPortraitUrl(version, entry.image));
+const missingChampionPortraits = championPortraitUrls.filter((url) => !url).length;
 const zhChampionIds = new Set(Object.keys(zhChampions.data || {}));
 const zhTraitIds = new Set(Object.keys(zhTraits.data || {}));
 const zhAugmentIds = new Set(Object.keys(zhAugments.data || {}));
@@ -134,9 +157,32 @@ const missingZhItemIds = Object.entries(enItems.data || {})
   .map(([id]) => id)
   .filter((id) => !zhItemIds.has(id));
 
+const championLookup = new Set();
+for (const [id, entry] of championEntries) {
+  const zh = zhChampions.data?.[id];
+  const nameZh = zh?.name || entry.name || id;
+  [id, entry.name, nameZh, ...aliasesForChampion(nameZh)].forEach((name) => {
+    if (name) championLookup.add(normalize(name));
+  });
+}
+
+const snapshotPath = path.join(process.cwd(), "data", "live-meta.generated.json");
+const snapshot = JSON.parse(await readFile(snapshotPath, "utf8"));
+const unresolvedSourceUnits = [];
+for (const record of snapshot.records || []) {
+  const sourceUnits = new Set([
+    ...(record.coreUnits || []),
+    ...(record.flexUnits || []),
+    ...((record.board || []).map((position) => position.unit)),
+  ]);
+  for (const unit of sourceUnits) {
+    if (!championLookup.has(normalize(unit))) unresolvedSourceUnits.push(`${record.id}:${unit}`);
+  }
+}
+
 console.log(`Data Dragon: ${version}`);
-console.log(`Display champions: ${championIds.length}`);
-console.log(`TFT shop portrait mappings: ${shopPortraitUrls.length - missingShopPortraitMappings}/${shopPortraitUrls.length}`);
+console.log(`Display champions: ${championIds.length} (raw Set 18 candidates ${rawChampionEntries.length})`);
+console.log(`Champion portrait URLs: ${championPortraitUrls.length - missingChampionPortraits}/${championPortraitUrls.length}`);
 console.log(`Display traits: ${traitIds.length}`);
 console.log(`Display augments: ${augmentIds.length} (raw ${rawAugmentEntries.length})`);
 console.log(`Components found: ${componentNames.length - missingComponents.length}/${componentNames.length}`);
@@ -144,10 +190,11 @@ console.log(`Completed items found: ${expectedCompletedItems.length - missingCom
 console.log(`Craftable emblems found: ${expectedEmblems.length - missingEmblems.length}/${expectedEmblems.length}`);
 console.log(`Tactician items found: ${expectedTacticianItems.length - missingTacticianItems.length}/${expectedTacticianItems.length}`);
 console.log(`Artifact item records found: ${artifactEntries.length}`);
+console.log(`Reviewed comp unit references resolved: ${unresolvedSourceUnits.length ? "NO" : "YES"}`);
 
 if (championIds.length < 50) throw new Error(`Too few display champions: ${championIds.length}`);
 if (championEntries.some(([, entry]) => /^Lux \(/i.test(entry.name || ""))) throw new Error("Lux form variants leaked into display catalog");
-if (missingShopPortraitMappings) throw new Error(`Missing TFT shop portrait mappings: ${missingShopPortraitMappings}`);
+if (missingChampionPortraits) throw new Error(`Missing TFT champion portraits: ${missingChampionPortraits}`);
 if (traitIds.length < 5) throw new Error(`Too few display traits: ${traitIds.length}`);
 if (augmentIds.length < 30) throw new Error(`Too few display augments: ${augmentIds.length}`);
 if (augmentIds.length >= rawAugmentEntries.length) throw new Error("Expected duplicate augment cleanup did not occur");
@@ -160,11 +207,12 @@ if (missingEmblems.length) throw new Error(`Missing Set 18 craftable emblems: ${
 if (missingTacticianItems.length) throw new Error(`Missing tactician items: ${missingTacticianItems.join(", ")}`);
 if (artifactEntries.length < 15) throw new Error(`Too few artifact item records: ${artifactEntries.length}`);
 if (missingZhItemIds.length) throw new Error(`Missing zh_CN item IDs: ${missingZhItemIds.join(", ")}`);
+if (unresolvedSourceUnits.length) throw new Error(`Reviewed comp units missing from TFT catalog: ${unresolvedSourceUnits.join(", ")}`);
 
-const portraitSamples = shopPortraitUrls.filter(Boolean).slice(0, 3);
+const portraitSamples = championPortraitUrls.filter(Boolean).slice(0, 3);
 for (const url of portraitSamples) {
   const response = await fetch(url, { method: "HEAD" });
-  if (!response.ok) throw new Error(`Missing TFT shop portrait: ${response.status} ${url}`);
+  if (!response.ok) throw new Error(`Missing TFT champion portrait: ${response.status} ${url}`);
 }
-console.log(`TFT shop portrait samples verified: ${portraitSamples.length}/${portraitSamples.length}`);
-console.log("Riot TFT cleaned catalog verification passed.");
+console.log(`TFT champion portrait samples verified: ${portraitSamples.length}/${portraitSamples.length}`);
+console.log("Riot TFT cleaned catalog verification passed, including reviewed comp unit resolution.");

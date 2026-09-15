@@ -53,7 +53,10 @@ async function getJson<T>(url: string): Promise<T> {
 }
 
 function isSet18ChampionId(id: string) {
-  return /\/Sets\/TFTSet18\/Shop\//i.test(id) || /^TFT18[_-]/i.test(id) || /^TFTSet18[_-]/i.test(id);
+  return /\/Sets\/TFTSet18\/Shop\//i.test(id)
+    || /^TFT18[_-]/i.test(id)
+    || /^TFTSet18[_-]/i.test(id)
+    || /^DA_(?:18_|.*18$)/i.test(id);
 }
 
 function isSet18TraitId(id: string) {
@@ -88,6 +91,17 @@ function normalizeName(value: string) {
     .toLocaleLowerCase("en-US")
     .replace(/[’']/g, "")
     .replace(/\s+/g, " ");
+}
+
+function aliasesForChampion(nameZh: string) {
+  const aliases: string[] = [];
+  if (/苍蓝.*雕.*魔像/.test(nameZh)) aliases.push("蓝霸符", "苍蓝雕像");
+  if (/远古.*石甲虫/.test(nameZh)) aliases.push("石甲虫");
+  if (/迅捷蟹/.test(nameZh)) aliases.push("迅捷蟹", "河蟹");
+  if (/绯红.*印记.*树怪/.test(nameZh)) aliases.push("红霸符");
+  if (nameZh === "绯红树怪") aliases.push("小绯红怪");
+  if (/锋喙鸟/.test(nameZh)) aliases.push("锋喙鸟");
+  return aliases.length ? aliases : undefined;
 }
 
 function cleanDescription(value?: string) {
@@ -135,13 +149,15 @@ function pairLocalizedEntries(
       const zh = zhData[id];
       const tierNumber = Number(entry.tier);
       const defaultImage = imageUrl(version, group, entry.image);
+      const nameZh = zh?.name || entry.name || id;
       return {
         id,
         type,
         nameEn: entry.name as string,
-        nameZh: zh?.name || entry.name || id,
+        nameZh,
         imageUrl: type === "英雄" ? tftShopPortraitUrl(entry.image) ?? defaultImage : defaultImage,
         tier: Number.isFinite(tierNumber) ? tierNumber : undefined,
+        aliases: type === "英雄" ? aliasesForChampion(nameZh) : undefined,
         descriptionEn: recordDescription(entry),
         descriptionZh: recordDescription(zh) ?? recordDescription(entry),
         thresholds: type === "羁绊" ? traitThresholds(entry) : undefined,
@@ -262,14 +278,16 @@ export async function GET() {
       getJson<DragonPayload>(`${base}/zh_CN/tft-augments.json`),
     ]);
 
-    const champions = pairLocalizedEntries(
-      version,
-      "英雄",
-      enChampions,
-      zhChampions,
-      "tft-champion",
-      (id, entry) =>
-        isSet18ChampionId(id) && !/^Lux \(/i.test(entry.name ?? ""),
+    const champions = dedupeByVisibleName(
+      pairLocalizedEntries(
+        version,
+        "英雄",
+        enChampions,
+        zhChampions,
+        "tft-champion",
+        (id, entry) =>
+          isSet18ChampionId(id) && !/^Lux \(/i.test(entry.name ?? ""),
+      ),
     );
 
     const traits = pairLocalizedEntries(
