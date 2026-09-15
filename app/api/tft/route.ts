@@ -11,16 +11,8 @@ import {
   type ItemSubtype,
 } from "@/data/tft";
 
-type DragonImage = {
-  full?: string;
-};
-
-type DragonTraitEffect = {
-  minUnits?: number | string;
-  maxUnits?: number | string;
-  style?: number | string;
-};
-
+type DragonImage = { full?: string };
+type DragonTraitEffect = { minUnits?: number | string; maxUnits?: number | string; style?: number | string };
 type DragonRecord = {
   id?: string;
   name?: string;
@@ -30,30 +22,48 @@ type DragonRecord = {
   desc?: string;
   effects?: DragonTraitEffect[];
 };
-
-type DragonPayload = {
-  data?: Record<string, DragonRecord>;
-};
-
-type RealmPayload = {
-  v?: string;
-  n?: Record<string, string>;
+type DragonPayload = { data?: Record<string, DragonRecord> };
+type RealmPayload = { v?: string; n?: Record<string, string> };
+type SpecialChampion = {
+  id: string;
+  nameEn: string;
+  nameZh: string;
+  tier: number;
+  imageUrl: string;
+  aliases?: string[];
 };
 
 const DDRAGON = "https://ddragon.leagueoflegends.com";
 const CDRAGON = "https://raw.communitydragon.org/latest";
 const FALLBACK_VERSION = "16.17.1";
 
+// Set 18 Rift monsters are playable units in reviewed comp sources but are not
+// consistently exposed by Riot's tft-champion Data Dragon payload. Keep the
+// supplement deliberately small and source-reviewed so comp/board resolution is exact.
+const SPECIAL_SET18_CHAMPIONS: SpecialChampion[] = [
+  { id: "DA_18_ElderDragon", nameEn: "Elder Dragon", nameZh: "远古巨龙", tier: 5, imageUrl: "/special-units/elder-dragon.jpg" },
+  { id: "DA_18_Sentry", nameEn: "Pebbles", nameZh: "苍蓝哨戒", tier: 1, imageUrl: "/special-units/blue-sentry.jpg" },
+  { id: "DA_Krug18", nameEn: "Krug", nameZh: "远古石甲虫", tier: 3, imageUrl: "/special-units/krug.jpg", aliases: ["石甲虫"] },
+  { id: "DA_Murkwolf18", nameEn: "Murk Wolf", nameZh: "暗影狼", tier: 2, imageUrl: "/special-units/murk-wolf.jpg" },
+  { id: "DA_Sentinel18", nameEn: "Blue Sentinel", nameZh: "苍蓝雕纹魔像", tier: 4, imageUrl: "/special-units/blue-sentinel.jpg", aliases: ["蓝霸符", "苍蓝雕像"] },
+  { id: "DA_Scuttlecrab18", nameEn: "Scuttle Crab", nameZh: "峡谷迅捷蟹", tier: 3, imageUrl: "/special-units/scuttle-crab.jpg", aliases: ["迅捷蟹", "河蟹"] },
+  { id: "DA_Brambleback18", nameEn: "Red Brambleback", nameZh: "绯红印记树怪", tier: 4, imageUrl: "/special-units/red-brambleback.jpg", aliases: ["红霸符"] },
+  { id: "DA_Cinderling18", nameEn: "Cinderling", nameZh: "绯红树怪", tier: 1, imageUrl: "/special-units/cinderling.jpg", aliases: ["小绯红怪"] },
+  { id: "DA_Gromp18_AP", nameEn: "Gromp", nameZh: "魔沼蛙", tier: 2, imageUrl: "/special-units/gromp.jpg" },
+  { id: "DA_CrimsonRaptor18", nameEn: "Crimson Raptor", nameZh: "深红锋喙鸟", tier: 3, imageUrl: "/special-units/crimson-raptor.jpg", aliases: ["锋喙鸟"] },
+];
+
 async function getJson<T>(url: string): Promise<T> {
   const response = await fetch(url, { next: { revalidate: 21600 } });
-  if (!response.ok) {
-    throw new Error(`Data Dragon request failed: ${response.status} ${url}`);
-  }
+  if (!response.ok) throw new Error(`Data Dragon request failed: ${response.status} ${url}`);
   return response.json() as Promise<T>;
 }
 
 function isSet18ChampionId(id: string) {
-  return /\/Sets\/TFTSet18\/Shop\//i.test(id) || /^TFT18[_-]/i.test(id) || /^TFTSet18[_-]/i.test(id);
+  return /\/Sets\/TFTSet18\/Shop\//i.test(id)
+    || /^TFT18[_-]/i.test(id)
+    || /^TFTSet18[_-]/i.test(id)
+    || /^DA_(?:18_|.*18(?:_|$))/i.test(id);
 }
 
 function isSet18TraitId(id: string) {
@@ -72,22 +82,38 @@ function imageUrl(version: string, group: string, image?: DragonImage) {
 function tftShopPortraitUrl(image?: DragonImage) {
   const full = image?.full;
   if (!full) return undefined;
-
   const lower = full.toLocaleLowerCase("en-US");
   const splashIndex = lower.indexOf("_splash");
-  const stem = (splashIndex > 0 ? full.slice(0, splashIndex) : full.replace(/\.[^.]+$/, ""))
-    .toLocaleLowerCase("en-US");
-
+  const stem = (splashIndex > 0 ? full.slice(0, splashIndex) : full.replace(/\.[^.]+$/, "")).toLocaleLowerCase("en-US");
   if (!stem.startsWith("tft18_")) return undefined;
   return `${CDRAGON}/game/assets/characters/${stem}/${stem}_square.png`;
 }
 
+function specialChampionEntries(): CatalogEntry[] {
+  return SPECIAL_SET18_CHAMPIONS.map((entry) => ({
+    id: entry.id,
+    type: "英雄",
+    nameEn: entry.nameEn,
+    nameZh: entry.nameZh,
+    tier: entry.tier,
+    aliases: entry.aliases,
+    imageUrl: entry.imageUrl,
+  }));
+}
+
 function normalizeName(value: string) {
-  return value
-    .trim()
-    .toLocaleLowerCase("en-US")
-    .replace(/[’']/g, "")
-    .replace(/\s+/g, " ");
+  return value.trim().toLocaleLowerCase("en-US").replace(/[’']/g, "").replace(/\s+/g, " ");
+}
+
+function aliasesForChampion(nameZh: string) {
+  const aliases: string[] = [];
+  if (/苍蓝.*雕.*魔像/.test(nameZh)) aliases.push("蓝霸符", "苍蓝雕像");
+  if (/远古.*石甲虫/.test(nameZh)) aliases.push("石甲虫");
+  if (/迅捷蟹/.test(nameZh)) aliases.push("迅捷蟹", "河蟹");
+  if (/绯红.*印记.*树怪/.test(nameZh)) aliases.push("红霸符");
+  if (nameZh === "绯红树怪") aliases.push("小绯红怪");
+  if (/锋喙鸟/.test(nameZh)) aliases.push("锋喙鸟");
+  return aliases.length ? aliases : undefined;
 }
 
 function cleanDescription(value?: string) {
@@ -112,9 +138,7 @@ function recordDescription(record?: DragonRecord) {
 }
 
 function traitThresholds(record: DragonRecord) {
-  const values = (record.effects ?? [])
-    .map((effect) => Number(effect.minUnits))
-    .filter((value) => Number.isFinite(value) && value > 0);
+  const values = (record.effects ?? []).map((effect) => Number(effect.minUnits)).filter((value) => Number.isFinite(value) && value > 0);
   return values.length ? Array.from(new Set(values)).sort((a, b) => a - b) : undefined;
 }
 
@@ -128,29 +152,27 @@ function pairLocalizedEntries(
 ): CatalogEntry[] {
   const enData = enPayload.data ?? {};
   const zhData = zhPayload.data ?? {};
-
   return Object.entries(enData)
     .filter(([id, entry]) => entry.name && filter(id, entry))
     .map(([id, entry]) => {
       const zh = zhData[id];
       const tierNumber = Number(entry.tier);
       const defaultImage = imageUrl(version, group, entry.image);
+      const nameZh = zh?.name || entry.name || id;
       return {
         id,
         type,
         nameEn: entry.name as string,
-        nameZh: zh?.name || entry.name || id,
+        nameZh,
         imageUrl: type === "英雄" ? tftShopPortraitUrl(entry.image) ?? defaultImage : defaultImage,
         tier: Number.isFinite(tierNumber) ? tierNumber : undefined,
+        aliases: type === "英雄" ? aliasesForChampion(nameZh) : undefined,
         descriptionEn: recordDescription(entry),
         descriptionZh: recordDescription(zh) ?? recordDescription(entry),
         thresholds: type === "羁绊" ? traitThresholds(entry) : undefined,
       } satisfies CatalogEntry;
     })
-    .sort((a, b) => {
-      if (type === "英雄" && a.tier !== b.tier) return (a.tier ?? 99) - (b.tier ?? 99);
-      return a.nameEn.localeCompare(b.nameEn);
-    });
+    .sort((a, b) => type === "英雄" && a.tier !== b.tier ? (a.tier ?? 99) - (b.tier ?? 99) : a.nameEn.localeCompare(b.nameEn));
 }
 
 function dedupeByVisibleName(entries: CatalogEntry[]) {
@@ -164,22 +186,16 @@ function dedupeByVisibleName(entries: CatalogEntry[]) {
 }
 
 function isArtifactItemId(id: string) {
-  return /(?:ornn|artifact)/i.test(id)
-    && !/(radiant|support|augment)/i.test(id);
+  return /(?:ornn|artifact)/i.test(id) && !/(radiant|support|augment)/i.test(id);
 }
 
 function aliasesForItem(name: string) {
   const normalized = normalizeName(name);
-  const match = Object.entries(itemLegacyAliases)
-    .find(([key]) => normalizeName(key) === normalized);
+  const match = Object.entries(itemLegacyAliases).find(([key]) => normalizeName(key) === normalized);
   return match?.[1];
 }
 
-function normalizeItems(
-  version: string,
-  enPayload: DragonPayload,
-  zhPayload: DragonPayload,
-): CatalogEntry[] {
+function normalizeItems(version: string, enPayload: DragonPayload, zhPayload: DragonPayload): CatalogEntry[] {
   const wanted = new Set(standardItemNames.map(normalizeName));
   const components = new Set(componentNames.map(normalizeName));
   const emblems = new Set(set18EmblemNames.map(normalizeName));
@@ -193,13 +209,11 @@ function normalizeItems(
     const key = normalizeName(entry.name);
     const isArtifact = isArtifactItemId(id);
     if (!wanted.has(key) && !isArtifact) continue;
-
     let subtype: ItemSubtype = "completed";
     if (components.has(key)) subtype = "component";
     else if (emblems.has(key)) subtype = "emblem";
     else if (tacticianItems.has(key)) subtype = "tactician";
     else if (isArtifact) subtype = "artifact";
-
     const zh = zhData[id];
     const candidate: CatalogEntry = {
       id,
@@ -212,23 +226,13 @@ function normalizeItems(
       descriptionEn: recordDescription(entry),
       descriptionZh: recordDescription(zh) ?? recordDescription(entry),
     };
-
     const current = byName.get(key);
     const candidateIsGeneric = id.startsWith("TFT_Item_");
     const currentIsGeneric = current?.id.startsWith("TFT_Item_") ?? false;
-    if (!current || (candidateIsGeneric && !currentIsGeneric)) {
-      byName.set(key, candidate);
-    }
+    if (!current || (candidateIsGeneric && !currentIsGeneric)) byName.set(key, candidate);
   }
 
-  const order: Record<ItemSubtype, number> = {
-    component: 0,
-    completed: 1,
-    emblem: 2,
-    tactician: 3,
-    artifact: 4,
-  };
-
+  const order: Record<ItemSubtype, number> = { component: 0, completed: 1, emblem: 2, tactician: 3, artifact: 4 };
   return Array.from(byName.values()).sort((a, b) => {
     const aOrder = a.subtype ? order[a.subtype] : 99;
     const bOrder = b.subtype ? order[b.subtype] : 99;
@@ -241,17 +245,7 @@ export async function GET() {
     const realm = await getJson<RealmPayload>(`${DDRAGON}/realms/na.json`);
     const version = realm.v || realm.n?.item || FALLBACK_VERSION;
     const base = `${DDRAGON}/cdn/${version}/data`;
-
-    const [
-      enChampions,
-      zhChampions,
-      enItems,
-      zhItems,
-      enTraits,
-      zhTraits,
-      enAugments,
-      zhAugments,
-    ] = await Promise.all([
+    const [enChampions, zhChampions, enItems, zhItems, enTraits, zhTraits, enAugments, zhAugments] = await Promise.all([
       getJson<DragonPayload>(`${base}/en_US/tft-champion.json`),
       getJson<DragonPayload>(`${base}/zh_CN/tft-champion.json`),
       getJson<DragonPayload>(`${base}/en_US/tft-item.json`),
@@ -262,73 +256,24 @@ export async function GET() {
       getJson<DragonPayload>(`${base}/zh_CN/tft-augments.json`),
     ]);
 
-    const champions = pairLocalizedEntries(
-      version,
-      "英雄",
-      enChampions,
-      zhChampions,
-      "tft-champion",
-      (id, entry) =>
-        isSet18ChampionId(id) && !/^Lux \(/i.test(entry.name ?? ""),
-    );
-
-    const traits = pairLocalizedEntries(
-      version,
-      "羁绊",
-      enTraits,
-      zhTraits,
-      "tft-trait",
-      (id) => isSet18TraitId(id),
-    );
-
-    const augments = dedupeByVisibleName(
-      pairLocalizedEntries(
-        version,
-        "强化",
-        enAugments,
-        zhAugments,
-        "tft-augment",
-        (id) => isSet18AugmentId(id),
-      ),
-    );
-
+    const champions = dedupeByVisibleName([
+      ...pairLocalizedEntries(version, "英雄", enChampions, zhChampions, "tft-champion", (id, entry) => isSet18ChampionId(id) && !/^Lux \(/i.test(entry.name ?? "")),
+      ...specialChampionEntries(),
+    ]).sort((a, b) => (a.tier ?? 99) - (b.tier ?? 99) || a.nameEn.localeCompare(b.nameEn));
+    const traits = pairLocalizedEntries(version, "羁绊", enTraits, zhTraits, "tft-trait", (id) => isSet18TraitId(id));
+    const augments = dedupeByVisibleName(pairLocalizedEntries(version, "强化", enAugments, zhAugments, "tft-augment", (id) => isSet18AugmentId(id)));
     const items = normalizeItems(version, enItems, zhItems);
-    const components = componentNames
-      .map((name) => items.find((item) => normalizeName(item.nameEn) === normalizeName(name)))
-      .filter((item): item is CatalogEntry => Boolean(item));
+    const components = componentNames.map((name) => items.find((item) => normalizeName(item.nameEn) === normalizeName(name))).filter((item): item is CatalogEntry => Boolean(item));
 
-    if (champions.length < 50 || traits.length < 5 || augments.length < 30 || components.length < 10) {
-      throw new Error(
-        `Incomplete TFT catalog: champions=${champions.length}, traits=${traits.length}, augments=${augments.length}, components=${components.length}`,
-      );
+    if (champions.length < 60 || traits.length < 5 || augments.length < 30 || components.length < 10) {
+      throw new Error(`Incomplete TFT catalog: champions=${champions.length}, traits=${traits.length}, augments=${augments.length}, components=${components.length}`);
     }
 
     return NextResponse.json(
-      {
-        source: "Riot Data Dragon + CommunityDragon",
-        dataDragonVersion: version,
-        tftPatch: patchInfo.patch,
-        set: patchInfo.set,
-        updated: patchInfo.updated,
-        champions,
-        items,
-        traits,
-        augments,
-        components,
-        recipes,
-      },
-      {
-        headers: {
-          "Cache-Control": "public, s-maxage=21600, stale-while-revalidate=86400",
-        },
-      },
+      { source: "Riot Data Dragon + reviewed Set 18 Rift unit supplement", dataDragonVersion: version, tftPatch: patchInfo.patch, set: patchInfo.set, updated: patchInfo.updated, champions, items, traits, augments, components, recipes },
+      { headers: { "Cache-Control": "public, s-maxage=21600, stale-while-revalidate=86400" } },
     );
   } catch (error) {
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : "Unable to load TFT catalog",
-      },
-      { status: 502 },
-    );
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Unable to load TFT catalog" }, { status: 502 });
   }
 }
