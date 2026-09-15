@@ -10,7 +10,6 @@ import { formatFreshness } from "@/lib/freshness";
 import {
   FAVORITE_COMPS_KEY,
   FOCUS_COMP_STATES_KEY,
-  FOCUS_KEY,
   FOCUS_TRAY_KEY,
   LOCAL_IMPORT_KEY,
   RECENT_COMPS_KEY,
@@ -22,7 +21,6 @@ import {
 } from "@/lib/workspace";
 import styles from "./dashboard.module.css";
 
-type FocusResume = { sourceId: string; id: string; stageIndex?: number; mirrored?: boolean };
 type TraySlot = StoredCompRef | null;
 
 function normalize(value: string) { return value.trim().toLocaleLowerCase("en-US").replace(/[’]/g, "'"); }
@@ -45,7 +43,6 @@ export default function HomePage() {
   const { locale, tr } = useLocale();
   const [catalog, setCatalog] = useState<TftCatalogPayload | null>(null);
   const [localComps, setLocalComps] = useState<UnifiedMetaComp[]>([]);
-  const [resume, setResume] = useState<FocusResume | null>(null);
   const [favorites, setFavorites] = useState<StoredCompRef[]>([]);
   const [recents, setRecents] = useState<StoredCompRef[]>([]);
   const [tray, setTray] = useState<TraySlot[]>([null, null, null]);
@@ -56,11 +53,6 @@ export default function HomePage() {
     try {
       const imported = JSON.parse(window.localStorage.getItem(LOCAL_IMPORT_KEY) || "[]") as unknown[];
       setLocalComps(imported.filter(isManualComp));
-      const raw = window.localStorage.getItem(FOCUS_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as Partial<FocusResume>;
-        if (typeof parsed.sourceId === "string" && typeof parsed.id === "string") setResume({ sourceId: parsed.sourceId, id: parsed.id, stageIndex: parsed.stageIndex, mirrored: parsed.mirrored });
-      }
       setFavorites(parseStoredCompRefs(JSON.parse(window.localStorage.getItem(FAVORITE_COMPS_KEY) || "[]"), 12));
       setRecents(parseStoredCompRefs(JSON.parse(window.localStorage.getItem(RECENT_COMPS_KEY) || "[]"), 8));
       setTray(parseTray(JSON.parse(window.localStorage.getItem(FOCUS_TRAY_KEY) || "[]")));
@@ -79,11 +71,6 @@ export default function HomePage() {
     return [...localComps, ...metaComps].filter((comp) => { const key = compRefKey(comp); if (seen.has(key)) return false; seen.add(key); return true; });
   }, [localComps]);
   const byRef = useMemo(() => new Map(allComps.map((comp) => [compRefKey(comp), comp])), [allComps]);
-  const continueComp = resume ? byRef.get(compRefKey(resume)) ?? null : null;
-  const resumeState = resume ? focusStates[compRefKey(resume)] : undefined;
-  const resumeStageIndex = resumeState?.stageIndex ?? resume?.stageIndex ?? 0;
-  const resumeStage = continueComp?.stages[Math.min(resumeStageIndex, Math.max(0, (continueComp?.stages.length ?? 1) - 1))]?.stage;
-  const resumeMirrored = resumeState?.mirrored ?? Boolean(resume?.mirrored);
   const trayComps = tray.map((ref) => ref ? byRef.get(compRefKey(ref)) ?? null : null);
   const personalComps = useMemo(() => {
     const result: Array<{ comp: UnifiedMetaComp; kind: "favorite" | "recent" }> = [];
@@ -100,8 +87,6 @@ export default function HomePage() {
       <div><div className={styles.eyebrow}>V1.3.2 · OPENING → FOCUS → REVIEW</div><h1>{tr("美服云顶中文副屏助手", "NA TFT companion for fast decisions")}</h1><p>{tr("新对局先把开局英雄与散件交给开局助手，选出 3 套候选；对局中保留各自 Stage 状态，结束后进入复盘。", "Start with your opening units and components, build a three-comp candidate tray, keep each comp's stage state during play, then review the result.")}</p></div>
       <div className={styles.heroActions}><Link className={styles.primaryButton} href="/opening">◇ {tr("开局决策助手", "Opening Assistant")}</Link><Link className={styles.secondaryButton} href="/comps">{tr("直接看阵容库", "Browse comps")}</Link></div>
     </section>
-
-    {continueComp ? <section className={styles.continueCard}><div className={styles.continueIcon}>▶</div><div className={styles.continueText}><span>{tr("继续上次对局", "Continue last focus")}</span><strong>{locale === "zh" ? continueComp.nameZh : continueComp.name}</strong><small>{resumeStage ?? "Stage 2"}{resumeMirrored ? ` · ${tr("已镜像", "Mirrored")}` : ""} · {continueComp.source}</small></div><Link href={focusHref(continueComp)}>{tr("继续", "Continue")}</Link></section> : null}
 
     <div className={styles.mainGrid}>
       <section className={styles.panel}>

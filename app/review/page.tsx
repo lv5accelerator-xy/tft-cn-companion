@@ -263,9 +263,7 @@ export default function ReviewPage() {
     const historyValue = safeParse(window.localStorage.getItem(REVIEW_HISTORY_KEY));
     setHistory(parseReviewHistory(historyValue));
     const savedDraft = parseReviewDraft(safeParse(window.localStorage.getItem(REVIEW_DRAFT_KEY)));
-    setDraft(savedDraft ?? seedFromCurrent());
-    // seedFromCurrent intentionally reads one snapshot after the TFT catalog is ready.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setDraft(savedDraft);
   }, [catalog]);
 
   useEffect(() => {
@@ -324,6 +322,17 @@ export default function ReviewPage() {
     setDraft(next);
     setSelectedId("");
     setMessage(next ? tr("已重新读取当前 Focus / Builder 状态。", "Reloaded the current Focus / Builder state.") : tr("没有找到可复盘的当前阵容。", "No current comp was available to review."));
+  }
+
+  function clearSnapshot() {
+    setDraft(null);
+    setSelectedId("");
+    try {
+      window.localStorage.removeItem(REVIEW_DRAFT_KEY);
+    } catch {
+      // Clearing the visible snapshot should still work when storage is unavailable.
+    }
+    setMessage(tr("当前复盘快照已清除。需要时点击“读取当前对局”重新生成。", "Review snapshot cleared. Use “Reload current game” when you want a new snapshot."));
   }
 
   function saveReview() {
@@ -391,9 +400,12 @@ export default function ReviewPage() {
               <h2>{locale === "zh" ? draft.plannedNameZh : draft.plannedNameEn}</h2>
               <p>{draft.source} · Patch {draft.patch} · {draft.playstyle}</p>
             </div>
-            <div className={styles.placementPicker}>
-              <span>{tr("最终名次", "Placement")}</span>
-              <div>{[1, 2, 3, 4, 5, 6, 7, 8].map((placement) => <button key={placement} className={draft.placement === placement ? styles.placementActive : ""} onClick={() => updateDraft({ placement })}>{placement}</button>)}</div>
+            <div className={styles.resultActions}>
+              <button className={styles.clearSnapshot} onClick={clearSnapshot}>× {tr("清除快照", "Clear snapshot")}</button>
+              <div className={styles.placementPicker}>
+                <span>{tr("最终名次", "Placement")}</span>
+                <div>{[1, 2, 3, 4, 5, 6, 7, 8].map((placement) => <button key={placement} className={draft.placement === placement ? styles.placementActive : ""} onClick={() => updateDraft({ placement })}>{placement}</button>)}</div>
+              </div>
             </div>
           </section>
 
@@ -440,8 +452,8 @@ export default function ReviewPage() {
         </>
       ) : (
         <section className={styles.savedState}>
-          <div><strong>{tr("本局已保存", "Review saved")}</strong><span>{tr("可以查看下方历史记录，或读取当前 Focus / Builder 状态开始下一次复盘。", "Inspect history below or reload the current Focus / Builder state to start another review.")}</span></div>
-          <button onClick={resetFromCurrent}>{tr("开始新的复盘", "Start another review")}</button>
+          <div><strong>{tr("暂无复盘快照", "No review snapshot")}</strong><span>{tr("需要复盘时点击“读取当前对局”。页面不会再自动带入旧 Focus / Builder 内容。", "Use “Reload current game” when you want to review a match. This page no longer auto-loads old Focus / Builder content.")}</span></div>
+          <button onClick={resetFromCurrent}>{tr("读取当前对局", "Reload current game")}</button>
         </section>
       )}
 
