@@ -68,8 +68,9 @@ function CompRow({ comp, champions, favorite, onToggleFavorite }: { comp: Unifie
     return map;
   }, [champions]);
 
-  const units = [...comp.coreUnits, ...comp.flexUnits].slice(0, 9).map((name) => byName.get(normalize(name))).filter((entry): entry is CatalogEntry => Boolean(entry));
+  const units = [...comp.coreUnits, ...comp.flexUnits].slice(0, 10).map((name) => byName.get(normalize(name))).filter((entry): entry is CatalogEntry => Boolean(entry));
   const freshness = formatFreshness(comp.sourceUpdatedAt, locale);
+  const ceilingNotes = comp.keyNotes.filter((note) => /(冲?9|9级|上限|三星|升人口|level\s*9|3-star|ceiling)/i.test(note)).slice(0, 3);
 
   function openBuilder() {
     try {
@@ -82,6 +83,10 @@ function CompRow({ comp, champions, favorite, onToggleFavorite }: { comp: Unifie
   function openFocus() {
     try { window.localStorage.setItem(FOCUS_KEY, JSON.stringify({ sourceId: comp.sourceId, id: comp.id, updatedAt: Date.now() })); } catch {}
     router.push(`/focus?source=${encodeURIComponent(comp.sourceId)}&id=${encodeURIComponent(comp.id)}`);
+  }
+
+  function openInsights() {
+    router.push(`/insights?source=${encodeURIComponent(comp.sourceId)}&id=${encodeURIComponent(comp.id)}`);
   }
 
   function addCandidate() {
@@ -114,7 +119,18 @@ function CompRow({ comp, champions, favorite, onToggleFavorite }: { comp: Unifie
       <div className={styles.traits}>{comp.traits.slice(0, 4).map((trait) => <span className={styles.trait} key={trait}>{trait}</span>)}</div>
       <div className={styles.actions}><button className={styles.builderButton} onClick={onToggleFavorite}>{favorite ? "♥" : "♡"} {tr("收藏", "Save")}</button><button className={styles.candidateButton} onClick={addCandidate}>☆ {candidateStatus || tr("候选", "Candidate")}</button><button className={styles.focusButton} onClick={openFocus}>◉ {tr("对局", "Focus")}</button><button className={styles.builderButton} onClick={openBuilder}>Builder</button></div>
 
-      {expanded && <div className={styles.details}><div className={styles.sourceMeta}><span><b>{tr("来源", "Source")}</b> {comp.source}</span><span><b>{tr("更新", "Updated")}</b> {comp.sourceUpdatedAt} · {freshness.stale ? "⚠ " : ""}{freshness.label}</span><span><b>{tr("文章", "Article")}</b> {comp.sourceArticleTitle}</span>{comp.sourceUrl ? <a href={comp.sourceUrl} target="_blank" rel="noreferrer">{tr("查看原文", "Original")}</a> : null}</div><div><strong>{tr("什么时候玩：", "When to play: ")}</strong>{comp.whenToPlay || "—"}<div className={styles.detailLine}><strong>{tr("装备优先：", "Item priority: ")}</strong>{comp.itemFocus.length ? comp.itemFocus.join(" · ") : "—"}</div><div className={styles.detailLine}><strong>{tr("要点：", "Notes: ")}</strong>{comp.keyNotes.length ? comp.keyNotes.slice(0, 5).join(locale === "zh" ? "；" : "; ") : "—"}</div><div className={styles.detailsGrid}>{comp.stages.map((stage) => <div className={styles.stage} key={stage.stage}><b>{stage.stage}</b>{stage.text}</div>)}</div><div className={styles.positioning}><div className={styles.positioningHead}><strong>{tr("参考站位", "Positioning")}</strong><span>{tr("前排在上 · 后排在下 · 对局模式可一键镜像", "Front on top · backline below · mirror instantly in Game Focus")}</span></div><BoardPreview positions={comp.board} champions={champions} /><p>{comp.positioningNote}</p></div></div></div>}
+      {expanded ? <div className={styles.details}>
+        <div className={styles.sourceMeta}><span><b>{tr("来源", "Source")}</b> {comp.source}</span><span><b>{tr("更新", "Updated")}</b> {comp.sourceUpdatedAt} · {freshness.stale ? "⚠ " : ""}{freshness.label}</span><span><b>{tr("文章", "Article")}</b> {comp.sourceArticleTitle}</span>{comp.sourceUrl ? <a href={comp.sourceUrl} target="_blank" rel="noreferrer">{tr("查看原文", "Original")}</a> : null}</div>
+        <div className={styles.guideGrid}>
+          <section className={styles.guideBlock}><span>{tr("什么时候玩", "When to play")}</span><strong>{comp.whenToPlay || "—"}</strong></section>
+          <section className={styles.guideBlock}><span>{tr("核心装备", "Core items")}</span><strong>{comp.itemFocus.length ? comp.itemFocus.join(" · ") : "—"}</strong></section>
+          <section className={styles.guideBlock}><span>{tr("搜牌 / 运营重点", "Roll / tempo")}</span><strong>{comp.keyNotes.length ? comp.keyNotes.slice(0, 4).join(locale === "zh" ? "；" : "; ") : "—"}</strong></section>
+          <section className={styles.guideBlock}><span>{tr("9级 / 上限", "Level 9 / ceiling")}</span><strong>{ceilingNotes.length ? ceilingNotes.join(locale === "zh" ? "；" : "; ") : tr("按来源阶段节奏完成主框架后，用高质量单位继续补强。", "After completing the source-backed core, add high-quality units as economy allows.")}</strong></section>
+        </div>
+        <div className={styles.detailsGrid}>{comp.stages.map((stage) => <div className={styles.stage} key={stage.stage}><b>{stage.stage}</b>{stage.text}</div>)}</div>
+        <div className={styles.positioning}><div className={styles.positioningHead}><strong>{tr("最终参考站位", "Final positioning")}</strong><span>{tr("前排在上 · 后排在下 · 对局模式可一键镜像", "Front on top · backline below · mirror instantly in Game Focus")}</span></div><BoardPreview positions={comp.board} champions={champions} /><p>{comp.positioningNote}</p></div>
+        <div className={styles.detailActions}><button onClick={openInsights}>↗ {tr("查看这套阵容的个人复盘数据", "Open personal data for this comp")}</button><button onClick={openFocus}>◉ {tr("进入对局模式", "Open Game Focus")}</button></div>
+      </div> : null}
     </article>
   );
 }
@@ -144,7 +160,8 @@ export default function CompsPage() {
     const q = normalize(query);
     return allComps.filter((comp) => {
       const sourceMatch = sourceFilter === "all" || comp.sourceId === sourceFilter;
-      const styleMatch = filter === "ALL" || (filter === "FAST8" && comp.playstyle.toLowerCase().includes("fast 8")) || (filter === "REROLL" && comp.playstyle.toLowerCase().includes("reroll")) || (filter === "FAVORITES" && favoriteKeys.has(compRefKey(comp)));
+      const playstyle = comp.playstyle.toLowerCase();
+      const styleMatch = filter === "ALL" || (filter === "FAST8" && (playstyle.includes("fast 8") || playstyle.includes("fast 9"))) || (filter === "REROLL" && playstyle.includes("reroll")) || (filter === "FAVORITES" && favoriteKeys.has(compRefKey(comp)));
       const searchText = normalize([comp.name, comp.nameZh, comp.source, comp.sourceArticleTitle, ...comp.coreUnits, ...comp.flexUnits, ...comp.traits, ...comp.itemFocus].join(" "));
       return sourceMatch && styleMatch && (!q || searchText.includes(q));
     });
@@ -160,5 +177,5 @@ export default function CompsPage() {
     });
   }
 
-  return <div className={styles.page}><header className={styles.heading}><div><h1>Live Meta Team Comps</h1><p>{tr("收藏常玩阵容，开局前把最多 3 套加入候选；数据过旧时会显示 ⚠。", "Favorite frequent comps, pin up to three candidates, and watch for stale-source ⚠ warnings.")}</p></div><div className={styles.meta}><span>Patch {metaPatch}</span><span>Curated {metaUpdatedAt}</span><span>{filtered.length} Comps</span></div></header><section className={styles.sourceBar}><button className={sourceFilter === "all" ? styles.sourceActive : ""} onClick={() => setSourceFilter("all")}>{tr("综合", "All Sources")} <span>{allComps.length}</span></button>{metaSources.map((source) => <button key={source.id} className={sourceFilter === source.id ? styles.sourceActive : ""} onClick={() => setSourceFilter(source.id)}>{source.name} <span>{sourceCounts.get(source.id) ?? 0}</span></button>)}<span className={styles.tftOnly}>TFT ONLY</span></section><section className={styles.toolbar}><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={tr("搜索阵容、英雄、羁绊或来源", "Search comps, champions, traits or sources")} /><div className={styles.filters}><button className={filter === "ALL" ? styles.active : ""} onClick={() => setFilter("ALL")}>All</button><button className={filter === "FAVORITES" ? styles.active : ""} onClick={() => setFilter("FAVORITES")}>♥ {tr("收藏", "Saved")}</button><button className={filter === "FAST8" ? styles.active : ""} onClick={() => setFilter("FAST8")}>Fast 8</button><button className={filter === "REROLL" ? styles.active : ""} onClick={() => setFilter("REROLL")}>Reroll</button></div><span className={styles.note}>{tr("♡ 收藏用于首页快速继续；☆ 候选保存到 Second Screen HUD 的 1 / 2 / 3 槽位。", "♡ Favorites appear on Home; ☆ Candidates go to Second Screen HUD slots 1 / 2 / 3.")}</span></section><section className={styles.list}><div className={styles.headerRow}><span>Tier</span><span>Comp / Source</span><span>Core / Units</span><span>Synergy</span><span>{tr("操作", "Actions")}</span></div>{filtered.map((comp) => <CompRow key={`${comp.sourceId}-${comp.id}-${comp.patch}`} comp={comp} champions={catalog?.champions ?? []} favorite={favoriteKeys.has(compRefKey(comp))} onToggleFavorite={() => toggleFavorite(comp)} />)}{!filtered.length && <div className={styles.empty}>{filter === "FAVORITES" ? tr("还没有收藏阵容。", "No favorite comps yet.") : tr("没有匹配阵容。", "No matching comps.")}</div>}</section></div>;
+  return <div className={styles.page}><header className={styles.heading}><div><h1>Live Meta Team Comps</h1><p>{tr("14 套 Patch 18.2 兔顶一图流已按开局条件、阶段运营、最终站位和个人复盘数据统一贯通。", "The 14 reviewed Patch 18.2 TFT guides are connected across opening conditions, stage plans, final boards and your personal review data.")}</p></div><div className={styles.meta}><span>Patch {metaPatch}</span><span>Reviewed {metaUpdatedAt}</span><span>{filtered.length} Comps</span></div></header><section className={styles.sourceBar}><button className={sourceFilter === "all" ? styles.sourceActive : ""} onClick={() => setSourceFilter("all")}>{tr("综合", "All Sources")} <span>{allComps.length}</span></button>{metaSources.map((source) => <button key={source.id} className={sourceFilter === source.id ? styles.sourceActive : ""} onClick={() => setSourceFilter(source.id)}>{source.name} <span>{sourceCounts.get(source.id) ?? 0}</span></button>)}<span className={styles.tftOnly}>TFT ONLY</span></section><section className={styles.toolbar}><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={tr("搜索阵容、英雄、羁绊或来源", "Search comps, champions, traits or sources")} /><div className={styles.filters}><button className={filter === "ALL" ? styles.active : ""} onClick={() => setFilter("ALL")}>All</button><button className={filter === "FAVORITES" ? styles.active : ""} onClick={() => setFilter("FAVORITES")}>♥ {tr("收藏", "Saved")}</button><button className={filter === "FAST8" ? styles.active : ""} onClick={() => setFilter("FAST8")}>Fast 8/9</button><button className={filter === "REROLL" ? styles.active : ""} onClick={() => setFilter("REROLL")}>Reroll</button></div><span className={styles.note}>{tr("展开阵容可按“什么时候玩 → 核心装备 → 搜牌/运营 → 9级上限 → 最终站位”快速阅读。", "Expand a comp for When to play → Core items → Roll/tempo → Level-9 ceiling → Final positioning.")}</span></section><section className={styles.list}><div className={styles.headerRow}><span>Tier</span><span>Comp / Source</span><span>Core / Units</span><span>Synergy</span><span>{tr("操作", "Actions")}</span></div>{filtered.map((comp) => <CompRow key={`${comp.sourceId}-${comp.id}-${comp.patch}`} comp={comp} champions={catalog?.champions ?? []} favorite={favoriteKeys.has(compRefKey(comp))} onToggleFavorite={() => toggleFavorite(comp)} />)}{!filtered.length && <div className={styles.empty}>{filter === "FAVORITES" ? tr("还没有收藏阵容。", "No favorite comps yet.") : tr("没有匹配阵容。", "No matching comps.")}</div>}</section></div>;
 }

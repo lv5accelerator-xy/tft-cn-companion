@@ -7,6 +7,7 @@ const requiredFiles = [
   "app/recovery.module.css",
   "app/api/health/route.ts",
   "scripts/smoke-test.mjs",
+  "scripts/verify-flow.mjs",
   "docs/release-safety.md",
 ];
 
@@ -20,7 +21,7 @@ for (const file of requiredFiles) {
 }
 
 const packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
-for (const script of ["verify:release", "smoke", "release:check"]) {
+for (const script of ["verify:release", "verify:flow", "smoke", "release:check"]) {
   if (!packageJson.scripts?.[script]) {
     console.error(`Release safety failed: package.json is missing script ${script}`);
     failed = true;
@@ -32,6 +33,7 @@ const ciNeedles = [
   "concurrency:",
   "cancel-in-progress: true",
   "npm run verify:release",
+  "npm run verify:flow",
   "npm run build",
   "npm run smoke",
   "trap 'kill",
@@ -47,9 +49,13 @@ if (ci.indexOf("npm run smoke") < ci.indexOf("npm run build")) {
   console.error("Release safety failed: smoke tests must run after the production build.");
   failed = true;
 }
+if (ci.indexOf("npm run verify:flow") > ci.indexOf("npm run build")) {
+  console.error("Release safety failed: V1.6.7 flow verification must run before the production build.");
+  failed = true;
+}
 
 const health = fs.existsSync("app/api/health/route.ts") ? fs.readFileSync("app/api/health/route.ts", "utf8") : "";
-for (const needle of ["status: \"ok\"", "Cache-Control", "metaComps.length", "VERCEL_GIT_COMMIT_SHA"]) {
+for (const needle of ["status: \"ok\"", "version: \"1.6.7\"", "Cache-Control", "metaComps.length", "VERCEL_GIT_COMMIT_SHA"]) {
   if (!health.includes(needle)) {
     console.error(`Release safety failed: health endpoint is missing ${needle}`);
     failed = true;
@@ -68,4 +74,4 @@ if (!globalError.includes('"use client"') || !globalError.includes("<html") || !
 }
 
 if (failed) process.exit(1);
-console.log("Release safety contract verified: recovery pages, health endpoint, CI gate and smoke-test path are present.");
+console.log("Release safety contract verified: recovery pages, V1.6.7 health/flow gates, CI ordering and production smoke path are present.");

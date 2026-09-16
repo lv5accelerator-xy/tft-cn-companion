@@ -1,5 +1,6 @@
 import type { UnifiedMetaComp } from "@/data/meta";
 import type { CatalogEntry, Recipe } from "@/data/tft";
+import { scoreSourceOpeningRule, type LocalizedOpeningSignal } from "@/lib/opening-rules";
 
 export type OpeningChampionPick = { id: string; count: number };
 export type OpeningComponentPick = { nameEn: string; count: number };
@@ -10,6 +11,9 @@ export type OpeningCompMatch = {
   unitScore: number;
   itemScore: number;
   metaScore: number;
+  guideScore: number;
+  guideReasons: LocalizedOpeningSignal[];
+  guideCautions: LocalizedOpeningSignal[];
   coreMatches: Array<{ champion: CatalogEntry; count: number }>;
   flexMatches: Array<{ champion: CatalogEntry; count: number }>;
   craftableItemMatches: CatalogEntry[];
@@ -93,13 +97,27 @@ export function rankOpeningComps({
     itemScore = Math.min(35, itemScore);
 
     const metaScore = comp.tier === "S" ? 8 : comp.tier === "A" ? 6 : comp.tier === "ACTIVE" ? 5 : 3;
+    const guideRule = scoreSourceOpeningRule(comp, { selectedChampions, componentCounts, craftableItems: craftable });
     const denominator = Math.max(1,
       Math.min(54, totalChampionCopies * 16)
       + (totalComponents >= 2 ? 35 : totalComponents * 8)
       + 8,
     );
-    const score = hasSignals ? Math.min(96, Math.round(((unitScore + itemScore + metaScore) / denominator) * 100)) : 0;
+    const baseScore = hasSignals ? ((unitScore + itemScore + metaScore) / denominator) * 100 : 0;
+    const score = hasSignals ? Math.min(99, Math.max(0, Math.round(baseScore + guideRule.score * 0.8))) : 0;
 
-    return { comp, score, unitScore, itemScore, metaScore, coreMatches, flexMatches, craftableItemMatches };
-  }).sort((left, right) => right.score - left.score || right.unitScore - left.unitScore || right.itemScore - left.itemScore || right.metaScore - left.metaScore);
+    return {
+      comp,
+      score,
+      unitScore,
+      itemScore,
+      metaScore,
+      guideScore: guideRule.score,
+      guideReasons: guideRule.reasons,
+      guideCautions: guideRule.cautions,
+      coreMatches,
+      flexMatches,
+      craftableItemMatches,
+    };
+  }).sort((left, right) => right.score - left.score || right.guideScore - left.guideScore || right.unitScore - left.unitScore || right.itemScore - left.itemScore || right.metaScore - left.metaScore);
 }

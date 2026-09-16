@@ -35,8 +35,8 @@ function sampleFor(match: OpeningCompMatch, history: ReviewRecord[]): PersonalSa
 function tempoMatches(match: OpeningCompMatch, tempo: UserPreferences["tempo"]) {
   if (tempo === "auto") return false;
   const text = normalize(`${match.comp.playstyle} ${match.comp.name} ${match.comp.nameZh}`);
-  if (tempo === "fast8") return text.includes("fast 8") || text.includes("fast8");
-  if (tempo === "reroll") return text.includes("reroll") || text.includes("reroll");
+  if (tempo === "fast8") return text.includes("fast 8") || text.includes("fast8") || text.includes("fast 9") || text.includes("fast9");
+  if (tempo === "reroll") return text.includes("reroll") || text.includes("slow roll") || text.includes("multi-3");
   return text.includes("flex") || match.comp.flexUnits.length >= 5;
 }
 
@@ -47,8 +47,8 @@ export function buildSmartGuidance(
   locale: "zh" | "en",
 ): SmartGuidanceMatch[] {
   return matches.map((match) => {
-    const reasons: string[] = [];
-    const cautions: string[] = [];
+    const reasons: string[] = match.guideReasons.map((reason) => locale === "zh" ? reason.zh : reason.en);
+    const cautions: string[] = match.guideCautions.map((caution) => locale === "zh" ? caution.zh : caution.en);
     let preferenceAdjustment = 0;
     let familiarityAdjustment = 0;
 
@@ -63,6 +63,10 @@ export function buildSmartGuidance(
       reasons.push(locale === "zh" ? `当前散件可合成 ${match.craftableItemMatches.length} 件来源攻略明确提到的装备。` : `${match.craftableItemMatches.length} craftable item(s) match source-backed item priorities.`);
     } else {
       cautions.push(locale === "zh" ? "当前散件暂未命中来源攻略中的明确成装。" : "Current components do not yet hit a source-backed exact item.");
+    }
+
+    if (match.guideScore > 0) {
+      reasons.push(locale === "zh" ? `兔顶 18.2 开局条件额外匹配 +${match.guideScore}。` : `TFT guide-specific 18.2 opening fit adds +${match.guideScore}.`);
     }
 
     if (tempoMatches(match, preferences.tempo)) {
@@ -112,6 +116,6 @@ export function buildSmartGuidance(
 
     const adjustment = Math.max(-10, Math.min(12, preferenceAdjustment + familiarityAdjustment));
     const guidanceScore = Math.max(0, Math.min(99, match.score + adjustment));
-    return { ...match, guidanceScore, preferenceAdjustment, familiarityAdjustment, reasons, cautions, personalSample };
-  }).sort((left, right) => right.guidanceScore - left.guidanceScore || right.score - left.score || right.unitScore - left.unitScore);
+    return { ...match, guidanceScore, preferenceAdjustment, familiarityAdjustment, reasons: Array.from(new Set(reasons)), cautions: Array.from(new Set(cautions)), personalSample };
+  }).sort((left, right) => right.guidanceScore - left.guidanceScore || right.score - left.score || right.guideScore - left.guideScore || right.unitScore - left.unitScore);
 }
