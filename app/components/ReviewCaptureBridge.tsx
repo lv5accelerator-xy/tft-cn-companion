@@ -116,7 +116,7 @@ export default function ReviewCaptureBridge() {
         let rolesByName = { ...(override?.rolesByName ?? stagePlan?.rolesByName ?? tactical.rolesByName) };
         let itemsByName = Object.fromEntries(Object.entries(override?.itemsByName ?? stagePlan?.itemsByName ?? tactical.itemsByName).map(([unit, values]) => [unit, [...values].slice(0, 3)]));
         let captureSource: ReviewDraft["captureSource"] = "focus";
-        let focusStage = activeStage?.stage ?? stagePlan?.stage ?? "Stage 4";
+        let focusStage: ReviewDraft["focusStage"] = activeStage?.stage ?? stagePlan?.stage ?? "Stage 4";
 
         const builderValue = safeParse(window.localStorage.getItem(BUILDER_KEY));
         const builder = builderValue && typeof builderValue === "object" && !Array.isArray(builderValue) ? builderValue as BuilderSnapshot : null;
@@ -147,7 +147,7 @@ export default function ReviewCaptureBridge() {
           if (Object.keys(nextRoles).length) rolesByName = nextRoles;
           if (Object.keys(nextItems).length) itemsByName = nextItems;
           captureSource = "builder";
-          focusStage = builder.stage || focusStage;
+          if (builder.stage === "Stage 2" || builder.stage === "Stage 3" || builder.stage === "Stage 4") focusStage = builder.stage;
         }
 
         const levelHint = stagePlan?.level ?? "8";
