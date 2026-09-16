@@ -10,6 +10,10 @@ const expectedStages = ["Stage 2", "Stage 3", "Stage 4"];
 const allowedTiers = new Set(["S", "A", "B", "ACTIVE"]);
 const allowedDifficulty = new Set(["EASY", "MEDIUM", "HARD"]);
 
+function canonicalOpeningRuleId(id) {
+  return id === "tuding-182-rift-blue-reroll" ? "tuding-182-rift-blue" : id;
+}
+
 if (snapshot.schemaVersion !== 1) throw new Error(`Unsupported live meta schema: ${snapshot.schemaVersion}`);
 if (!Array.isArray(snapshot.sourceStates) || !Array.isArray(snapshot.articles) || !Array.isArray(snapshot.records)) {
   throw new Error("live-meta.generated.json is missing required arrays");
@@ -60,7 +64,8 @@ for (const record of snapshot.records) {
     if (!roster.has(position.unit)) throw new Error(`Board unit is missing from core/flex roster in ${record.id}: ${position.unit}`);
   }
 
-  if (!openingRulesSource.includes(`"${record.id}"`)) throw new Error(`Missing reviewed opening rule coverage for ${record.id}`);
+  const ruleId = canonicalOpeningRuleId(record.id);
+  if (!openingRulesSource.includes(`"${ruleId}"`)) throw new Error(`Missing reviewed opening rule coverage for ${record.id} (canonical ${ruleId})`);
 
   const text = JSON.stringify(record);
   const bad = blocked.find((keyword) => text.includes(keyword));

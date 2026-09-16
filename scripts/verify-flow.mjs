@@ -5,7 +5,7 @@ const requiredCompIds = [
   "tuding-182-draven-fast9",
   "tuding-182-nidalee-aphelios",
   "tuding-182-thorn-soraka",
-  "tuding-182-rift-blue",
+  "tuding-182-rift-blue-reroll",
   "tuding-182-invoker-ahri",
   "tuding-182-baby-akali",
   "tuding-182-primal-double-carry",
@@ -18,13 +18,16 @@ const requiredCompIds = [
 ];
 
 const checks = [
-  ["lib/opening-rules.ts", ["scoreSourceOpeningRule", "REVIEWED_OPENING_RULE_IDS", ...requiredCompIds]],
-  ["lib/opening-assistant.ts", ["guideScore", "guideReasons", "guideCautions", "scoreSourceOpeningRule"]],
+  ["lib/opening-rules.ts", ["scoreSourceOpeningRule", "REVIEWED_OPENING_RULE_IDS", "tuding-182-rift-blue"]],
+  ["lib/opening-rule-id.ts", ["canonicalOpeningRuleId", "tuding-182-rift-blue-reroll", "tuding-182-rift-blue"]],
+  ["lib/opening-assistant.ts", ["guideScore", "guideReasons", "guideCautions", "scoreSourceOpeningRule", "canonicalOpeningRuleId"]],
   ["lib/smart-guidance.ts", ["match.guideReasons", "match.guideCautions", "guideScore"]],
   ["app/components/EndGameReviewButton.tsx", ["/review?capture=1", "结束对局", "End game"]],
   ["app/components/ReviewCaptureBridge.tsx", ["capture", "REVIEW_DRAFT_KEY", "deriveStageBoardPlans", "window.location.replace(\"/review\")"]],
   ["app/components/DesktopShell.tsx", ["ReviewCaptureBridge", "EndGameReviewButton", "V1.6.7"]],
-  ["scripts/verify-meta.mjs", ["Stage 2/3/4 contract", "opening rule coverage", "Duplicate board hex"]],
+  ["app/comps/page.tsx", ["Fast 8/9", "9级 / 上限", "/insights?source="]],
+  ["app/insights/page.tsx", ["V1.6.7", "source", "id", "WindowSize"]],
+  ["scripts/verify-meta.mjs", ["Stage 2/3/4 contract", "opening rule coverage", "Duplicate board hex", "canonicalOpeningRuleId"]],
   ["public/sw.js", ["v1.6.7-set18", "/review/history", "/insights"]],
   ["app/api/health/route.ts", ["version: \"1.6.7\""]],
 ];
@@ -45,6 +48,19 @@ for (const [file, needles] of checks) {
   }
 }
 
+const snapshot = JSON.parse(fs.readFileSync("data/live-meta.generated.json", "utf8"));
+const snapshotIds = new Set((snapshot.records ?? []).map((record) => record.id));
+for (const id of requiredCompIds) {
+  if (!snapshotIds.has(id)) {
+    console.error(`V1.6.7 flow verification failed: reviewed baseline is missing ${id}`);
+    failed = true;
+  }
+}
+if (snapshotIds.size !== requiredCompIds.length) {
+  console.error(`V1.6.7 flow verification failed: expected ${requiredCompIds.length} reviewed comp IDs, got ${snapshotIds.size}`);
+  failed = true;
+}
+
 const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
 if (pkg.version !== "1.6.7") {
   console.error(`V1.6.7 flow verification failed: package version is ${pkg.version}`);
@@ -56,4 +72,4 @@ if (!pkg.scripts?.["verify:flow"] || !pkg.scripts?.["release:check"]?.includes("
 }
 
 if (failed) process.exit(1);
-console.log("V1.6.7 flow contract verified: 14 reviewed opening rules, explicit Focus → Review capture, data-fidelity guards, offline shell and release version wiring are present.");
+console.log("V1.6.7 flow contract verified: exact 14-comp 18.2 baseline, canonical opening-rule aliases, explicit Focus → Review capture, data-fidelity guards, per-comp Insights, offline shell and release version wiring are present.");

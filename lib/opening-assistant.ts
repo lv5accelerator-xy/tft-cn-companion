@@ -1,5 +1,6 @@
 import type { UnifiedMetaComp } from "@/data/meta";
 import type { CatalogEntry, Recipe } from "@/data/tft";
+import { canonicalOpeningRuleId } from "@/lib/opening-rule-id";
 import { scoreSourceOpeningRule, type LocalizedOpeningSignal } from "@/lib/opening-rules";
 
 export type OpeningChampionPick = { id: string; count: number };
@@ -97,7 +98,7 @@ export function rankOpeningComps({
     itemScore = Math.min(35, itemScore);
 
     const metaScore = comp.tier === "S" ? 8 : comp.tier === "A" ? 6 : comp.tier === "ACTIVE" ? 5 : 3;
-    const guideRule = scoreSourceOpeningRule(comp, { selectedChampions, componentCounts, craftableItems: craftable });
+    const guideRule = scoreSourceOpeningRule({ id: canonicalOpeningRuleId(comp.id) }, { selectedChampions, componentCounts, craftableItems: craftable });
     const denominator = Math.max(1,
       Math.min(54, totalChampionCopies * 16)
       + (totalComponents >= 2 ? 35 : totalComponents * 8)
