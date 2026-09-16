@@ -1,7 +1,7 @@
 import fs from "node:fs";
 
 const checks = [
-  ["app/components/DesktopShell.tsx", ["DensityControl", "ReviewPulse", "data-ui-route", "data-command-ui", "V1.6.6"]],
+  ["app/components/DesktopShell.tsx", ["DensityControl", "ReviewPulse", "data-ui-route", "data-command-ui", "V1.6.7"]],
   ["app/components/DensityControl.tsx", ["tft-cn-companion-ui-density-v1", "uiDensity", "compact", "comfortable"]],
   ["app/components/ReviewPulse.tsx", ["REVIEW_HISTORY_KEY", "WORKSPACE_EVENT", "recentAverage"]],
   ["app/polish.css", ["max-width:1366px", "max-height:820px", "min-width:1800px", "data-ui-density", "data-ui-tip"]],
@@ -23,4 +23,4 @@ for (const [file, needles] of checks) {
 }
 
 if (failed) process.exit(1);
-console.log("UI contract verified: Neon Command shell, tactical route styling, density, responsive breakpoints, overflow safety and reduced-motion support are present.");
+console.log("UI contract verified: V1.6.7 Neon Command shell, tactical route styling, density, responsive breakpoints, overflow safety and reduced-motion support are present.");
