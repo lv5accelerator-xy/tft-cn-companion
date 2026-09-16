@@ -14,6 +14,7 @@ export const RECENT_COMPS_KEY = "tft-cn-companion-recent-comps-v1";
 export const OPENING_SESSION_KEY = "tft-cn-companion-opening-session-v1";
 export const REVIEW_HISTORY_KEY = "tft-cn-companion-review-history-v1";
 export const REVIEW_DRAFT_KEY = "tft-cn-companion-review-draft-v1";
+export const TRAINING_FOCUS_KEY = "tft-cn-companion-training-focus-v1";
 
 export type StoredCompRef = {
   sourceId: string;
@@ -40,6 +41,7 @@ export type WorkspaceSnapshot = {
   focusStates: Record<string, unknown>;
   tray?: unknown[];
   opening?: unknown | null;
+  trainingFocus?: unknown | null;
   locale: "zh" | "en";
 };
 
@@ -132,7 +134,7 @@ export function getWorkspaceUpdatedAt() {
 
 export function readWorkspaceSnapshot(): WorkspaceSnapshot {
   if (typeof window === "undefined") {
-    return { version: 1, savedAt: 0, builder: null, imports: [], reviews: [], favorites: [], recents: [], focusStates: {}, tray: [], opening: null, locale: "zh" };
+    return { version: 1, savedAt: 0, builder: null, imports: [], reviews: [], favorites: [], recents: [], focusStates: {}, tray: [], opening: null, trainingFocus: null, locale: "zh" };
   }
   const builder = safeParse(window.localStorage.getItem(BUILDER_KEY));
   const importsValue = safeParse(window.localStorage.getItem(LOCAL_IMPORT_KEY));
@@ -142,6 +144,7 @@ export function readWorkspaceSnapshot(): WorkspaceSnapshot {
   const focusStatesValue = safeParse(window.localStorage.getItem(FOCUS_COMP_STATES_KEY));
   const trayValue = safeParse(window.localStorage.getItem(FOCUS_TRAY_KEY));
   const openingValue = safeParse(window.localStorage.getItem(OPENING_SESSION_KEY));
+  const trainingFocusValue = safeParse(window.localStorage.getItem(TRAINING_FOCUS_KEY));
   const localeValue = window.localStorage.getItem(LOCALE_KEY);
   return {
     version: 1,
@@ -154,6 +157,7 @@ export function readWorkspaceSnapshot(): WorkspaceSnapshot {
     focusStates: focusStatesValue && typeof focusStatesValue === "object" && !Array.isArray(focusStatesValue) ? focusStatesValue as Record<string, unknown> : {},
     tray: Array.isArray(trayValue) ? trayValue : [],
     opening: openingValue,
+    trainingFocus: trainingFocusValue,
     locale: localeValue === "en" ? "en" : "zh",
   };
 }
@@ -170,6 +174,8 @@ export function writeWorkspaceSnapshot(snapshot: WorkspaceSnapshot) {
   window.localStorage.setItem(FOCUS_TRAY_KEY, JSON.stringify(Array.isArray(snapshot.tray) ? snapshot.tray : []));
   if (snapshot.opening === null || snapshot.opening === undefined) window.localStorage.removeItem(OPENING_SESSION_KEY);
   else window.localStorage.setItem(OPENING_SESSION_KEY, JSON.stringify(snapshot.opening));
+  if (snapshot.trainingFocus === null || snapshot.trainingFocus === undefined) window.localStorage.removeItem(TRAINING_FOCUS_KEY);
+  else window.localStorage.setItem(TRAINING_FOCUS_KEY, JSON.stringify(snapshot.trainingFocus));
   window.localStorage.setItem(LOCALE_KEY, snapshot.locale === "en" ? "en" : "zh");
   window.localStorage.setItem(WORKSPACE_UPDATED_KEY, String(snapshot.savedAt || Date.now()));
   window.dispatchEvent(new CustomEvent(WORKSPACE_EVENT, { detail: { restored: true } }));
