@@ -11,7 +11,7 @@ function sleep(ms) { return new Promise((resolve) => setTimeout(resolve, ms)); }
 async function request(path) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), requestTimeoutMs);
-  try { return await fetch(`${baseUrl}${path}`, { redirect: "follow", signal: controller.signal, headers: { "user-agent": "tft-cn-companion-release-smoke/1.6.7" } }); }
+  try { return await fetch(`${baseUrl}${path}`, { redirect: "follow", signal: controller.signal, headers: { "user-agent": "tft-cn-companion-release-smoke/1.6.8" } }); }
   finally { clearTimeout(timer); }
 }
 
@@ -35,7 +35,7 @@ for (const path of requiredRoutes) {
     if (!ok) { console.error(`Smoke failed: ${path} returned HTTP ${response.status}`); failed = true; continue; }
     if (path === "/api/health") {
       const payload = await response.json();
-      if (payload?.status !== "ok" || payload?.app !== "tft-cn-companion" || payload?.version !== "1.6.7" || payload?.patch !== "18.2" || payload?.compCount !== 14) { console.error(`Smoke failed: ${path} returned an invalid V1.6.7 health payload.`); failed = true; continue; }
+      if (payload?.status !== "ok" || payload?.app !== "tft-cn-companion" || payload?.version !== "1.6.8" || payload?.patch !== "18.2" || payload?.compCount !== 14) { console.error(`Smoke failed: ${path} returned an invalid V1.6.8 health payload.`); failed = true; continue; }
     }
     console.log(`Smoke OK: ${path} -> ${response.status}`);
   } catch (error) { console.error(`Smoke failed: ${path}: ${error instanceof Error ? error.message : String(error)}`); failed = true; }

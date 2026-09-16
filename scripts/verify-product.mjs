@@ -4,7 +4,7 @@ const checks = [
   ["app/share/page.tsx", ["V1.6.4", "下载 PNG", "sharePng", "PRODUCT_URL"]],
   ["app/demo/page.tsx", ["2–3 MINUTE GUIDED DEMO", "不改你的数据", "INSIGHTS"]],
   ["lib/review-intelligence.ts", ["buildReviewIntelligence", "recentDelta", "observations"]],
-  ["app/insights/page.tsx", ["V1.6.7", "个人复盘洞察", "WindowSize", "source", "id"]],
+  ["app/insights/page.tsx", ["V1.6.8", "个人复盘洞察", "WindowSize", "source", "id"]],
   ["app/comps/page.tsx", ["Fast 8/9", "9级 / 上限", "/insights?source="]],
   ["lib/preferences.ts", ["PREFERENCES_KEY", "prioritizeFamiliar", "preferSimpleExecution"]],
   ["app/preferences/page.tsx", ["V1.5.1", "个人偏好", "Smart Guidance"]],
@@ -12,7 +12,7 @@ const checks = [
   ["lib/opening-assistant.ts", ["guideScore", "guideReasons", "scoreSourceOpeningRule"]],
   ["lib/smart-guidance.ts", ["buildSmartGuidance", "guidanceScore", "familiarityAdjustment", "guideReasons"]],
   ["app/coach/page.tsx", ["V1.6", "可解释智能指导", "No live opponent"]],
-  ["app/components/DesktopShell.tsx", ["/coach", "/insights", "/share", "/preferences", "V1.6.7"]],
+  ["app/components/DesktopShell.tsx", ["/coach", "/insights", "/share", "/preferences", "V1.6.8"]],
   ["app/v16.css", ["max-width:1366px", "overflow-y:auto", "data-ui-topbar"]],
 ];
 
@@ -29,4 +29,4 @@ if (/(opponent scouting|hidden information|screen capture|real-time opponent)/i.
   failed = true;
 }
 if (failed) process.exit(1);
-console.log("Product evolution contract verified: V1.4.3 → V1.6 features remain present through V1.6.7 Data Fidelity & Flow Polish, including reviewed 18.2 opening-condition rules and per-comp review deep links.");
+console.log("Product evolution contract verified: V1.4.3 → V1.6 features remain present through V1.6.8 Data Fidelity & Flow Polish, including reviewed 18.2 opening-condition rules and per-comp review deep links.");

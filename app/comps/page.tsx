@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import UnitIcon from "../components/UnitIcon";
 import BoardPreview from "../components/BoardPreview";
 import { useLocale } from "../components/LocaleProvider";
@@ -61,6 +61,7 @@ function CompRow({ comp, champions, favorite, onToggleFavorite }: { comp: Unifie
   const { locale, tr } = useLocale();
   const [expanded, setExpanded] = useState(false);
   const [candidateStatus, setCandidateStatus] = useState("");
+  const detailsId = useId();
 
   const byName = useMemo(() => {
     const map = new Map<string, CatalogEntry>();
@@ -101,6 +102,7 @@ function CompRow({ comp, champions, favorite, onToggleFavorite }: { comp: Unifie
       }
       const slotIndex = slots.findIndex((slot) => slot === null);
       const target = slotIndex >= 0 ? slotIndex : 2;
+      if (slotIndex < 0 && !window.confirm(tr(`候选夹已满。将用「${comp.nameZh}」替换候选 C，是否继续？`, `The tray is full. Replace candidate C with ${comp.name}?`))) return;
       slots[target] = ref;
       window.localStorage.setItem(FOCUS_TRAY_KEY, JSON.stringify(slots));
       markWorkspaceChanged();
@@ -112,14 +114,14 @@ function CompRow({ comp, champions, favorite, onToggleFavorite }: { comp: Unifie
   }
 
   return (
-    <article className={styles.row} onDoubleClick={() => setExpanded((value) => !value)}>
+    <article className={styles.row}>
       <span className={`${styles.tier} ${styles[`tier${comp.tier}`]}`}>{comp.tier === "ACTIVE" ? "·" : comp.tier}</span>
-      <button onClick={() => setExpanded((value) => !value)} className={styles.name}><strong>{locale === "zh" ? comp.nameZh : comp.name}</strong><span>{locale === "zh" ? comp.name : comp.nameZh} · {comp.playstyle}</span><em className={styles.sourceLine}>{comp.source} · {freshness.stale ? "⚠ " : ""}{freshness.label}{comp.syncOrigin === "manual" ? ` · ${tr("图片导入", "Image import")}` : ""}</em></button>
+      <button onClick={() => setExpanded((value) => !value)} className={styles.name} aria-expanded={expanded} aria-controls={expanded ? detailsId : undefined}><strong>{locale === "zh" ? comp.nameZh : comp.name}</strong><span>{locale === "zh" ? comp.name : comp.nameZh} · {comp.playstyle}</span><em className={styles.sourceLine}>{comp.source} · {freshness.stale ? "⚠ " : ""}{freshness.label}{comp.syncOrigin === "manual" ? ` · ${tr("图片导入", "Image import")}` : ""}</em><span>{expanded ? tr("▴ 收起攻略", "▴ Hide guide") : tr("▾ 展开攻略 · 开局条件 / 装备 / 运营", "▾ Guide · Opening / Items / Tempo")}</span></button>
       <div className={styles.units}>{units.map((unit) => <span className={styles.unit} key={unit.id} title={`${unit.nameZh} / ${unit.nameEn}`}><UnitIcon entry={unit} size={38} />{unit.tier ? <em>{unit.tier}</em> : null}</span>)}</div>
       <div className={styles.traits}>{comp.traits.slice(0, 4).map((trait) => <span className={styles.trait} key={trait}>{trait}</span>)}</div>
       <div className={styles.actions}><button className={styles.builderButton} onClick={onToggleFavorite}>{favorite ? "♥" : "♡"} {tr("收藏", "Save")}</button><button className={styles.candidateButton} onClick={addCandidate}>☆ {candidateStatus || tr("候选", "Candidate")}</button><button className={styles.focusButton} onClick={openFocus}>◉ {tr("对局", "Focus")}</button><button className={styles.builderButton} onClick={openBuilder}>Builder</button></div>
 
-      {expanded ? <div className={styles.details}>
+      {expanded ? <div className={styles.details} id={detailsId}>
         <div className={styles.sourceMeta}><span><b>{tr("来源", "Source")}</b> {comp.source}</span><span><b>{tr("更新", "Updated")}</b> {comp.sourceUpdatedAt} · {freshness.stale ? "⚠ " : ""}{freshness.label}</span><span><b>{tr("文章", "Article")}</b> {comp.sourceArticleTitle}</span>{comp.sourceUrl ? <a href={comp.sourceUrl} target="_blank" rel="noreferrer">{tr("查看原文", "Original")}</a> : null}</div>
         <div className={styles.guideGrid}>
           <section className={styles.guideBlock}><span>{tr("什么时候玩", "When to play")}</span><strong>{comp.whenToPlay || "—"}</strong></section>

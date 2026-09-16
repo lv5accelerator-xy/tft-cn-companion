@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { metaComps } from "@/data/meta";
 import { useEffect, useMemo, useState } from "react";
 import { buildReviewIntelligence } from "@/lib/review-intelligence";
 import { parseReviewHistory, reviewTagLabel, type ReviewIssueTag, type ReviewRecord } from "@/lib/review";
@@ -44,8 +45,12 @@ export default function InsightsPage() {
   const compOptions = useMemo(() => {
     const map = new Map<string, { zh: string; en: string }>();
     history.forEach((record) => map.set(`${record.sourceId}:${record.compId}`, { zh: record.plannedNameZh, en: record.plannedNameEn }));
+    if (compFilter !== "all" && !map.has(compFilter)) {
+      const comp = metaComps.find((entry) => `${entry.sourceId}:${entry.id}` === compFilter);
+      map.set(compFilter, { zh: comp?.nameZh ?? compFilter, en: comp?.name ?? compFilter });
+    }
     return [...map.entries()];
-  }, [history]);
+  }, [history, compFilter]);
 
   const windowed = useMemo(() => history.slice(0, windowSize).filter((record) => compFilter === "all" || `${record.sourceId}:${record.compId}` === compFilter), [history, windowSize, compFilter]);
   const data = useMemo(() => buildReviewIntelligence(windowed, locale), [windowed, locale]);
@@ -73,11 +78,17 @@ export default function InsightsPage() {
     return [...new Set([...recent.keys(), ...older.keys()])].map((tag) => ({ tag, recent: recent.get(tag) ?? 0, older: older.get(tag) ?? 0, delta: (recent.get(tag) ?? 0) - (older.get(tag) ?? 0) })).sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
   }, [windowed]);
 
-  if (!history.length) return <div className={styles.empty}><span>V1.6.7 · REVIEW INTELLIGENCE</span><h1>{tr("先积累第一局复盘", "Save your first review")}</h1><p>{tr("个人洞察只读取你自己保存的复盘。", "Personal insights only read your saved reviews.")}</p><Link href="/review">{tr("去赛后复盘", "Open Review Center")}</Link></div>;
+  if (!windowed.length && compFilter !== "all") {
+    const name = compOptions.find(([key]) => key === compFilter)?.[1];
+    const comp = metaComps.find((entry) => `${entry.sourceId}:${entry.id}` === compFilter);
+    const hasOlder = history.some((record) => `${record.sourceId}:${record.compId}` === compFilter);
+    return <div className={styles.empty}><span>V1.6.8 · REVIEW INTELLIGENCE</span><h1>{name ? tr(name.zh, name.en) : compFilter}</h1><p>{hasOlder ? tr(`最近 ${windowSize} 局中没有这套阵容的记录，可在历史中查看更早的复盘。`, `No records for this comp in your last ${windowSize} games. Older reviews are available in history.`) : tr("这套阵容暂无个人复盘。完成一局并保存复盘后，再回来查看。", "No personal reviews for this comp yet. Complete a game and save its review, then return here.")}</p><div className={styles.actions}><Link href="/review/history">{tr("查看复盘历史", "Review history")}</Link>{comp ? <Link href={`/focus?source=${encodeURIComponent(comp.sourceId)}&id=${encodeURIComponent(comp.id)}`}>{tr("用这套阵容开始对局", "Start with this comp")}</Link> : <Link href="/comps">{tr("返回阵容库", "Back to comps")}</Link>}<button onClick={() => setCompFilter("all")}>{tr("查看全部阵容", "Show all comps")}</button></div></div>;
+  }
+  if (!history.length) return <div className={styles.empty}><span>V1.6.8 · REVIEW INTELLIGENCE</span><h1>{tr("先积累第一局复盘", "Save your first review")}</h1><p>{tr("个人洞察只读取你自己保存的复盘。", "Personal insights only read your saved reviews.")}</p><Link href="/review">{tr("去赛后复盘", "Open Review Center")}</Link></div>;
 
   return (
     <div className={styles.page}>
-      <header className={styles.heading}><div><span>V1.6.7 · REVIEW INTELLIGENCE</span><h1>{tr("个人复盘洞察", "Personal Review Intelligence")}</h1><p>{tr("用 10 / 20 / 50 局窗口观察名次、问题标签和单阵容样本变化。支持从阵容详情直接跳到该阵容自己的历史样本；只描述记录，不做因果推断。", "Use 10 / 20 / 50-game windows to inspect placement, issue-tag and per-comp sample trends. Comp details can deep-link directly into that comp's personal history; this describes records, not causes.")}</p></div><div className={styles.actions}><Link href="/review/history">{tr("管理历史", "Manage history")}</Link><Link href="/review">{tr("记录新一局", "Add review")}</Link><Link href="/share">{tr("分享", "Share")}</Link></div></header>
+      <header className={styles.heading}><div><span>V1.6.8 · REVIEW INTELLIGENCE</span><h1>{tr("个人复盘洞察", "Personal Review Intelligence")}</h1><p>{tr("用 10 / 20 / 50 局窗口观察名次、问题标签和单阵容样本变化。支持从阵容详情直接跳到该阵容自己的历史样本；只描述记录，不做因果推断。", "Use 10 / 20 / 50-game windows to inspect placement, issue-tag and per-comp sample trends. Comp details can deep-link directly into that comp's personal history; this describes records, not causes.")}</p></div><div className={styles.actions}><Link href="/review/history">{tr("管理历史", "Manage history")}</Link><Link href="/review">{tr("记录新一局", "Add review")}</Link><Link href="/share">{tr("分享", "Share")}</Link></div></header>
 
       <section className={styles.controls}><label><span>{tr("趋势窗口", "Trend window")}</span><select value={windowSize} onChange={(event) => setWindowSize(Number(event.target.value) as WindowSize)}><option value={10}>10</option><option value={20}>20</option><option value={50}>50</option></select></label><label><span>{tr("阵容样本", "Comp sample")}</span><select value={compFilter} onChange={(event) => setCompFilter(event.target.value)}><option value="all">{tr("全部阵容", "All comps")}</option>{compOptions.map(([key, name]) => <option key={key} value={key}>{locale === "zh" ? name.zh : name.en}</option>)}</select></label></section>
 
