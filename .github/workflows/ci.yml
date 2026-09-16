@@ -50,7 +50,7 @@ jobs:
       - name: Verify V1.6 maintenance contract
         run: npm run verify:maintenance
 
-      - name: Verify V1.6.7 data and flow contract
+      - name: Verify V1.6.8 data and flow contract
         run: npm run verify:flow
 
       - name: Build

@@ -399,6 +399,7 @@ export default function ReviewPage() {
               <span>{draft.captureSource === "builder" ? tr("BUILDER 最终快照", "BUILDER FINAL SNAPSHOT") : tr("STAGE BOARD 快照", "STAGE BOARD SNAPSHOT")}</span>
               <h2>{locale === "zh" ? draft.plannedNameZh : draft.plannedNameEn}</h2>
               <p>{draft.source} · Patch {draft.patch} · {draft.playstyle}</p>
+              <p role="status">{tr(`快照来源：${draft.captureSource === "builder" ? "Builder" : "Focus"} · ${draft.focusStage}。请核对实际棋盘和最终名次后保存。`, `Captured from ${draft.captureSource === "builder" ? "Builder" : "Focus"} · ${draft.focusStage}. Check your actual board and placement before saving.`)}</p>
             </div>
             <div className={styles.resultActions}>
               <button className={styles.clearSnapshot} onClick={clearSnapshot}>× {tr("清除快照", "Clear snapshot")}</button>

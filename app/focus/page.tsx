@@ -182,7 +182,7 @@ export default function FocusPage() {
 
   const comp = useMemo(() => {
     if (!ready) return null;
-    if (requested) return allComps.find((entry) => entry.sourceId === requested.sourceId && entry.id === requested.id) ?? allComps[0] ?? null;
+    if (requested) return allComps.find((entry) => entry.sourceId === requested.sourceId && entry.id === requested.id) ?? null;
     return allComps[0] ?? null;
   }, [allComps, ready, requested]);
 
@@ -381,7 +381,7 @@ export default function FocusPage() {
   }, [candidateSlots, comp, openBuilder, switchComp]);
 
   if (!ready) return <div className={styles.empty}><strong>{tr("正在恢复上次对局…", "Restoring your last game…")}</strong></div>;
-  if (!comp) return <div className={styles.empty}><strong>{tr("暂无可用阵容", "No comps available")}</strong><Link href="/comps">{tr("返回阵容库", "Back to comps")}</Link></div>;
+  if (!comp) return <div className={styles.empty}><strong>{tr("阵容不存在或已下架", "Comp unavailable or removed")}</strong><p>{tr("未切换到其他阵容。请返回阵容库重新选择。", "No other comp was selected. Choose a comp from the library.")}</p><Link href="/comps">{tr("返回阵容库", "Back to comps")}</Link></div>;
 
   const handoffText = activeStagePlan?.handoffs.length
     ? activeStagePlan.handoffs.map((handoff) => `${handoff.from} → ${handoff.to}`).join(" · ")
@@ -399,7 +399,7 @@ export default function FocusPage() {
         </div>
         <div className={styles.headingActions}>
           <button className={compact ? styles.compactActive : ""} onClick={() => setCompact((value) => !value)} title={tr("快捷键 C", "Shortcut C")}>{compact ? tr("紧凑 HUD", "Compact HUD") : tr("标准 HUD", "Standard HUD")} <kbd>C</kbd></button>
-          <Link href="/review">{tr("赛后复盘", "Review")}</Link>
+          <Link href="/review/history">{tr("复盘历史", "Review history")}</Link>
           <button onClick={openBuilder} title={tr("把当前阶段载入 Builder · 快捷键 B", "Load the current stage into Builder · Shortcut B")}>{tr("阶段 Builder", "Stage Builder")} <kbd>B</kbd></button>
         </div>
       </header>

@@ -50,12 +50,12 @@ if (ci.indexOf("npm run smoke") < ci.indexOf("npm run build")) {
   failed = true;
 }
 if (ci.indexOf("npm run verify:flow") > ci.indexOf("npm run build")) {
-  console.error("Release safety failed: V1.6.7 flow verification must run before the production build.");
+  console.error("Release safety failed: V1.6.8 flow verification must run before the production build.");
   failed = true;
 }
 
 const health = fs.existsSync("app/api/health/route.ts") ? fs.readFileSync("app/api/health/route.ts", "utf8") : "";
-for (const needle of ["status: \"ok\"", "version: \"1.6.7\"", "Cache-Control", "metaComps.length", "VERCEL_GIT_COMMIT_SHA"]) {
+for (const needle of ["status: \"ok\"", "version: \"1.6.8\"", "Cache-Control", "metaComps.length", "VERCEL_GIT_COMMIT_SHA"]) {
   if (!health.includes(needle)) {
     console.error(`Release safety failed: health endpoint is missing ${needle}`);
     failed = true;
@@ -74,4 +74,4 @@ if (!globalError.includes('"use client"') || !globalError.includes("<html") || !
 }
 
 if (failed) process.exit(1);
-console.log("Release safety contract verified: recovery pages, V1.6.7 health/flow gates, CI ordering and production smoke path are present.");
+console.log("Release safety contract verified: recovery pages, V1.6.8 health/flow gates, CI ordering and production smoke path are present.");
