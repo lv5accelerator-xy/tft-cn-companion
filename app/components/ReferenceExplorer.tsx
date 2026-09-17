@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchTftCatalog } from "@/lib/catalog-client";
 import { useEffect, useMemo, useState } from "react";
 import type { CatalogEntry, TftCatalogPayload } from "@/data/tft";
 import type { ChampionDetailIndex } from "@/lib/champion-details-client";
@@ -23,7 +24,7 @@ export default function ReferenceExplorer({ kind }: { kind: ReferenceKind }) {
   const [championIndex, setChampionIndex] = useState<ChampionDetailIndex | null>(null);
 
   useEffect(() => {
-    fetch("/api/tft")
+    fetchTftCatalog()
       .then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject())
       .then(setCatalog)
       .catch(() => setCatalog(null));

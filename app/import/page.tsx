@@ -1,6 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { patchInfo } from "@/data/tft";
+import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 import { ChangeEvent, DragEvent, useEffect, useMemo, useState } from "react";
 import { isBlockedGoldenSpatulaText, metaSources, type MetaSourceId } from "@/data/meta-sources";
 import type { UnifiedMetaComp } from "@/data/meta";
@@ -93,7 +96,7 @@ function validateComp(comp: AnalysisComp) {
 export default function ImportPage() {
   const { tr } = useLocale();
   const [sourceId, setSourceId] = useState<MetaSourceId>("tuding");
-  const [patch, setPatch] = useState("18.1");
+  const [patch, setPatch] = useState(patchInfo.patch);
   const [images, setImages] = useState<PreviewImage[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -154,9 +157,13 @@ export default function ImportPage() {
     setEditingIndex(null);
     setSaved({});
     try {
+      const client = getSupabaseBrowserClient();
+      const session = client ? (await client.auth.getSession()).data.session : null;
+      if (!session) throw new Error(tr("请先在账号页登录，再分析图片。", "Sign in on the account page before analyzing images."));
       const response = await fetch("/api/analyze-comp-image", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json", authorization: `Bearer ${session.access_token}` },
+        signal: AbortSignal.timeout(60000),
         body: JSON.stringify({ images: images.map((image) => image.dataUrl), sourceId, sourceName: source?.name ?? sourceId, patch }),
       });
       const payload = await response.json();
@@ -271,6 +278,7 @@ export default function ImportPage() {
 
   return (
     <div className={styles.page}>
+      <p><Link href="/account">{tr("图片分析需要登录 · 前往账号页", "Image analysis requires sign-in · Account")}</Link></p>
       <header className={styles.heading}>
         <div>
           <h1>{tr("一图流导入", "Infographic Import")}</h1>
@@ -284,7 +292,7 @@ export default function ImportPage() {
 
       <section className={styles.config}>
         <label><span>{tr("来源", "Source")}</span><select value={sourceId} onChange={(event) => setSourceId(event.target.value as MetaSourceId)}>{ALLOWED_SOURCES.map((entry) => <option value={entry.id} key={entry.id}>{entry.name}</option>)}</select></label>
-        <label><span>Patch</span><input value={patch} onChange={(event) => setPatch(event.target.value)} placeholder="18.1" /></label>
+        <label><span>Patch</span><input value={patch} onChange={(event) => setPatch(event.target.value)} placeholder={patchInfo.patch} /></label>
         <div className={styles.hint}>{tr("图片只在点击 AI 分析时发送到服务端；浏览器会先压缩，原图不会写进阵容库。识别结果必须经人工确认。", "Images are compressed in-browser and sent only when you click AI Analyze. Original images are not stored in the comp library; review is required.")}</div>
       </section>
 

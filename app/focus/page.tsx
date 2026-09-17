@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchTftCatalog } from "@/lib/catalog-client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
@@ -130,7 +131,7 @@ export default function FocusPage() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    fetch("/api/tft").then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject()).then(setCatalog).catch(() => setCatalog(null));
+    fetchTftCatalog().then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject()).then(setCatalog).catch(() => setCatalog(null));
     const params = new URLSearchParams(window.location.search);
     const sourceId = params.get("source");
     const id = params.get("id");

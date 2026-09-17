@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "tft-cn-companion-";
-const BUILD_CACHE = `${CACHE_PREFIX}v1.6.9-practice-loop`;
+const BUILD_CACHE = `${CACHE_PREFIX}v1.6.9-practice-loop-safety-1`;
 const SHELL_CACHE = `${BUILD_CACHE}-shell`;
 const DATA_CACHE = `${BUILD_CACHE}-data`;
 const RUNTIME_CACHE = `${BUILD_CACHE}-runtime`;
@@ -43,7 +43,7 @@ self.addEventListener("message", (event) => {
   if (event.data?.type === "SKIP_WAITING") void self.skipWaiting();
 });
 
-async function staleWhileRevalidate(request, cacheName, stableKey, maxEntries = 96) {
+async function staleWhileRevalidate(event, request, cacheName, stableKey, maxEntries = 96) {
   const cache = await caches.open(cacheName);
   const key = stableKey || request;
   const cached = await cache.match(key);
@@ -54,7 +54,8 @@ async function staleWhileRevalidate(request, cacheName, stableKey, maxEntries = 
     }
     return response;
   }).catch(() => null);
-  if (cached) { void refresh; return cached; }
+  event.waitUntil(refresh.then(() => undefined));
+  if (cached) return cached;
   const response = await refresh;
   if (response) return response;
   throw new Error("offline");
@@ -78,13 +79,13 @@ async function networkFirstNavigation(request) {
 
 self.addEventListener("fetch", (event) => {
   const request = event.request;
-  if (request.method !== "GET") return;
+  if (request.method !== "GET" || request.cache === "no-store") return;
   const url = new URL(request.url);
   if (request.mode === "navigate") { event.respondWith(networkFirstNavigation(request)); return; }
-  if (url.origin === self.location.origin && url.pathname === "/api/tft") { event.respondWith(staleWhileRevalidate(request, DATA_CACHE, "/api/tft", 8)); return; }
-  if (url.origin === self.location.origin && url.pathname.startsWith("/_next/static/")) { event.respondWith(staleWhileRevalidate(request, RUNTIME_CACHE, undefined, 96)); return; }
+  if (url.origin === self.location.origin && url.pathname === "/api/tft") { event.respondWith(staleWhileRevalidate(event, request, DATA_CACHE, "/api/tft", 8)); return; }
+  if (url.origin === self.location.origin && url.pathname.startsWith("/_next/static/")) { event.respondWith(staleWhileRevalidate(event, request, RUNTIME_CACHE, undefined, 96)); return; }
   if (request.destination === "image") {
     const allowedRemoteImage = url.origin === self.location.origin || url.hostname === "ddragon.leagueoflegends.com" || url.hostname === "raw.communitydragon.org";
-    if (allowedRemoteImage) event.respondWith(staleWhileRevalidate(request, RUNTIME_CACHE, undefined, 96));
+    if (allowedRemoteImage) event.respondWith(staleWhileRevalidate(event, request, RUNTIME_CACHE, undefined, 96));
   }
 });

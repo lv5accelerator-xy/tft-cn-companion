@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchTftCatalog } from "@/lib/catalog-client";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -53,7 +54,7 @@ export default function OpeningPage() {
   const [restored, setRestored] = useState(false);
 
   useEffect(() => {
-    fetch("/api/tft").then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject()).then(setCatalog).catch(() => setCatalog(null));
+    fetchTftCatalog().then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject()).then(setCatalog).catch(() => setCatalog(null));
     try {
       const imported = JSON.parse(window.localStorage.getItem(LOCAL_IMPORT_KEY) || "[]") as unknown[];
       setLocalComps(imported.filter(isManualComp));

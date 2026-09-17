@@ -2,7 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
-import { AUTO_SYNC_KEY, WORKSPACE_EVENT, readWorkspaceSnapshot, type WorkspaceSnapshot } from "@/lib/workspace";
+import { AUTO_SYNC_KEY, WORKSPACE_EVENT } from "@/lib/workspace";
+
+import { syncWorkspace } from "@/lib/cloud-sync";
 
 export const CLOUD_SYNC_EVENT = "tft-cloud-sync-status";
 
@@ -33,19 +35,15 @@ export default function CloudSyncAgent() {
       if (!userId || !autoSyncEnabled()) return;
       emit("syncing", "push");
       try {
-        const snapshot = readWorkspaceSnapshot();
-        const payload: WorkspaceSnapshot = { ...snapshot, savedAt: Date.now() };
-        const { error } = await client
-          .from("tft_workspaces")
-          .upsert({ user_id: userId, payload }, { onConflict: "user_id" });
-        if (error) throw error;
+        await syncWorkspace(client, userId, "auto");
         if (!disposed) emit("success", "pushed");
       } catch (error) {
         if (!disposed) emit("error", error instanceof Error ? error.message : "cloud-sync-failed");
       }
     }
 
-    function schedulePush() {
+    function schedulePush(event?: Event) {
+      if ((event as CustomEvent | undefined)?.detail?.restored) return;
       if (!userIdRef.current || !autoSyncEnabled()) return;
       if (timerRef.current !== null) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => void pushCurrent(), 1200);
@@ -56,15 +54,18 @@ export default function CloudSyncAgent() {
     });
 
     const { data: authListener } = client.auth.onAuthStateChange((_event, session) => {
+      if (timerRef.current !== null) clearTimeout(timerRef.current);
       userIdRef.current = session?.user?.id ?? null;
     });
 
     window.addEventListener(WORKSPACE_EVENT, schedulePush);
+    window.addEventListener("online", schedulePush);
     return () => {
       disposed = true;
       if (timerRef.current !== null) clearTimeout(timerRef.current);
       authListener.subscription.unsubscribe();
       window.removeEventListener(WORKSPACE_EVENT, schedulePush);
+      window.removeEventListener("online", schedulePush);
     };
   }, []);
 

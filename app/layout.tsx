@@ -6,7 +6,6 @@ import "./v16.css";
 import "./maintenance.css";
 import "./command-ui.css";
 import CloudSyncAgent from "./components/CloudSyncAgent";
-import CompDataReset from "./components/CompDataReset";
 import DesktopShell from "./components/DesktopShell";
 import ToastHost from "./components/ToastHost";
 import { LocaleProvider } from "./components/LocaleProvider";
@@ -32,5 +31,5 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: "#080b12" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="zh-CN"><body><LocaleProvider><CompDataReset /><CloudSyncAgent /><DesktopShell>{children}</DesktopShell><ToastHost /></LocaleProvider></body></html>;
+  return <html lang="zh-CN"><body><LocaleProvider><CloudSyncAgent /><DesktopShell>{children}</DesktopShell><ToastHost /></LocaleProvider></body></html>;
 }

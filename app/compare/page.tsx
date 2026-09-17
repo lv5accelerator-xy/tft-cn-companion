@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchTftCatalog } from "@/lib/catalog-client";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import UnitIcon from "../components/UnitIcon";
@@ -91,7 +92,7 @@ export default function CandidateComparePage() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    fetch("/api/tft")
+    fetchTftCatalog()
       .then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject())
       .then(setCatalog)
       .catch(() => setCatalog(null));

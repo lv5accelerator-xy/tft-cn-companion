@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchTftCatalog } from "@/lib/catalog-client";
 import Link from "next/link";
 import { FormEvent, KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -53,7 +54,7 @@ export default function QuickSearch() {
 
   useEffect(() => {
     if (!open || catalog) return;
-    fetch("/api/tft")
+    fetchTftCatalog()
       .then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject())
       .then(setCatalog)
       .catch(() => setCatalog(null));

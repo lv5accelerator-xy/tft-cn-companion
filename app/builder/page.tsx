@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchTftCatalog } from "@/lib/catalog-client";
 import { useEffect, useMemo, useState } from "react";
 import UnitIcon from "../components/UnitIcon";
 import BoardPreview from "../components/BoardPreview";
@@ -108,13 +109,13 @@ export default function BuilderPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch("/api/tft").then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject()),
+      fetchTftCatalog().then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject()),
       fetch("/api/tft-trait-map").then((response) => response.ok ? response.json() as Promise<TraitPayload> : Promise.reject()),
     ]).then(([catalogPayload, traits]) => {
       setCatalog(catalogPayload);
       setTraitPayload(traits);
     }).catch(() => {
-      fetch("/api/tft")
+      fetchTftCatalog()
         .then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject())
         .then(setCatalog)
         .catch(() => setCatalog(null));

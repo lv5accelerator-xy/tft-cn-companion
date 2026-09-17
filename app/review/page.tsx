@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchTftCatalog } from "@/lib/catalog-client";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import BoardPreview from "../components/BoardPreview";
@@ -130,7 +131,7 @@ export default function ReviewPage() {
   const initialized = useRef(false);
 
   useEffect(() => {
-    fetch("/api/tft")
+    fetchTftCatalog()
       .then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject())
       .then(setCatalog)
       .catch(() => setCatalog(null));

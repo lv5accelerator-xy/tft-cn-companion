@@ -45,6 +45,17 @@ export type WorkspaceSnapshot = {
   locale: "zh" | "en";
 };
 
+export function isWorkspaceSnapshot(value: unknown): value is WorkspaceSnapshot {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const snapshot = value as Record<string, unknown>;
+  return snapshot.version === 1 && typeof snapshot.savedAt === "number" && Number.isFinite(snapshot.savedAt)
+    && snapshot.savedAt >= 0 && (snapshot.locale === "zh" || snapshot.locale === "en")
+    && "builder" in snapshot && (snapshot.builder === null || (typeof snapshot.builder === "object" && !Array.isArray(snapshot.builder)))
+    && ["imports", "reviews", "favorites", "recents"].every((key) => Array.isArray(snapshot[key]))
+    && Boolean(snapshot.focusStates) && typeof snapshot.focusStates === "object" && !Array.isArray(snapshot.focusStates)
+    && (snapshot.tray === undefined || Array.isArray(snapshot.tray));
+}
+
 function safeParse(value: string | null): unknown {
   if (!value) return null;
   try {
@@ -164,6 +175,7 @@ export function readWorkspaceSnapshot(): WorkspaceSnapshot {
 
 export function writeWorkspaceSnapshot(snapshot: WorkspaceSnapshot) {
   if (typeof window === "undefined") return;
+  if (!isWorkspaceSnapshot(snapshot)) throw new Error("Invalid workspace backup; local data was not changed.");
   if (snapshot.builder === null) window.localStorage.removeItem(BUILDER_KEY);
   else window.localStorage.setItem(BUILDER_KEY, JSON.stringify(snapshot.builder));
   window.localStorage.setItem(LOCAL_IMPORT_KEY, JSON.stringify(Array.isArray(snapshot.imports) ? snapshot.imports : []));

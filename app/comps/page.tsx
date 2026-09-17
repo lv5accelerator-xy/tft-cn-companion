@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchTftCatalog } from "@/lib/catalog-client";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useMemo, useState } from "react";
 import UnitIcon from "../components/UnitIcon";
@@ -146,7 +147,7 @@ export default function CompsPage() {
   const [filter, setFilter] = useState<"ALL" | "FAST8" | "REROLL" | "FAVORITES">("ALL");
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>("all");
 
-  useEffect(() => { fetch("/api/tft").then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject()).then(setCatalog).catch(() => setCatalog(null)); }, []);
+  useEffect(() => { fetchTftCatalog().then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject()).then(setCatalog).catch(() => setCatalog(null)); }, []);
   useEffect(() => {
     try {
       const parsed = JSON.parse(window.localStorage.getItem(LOCAL_IMPORT_KEY) || "[]") as unknown[];

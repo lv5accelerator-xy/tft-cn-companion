@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchTftCatalog } from "@/lib/catalog-client";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import UnitIcon from "../components/UnitIcon";
 import { useLocale } from "../components/LocaleProvider";
@@ -21,7 +22,7 @@ export default function SearchPage() {
     const q = new URLSearchParams(window.location.search).get("q") ?? "";
     setQuery(q); setActiveQuery(q);
   }, []);
-  useEffect(() => { fetch("/api/tft").then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject()).then(setCatalog).catch(() => setCatalog(null)); }, []);
+  useEffect(() => { fetchTftCatalog().then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject()).then(setCatalog).catch(() => setCatalog(null)); }, []);
 
   const results = useMemo(() => {
     const q = normalize(activeQuery);

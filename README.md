@@ -5,7 +5,7 @@
 ## V1.0
 
 - Set 18 · Enchanted Wilds
-- Patch 18.1
+- Patch 18.2
 - Next.js 16 + React 19 + TypeScript
 - Riot Data Dragon + CommunityDragon
 - OpenAI 图片一图流分析
@@ -99,7 +99,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 ## 本地运行
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
@@ -123,3 +123,24 @@ Live 模式以赛前已存在的静态资料、公开攻略摘要、用户主动
 ## Disclaimer
 
 TFT CN Companion is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
+
+## 安全修复与部署配置
+
+- 使用 Node.js 24 和 `npm ci`，依赖版本及 `package-lock.json` 一起提交。
+- `npm test` 执行同步冲突、导入数据保留、AI 访问控制和缓存的行为回归测试；CI 会运行这些测试。
+- 自动同步通过服务端 `updated_at` 条件更新检查冲突，不再把上传时间当成内容修改时间。不需要数据库迁移。
+- 首次在已有云端数据的设备同步，或两台设备都修改后，智能同步会保留双方版本并提示选择方向。手动覆盖和冲突处理前保留最近 5 份本机恢复备份，可在账号页导出。备份位于当前浏览器，不是额外的远程备份；无法保存备份时停止覆盖。
+- 用户手动导入的阵容不再因名称、日期或补丁版本被自动删除。
+
+AI 图片分析现在需要已登录的非匿名 Supabase 用户，以及 Upstash Redis REST 配置：
+
+```text
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+```
+
+这两个值仅供服务端使用，不要加 `NEXT_PUBLIC_` 前缀，也不要提交真实值。原有 `OPENAI_API_KEY` 和 Supabase 公开配置仍然需要。
+
+限额为每位用户每 60 秒 2 次、每 24 小时 10 次、全站每 24 小时 100 次；窗口从第一次调用开始。Redis 脚本原子检查并扣除额度，多个服务实例共享额度。失败请求也计入额度，每次最多调用主模型及一次备用模型。配置缺失或额度服务故障时停止付费调用并返回 503；超额返回 429 和 `Retry-After`。上线前需要配置上述 Redis 环境变量，否则图片分析保持不可用。
+
+本地测试使用模拟的 Supabase/Auth/Redis/OpenAI 响应，不会消耗 AI 额度，也不会写入生产数据库。

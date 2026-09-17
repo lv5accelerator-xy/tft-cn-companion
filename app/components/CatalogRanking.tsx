@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchTftCatalog } from "@/lib/catalog-client";
 import { useEffect, useMemo, useState } from "react";
 import UnitIcon from "./UnitIcon";
 import { useLocale } from "./LocaleProvider";
@@ -73,7 +74,7 @@ export default function CatalogRanking({ kind }: { kind: CatalogKey }) {
   const config = configs[kind];
 
   useEffect(() => {
-    fetch("/api/tft")
+    fetchTftCatalog()
       .then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject())
       .then(setCatalog)
       .catch(() => setCatalog(null));

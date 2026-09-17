@@ -1,24 +1,18 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { getSupabaseBrowserClient, isSupabaseConfigured } from "@/lib/supabase-browser";
 import {
   AUTO_SYNC_KEY,
   WORKSPACE_EVENT,
   getWorkspaceUpdatedAt,
-  markWorkspaceChanged,
-  readWorkspaceSnapshot,
-  writeWorkspaceSnapshot,
-  type WorkspaceSnapshot,
 } from "@/lib/workspace";
 import { useLocale } from "../components/LocaleProvider";
 import styles from "./account.module.css";
 
-type CloudRecord = {
-  payload: WorkspaceSnapshot;
-  updated_at: string;
-};
+import { loadCloudWorkspace, syncWorkspace, SYNC_BACKUPS_KEY, type CloudRecord } from "@/lib/cloud-sync";
+import { CLOUD_SYNC_EVENT } from "../components/CloudSyncAgent";
 
 type SyncState = "idle" | "syncing" | "success" | "error";
 
@@ -47,7 +41,6 @@ export default function AccountPage() {
   const [cloudRecord, setCloudRecord] = useState<CloudRecord | null>(null);
   const [autoSync, setAutoSync] = useState(false);
   const [localUpdatedAt, setLocalUpdatedAt] = useState(0);
-  const syncTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const refreshLocalTime = useCallback(() => setLocalUpdatedAt(getWorkspaceUpdatedAt()), []);
 
@@ -56,90 +49,36 @@ export default function AccountPage() {
       setCloudRecord(null);
       return null;
     }
-    const { data, error } = await supabase
-      .from("tft_workspaces")
-      .select("payload,updated_at")
-      .eq("user_id", user.id)
-      .maybeSingle();
-    if (error) throw error;
-    const record = data as CloudRecord | null;
+    const record = await loadCloudWorkspace(supabase, user.id);
     setCloudRecord(record);
     return record;
   }, [supabase, user]);
 
-  const pushCloud = useCallback(async (quiet = false) => {
+  const runSync = useCallback(async (mode: "smart" | "push" | "pull") => {
     if (!supabase || !user) return;
-    if (!quiet) {
-      setSyncState("syncing");
-      setSyncMessage(tr("正在上传本机工作区…", "Uploading this device workspace…"));
-    }
-    try {
-      const snapshot = readWorkspaceSnapshot();
-      const savedAt = Date.now();
-      const payload: WorkspaceSnapshot = { ...snapshot, savedAt };
-      const { data, error } = await supabase
-        .from("tft_workspaces")
-        .upsert({ user_id: user.id, payload }, { onConflict: "user_id" })
-        .select("payload,updated_at")
-        .single();
-      if (error) throw error;
-      window.localStorage.setItem("tft-cn-companion-workspace-updated-v1", String(savedAt));
-      setLocalUpdatedAt(savedAt);
-      setCloudRecord(data as CloudRecord);
-      setSyncState("success");
-      setSyncMessage(tr("已同步到云端。", "Synced to cloud."));
-    } catch (error) {
-      setSyncState("error");
-      setSyncMessage(error instanceof Error ? error.message : tr("云同步失败。", "Cloud sync failed."));
-    }
-  }, [supabase, tr, user]);
-
-  const pullCloud = useCallback(async () => {
-    if (!supabase || !user) return;
+    if (mode !== "smart" && !window.confirm(tr("将按所选方向替换工作区，替换前会保留恢复备份。继续？", "Replace the workspace in this direction? A recovery backup will be saved first."))) return;
     setSyncState("syncing");
-    setSyncMessage(tr("正在下载云端工作区…", "Downloading cloud workspace…"));
     try {
-      const record = await loadCloud();
-      if (!record?.payload) {
-        setSyncState("idle");
-        setSyncMessage(tr("云端还没有保存记录。", "No cloud workspace exists yet."));
-        return;
-      }
-      writeWorkspaceSnapshot(record.payload);
-      setLocalUpdatedAt(record.payload.savedAt || Date.now());
+      const record = await syncWorkspace(supabase, user.id, mode);
+      setCloudRecord(record);
+      refreshLocalTime();
       setSyncState("success");
-      setSyncMessage(tr("云端工作区已恢复到本机。刷新相关页面即可看到最新内容。", "Cloud workspace restored to this device. Refresh related pages to see it."));
+      setSyncMessage(tr("同步完成。", "Workspace synced."));
     } catch (error) {
       setSyncState("error");
-      setSyncMessage(error instanceof Error ? error.message : tr("恢复失败。", "Restore failed."));
+      setSyncMessage(error instanceof Error ? error.message : tr("同步失败。", "Sync failed."));
     }
-  }, [loadCloud, supabase, tr, user]);
+  }, [supabase, user, tr, refreshLocalTime]);
 
-  const smartSync = useCallback(async () => {
-    if (!supabase || !user) return;
-    setSyncState("syncing");
-    setSyncMessage(tr("正在比较本机和云端版本…", "Comparing local and cloud versions…"));
-    try {
-      const local = readWorkspaceSnapshot();
-      const remote = await loadCloud();
-      const remoteSavedAt = Number(remote?.payload?.savedAt || 0);
-      if (!remote) {
-        await pushCloud();
-        return;
-      }
-      if (remoteSavedAt > Number(local.savedAt || 0)) {
-        writeWorkspaceSnapshot(remote.payload);
-        setLocalUpdatedAt(remoteSavedAt);
-        setSyncState("success");
-        setSyncMessage(tr("云端版本更新，已自动恢复到本机。", "Cloud version was newer and has been restored locally."));
-        return;
-      }
-      await pushCloud();
-    } catch (error) {
-      setSyncState("error");
-      setSyncMessage(error instanceof Error ? error.message : tr("智能同步失败。", "Smart sync failed."));
-    }
-  }, [loadCloud, pushCloud, supabase, tr, user]);
+  function exportBackups() {
+    const blob = new Blob([window.localStorage.getItem(SYNC_BACKUPS_KEY) || "[]"], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "tft-workspace-recovery.json";
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
 
   useEffect(() => {
     refreshLocalTime();
@@ -169,18 +108,22 @@ export default function AccountPage() {
   }, [loadCloud, tr, user]);
 
   useEffect(() => {
-    const onWorkspaceChanged = () => {
-      refreshLocalTime();
-      if (!autoSync || !user) return;
-      if (syncTimer.current) clearTimeout(syncTimer.current);
-      syncTimer.current = setTimeout(() => void pushCloud(true), 1400);
+    const onStatus = (event: Event) => {
+      const detail = (event as CustomEvent<{ state: SyncState; message: string }>).detail;
+      setSyncState(detail.state);
+      if (detail.state === "error") setSyncMessage(detail.message);
+      if (detail.state === "success") {
+        setSyncMessage(tr("已同步到云端。", "Synced to cloud."));
+        void loadCloud().catch(() => undefined);
+      }
     };
-    window.addEventListener(WORKSPACE_EVENT, onWorkspaceChanged);
+    window.addEventListener(WORKSPACE_EVENT, refreshLocalTime);
+    window.addEventListener(CLOUD_SYNC_EVENT, onStatus);
     return () => {
-      window.removeEventListener(WORKSPACE_EVENT, onWorkspaceChanged);
-      if (syncTimer.current) clearTimeout(syncTimer.current);
+      window.removeEventListener(WORKSPACE_EVENT, refreshLocalTime);
+      window.removeEventListener(CLOUD_SYNC_EVENT, onStatus);
     };
-  }, [autoSync, pushCloud, refreshLocalTime, user]);
+  }, [loadCloud, refreshLocalTime, tr]);
 
   async function submitEmail(event: FormEvent) {
     event.preventDefault();
@@ -208,7 +151,7 @@ export default function AccountPage() {
     } catch {
       // Keep the current-session toggle.
     }
-    markWorkspaceChanged();
+    if (next) window.dispatchEvent(new CustomEvent(WORKSPACE_EVENT));
   }
 
   return (
@@ -264,14 +207,16 @@ export default function AccountPage() {
           </section>
 
           <section className={styles.controls}>
-            <button className={styles.primary} onClick={() => void smartSync()} disabled={syncState === "syncing"}>{tr("智能同步", "Smart sync")}</button>
-            <button onClick={() => void pushCloud()} disabled={syncState === "syncing"}>{tr("本机 → 云端", "Local → Cloud")}</button>
-            <button onClick={() => void pullCloud()} disabled={syncState === "syncing" || !cloudRecord}>{tr("云端 → 本机", "Cloud → Local")}</button>
+            <button className={styles.primary} onClick={() => void runSync("smart")} disabled={syncState === "syncing"}>{tr("智能同步", "Smart sync")}</button>
+            <button onClick={() => void runSync("push")} disabled={syncState === "syncing"}>{tr("本机 → 云端", "Local → Cloud")}</button>
+            <button onClick={() => void runSync("pull")} disabled={syncState === "syncing" || !cloudRecord}>{tr("云端 → 本机", "Cloud → Local")}</button>
             <label className={styles.toggle}>
               <input type="checkbox" checked={autoSync} onChange={toggleAutoSync} />
               <span>{tr("登录期间自动同步本机修改", "Auto-sync local changes while signed in")}</span>
             </label>
           </section>
+
+          <button onClick={exportBackups}>{tr("导出恢复备份", "Export recovery backups")}</button>
 
           {syncMessage && <div className={`${styles.message} ${syncState === "error" ? styles.error : ""}`}>{syncMessage}</div>}
         </>

@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchTftCatalog } from "@/lib/catalog-client";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import UnitIcon from "../components/UnitIcon";
@@ -126,7 +127,7 @@ export default function StatSimulator({ initialChampionId = "" }: { initialChamp
   const [targetMagicResist, setTargetMagicResist] = useState(60);
 
   useEffect(() => {
-    fetch("/api/tft")
+    fetchTftCatalog()
       .then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject())
       .then(setCatalog)
       .catch(() => setCatalog(null));

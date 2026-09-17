@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchTftCatalog } from "@/lib/catalog-client";
 import { useEffect, useMemo, useState } from "react";
 import type { CatalogEntry } from "@/data/tft";
 import { useLocale } from "../components/LocaleProvider";
@@ -39,7 +40,7 @@ export default function CompCorrectionEditor({ comp, activeBoardUnit, onActiveBo
   const [champions, setChampions] = useState<CatalogEntry[]>([]);
 
   useEffect(() => {
-    fetch("/api/tft")
+    fetchTftCatalog()
       .then((response) => response.ok ? response.json() : Promise.reject())
       .then((payload: { champions?: CatalogEntry[] }) => setChampions(Array.isArray(payload.champions) ? payload.champions : []))
       .catch(() => setChampions([]));

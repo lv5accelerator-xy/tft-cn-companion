@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchTftCatalog } from "@/lib/catalog-client";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { metaComps, type UnifiedMetaComp } from "@/data/meta";
@@ -29,7 +30,7 @@ export default function CoachPage() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    fetch("/api/tft").then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject()).then(setCatalog).catch(() => setCatalog(null));
+    fetchTftCatalog().then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject()).then(setCatalog).catch(() => setCatalog(null));
     try {
       const imported = JSON.parse(window.localStorage.getItem(LOCAL_IMPORT_KEY) || "[]") as unknown[];
       setLocalComps(imported.filter(isManualComp));
