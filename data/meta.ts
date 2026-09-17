@@ -1,11 +1,12 @@
 import { metaComps as curatedMetaComps, metaPatch, metaUpdatedAt, type BoardPosition, type MetaComp, type StagePlan } from "./comps";
-import { liveMetaSnapshot } from "./live-meta";
+import { liveMetaSnapshot, type CompRanking } from "./live-meta";
 import { getMetaSource, isBlockedGoldenSpatulaText, type MetaSourceId } from "./meta-sources";
 
 export type UnifiedCompTier = "S" | "A" | "B" | "ACTIVE";
 
 export type UnifiedMetaComp = Omit<MetaComp, "tier"> & {
   tier: UnifiedCompTier;
+  ranking?: CompRanking;
   sourceId: MetaSourceId;
   sourcePublishedAt: string;
   sourceUpdatedAt: string;
@@ -55,6 +56,7 @@ const live: UnifiedMetaComp[] = liveMetaSnapshot.records
     const source = getMetaSource(record.sourceId);
     return {
       id: record.id,
+      ranking: record.ranking,
       name: record.name,
       nameZh: record.nameZh,
       tier: record.tier,

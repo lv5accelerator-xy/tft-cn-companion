@@ -1,3 +1,4 @@
+import opggSnapshot from "./opgg-meta.generated.json";
 import generatedSnapshot from "./live-meta.generated.json";
 import type { MetaSourceId } from "./meta-sources";
 
@@ -12,7 +13,24 @@ export type LiveStagePlan = {
   text: string;
 };
 
+export type CompRanking = {
+  sourceTier: "OP" | "S" | "A";
+  sourceOrder: number;
+  averagePlacement: number;
+  winRate: number;
+  top4Rate: number;
+  pickRate: number;
+  games: number;
+  totalGames: number;
+  capturedAt: string;
+  sourceUpdatedLabel: string;
+  scope: string;
+  statisticsBasis: string;
+  teamCode: string;
+};
+
 export type LiveMetaRecord = {
+  ranking?: CompRanking;
   id: string;
   sourceId: MetaSourceId;
   articleId: string;
@@ -68,4 +86,10 @@ export type LiveMetaSnapshot = {
 };
 
 // scripts/sync-meta-sources.mjs updates only the JSON file. External feeds are never required during a Next.js build.
-export const liveMetaSnapshot = generatedSnapshot as LiveMetaSnapshot;
+export const liveMetaSnapshot: LiveMetaSnapshot = {
+  schemaVersion: 1,
+  generatedAt: [generatedSnapshot.generatedAt, opggSnapshot.generatedAt].sort().at(-1) ?? null,
+  sourceStates: [...opggSnapshot.sourceStates, ...generatedSnapshot.sourceStates] as LiveSourceState[],
+  articles: [...opggSnapshot.articles, ...generatedSnapshot.articles] as LiveArticle[],
+  records: [...opggSnapshot.records, ...generatedSnapshot.records] as LiveMetaRecord[],
+};

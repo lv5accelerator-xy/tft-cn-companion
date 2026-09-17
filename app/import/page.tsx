@@ -13,7 +13,7 @@ import CompCorrectionEditor from "./CompCorrectionEditor";
 import type { AnalysisComp, AnalysisResult } from "./types";
 import styles from "./import.module.css";
 
-const ALLOWED_SOURCES = metaSources.filter((source) => source.id !== "tft-academy");
+const ALLOWED_SOURCES = metaSources.filter((source) => source.channel === "WeChat");
 
 type PreviewImage = {
   name: string;

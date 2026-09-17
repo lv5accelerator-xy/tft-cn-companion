@@ -1,4 +1,4 @@
-export type MetaSourceId = "tuding" | "shenchao" | "lindo" | "tft-academy";
+export type MetaSourceId = "tuding" | "shenchao" | "lindo" | "tft-academy" | "opgg";
 
 export type MetaSource = {
   id: MetaSourceId;
@@ -11,6 +11,7 @@ export type MetaSource = {
 };
 
 export const metaSources: MetaSource[] = [
+  { id: "opgg", name: "OP.GG", channel: "Web", description: "18.2 OP/S/A 榜单快照：全服务器、全段位、ALL 模式；展示来源评级和样本统计。", priority: 1, game: "TFT" },
   {
     id: "tuding",
     name: "兔顶之弈",

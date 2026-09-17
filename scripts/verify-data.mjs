@@ -118,7 +118,8 @@ for (const entry of specialSet18Champions) [entry.id, entry.nameEn, entry.nameZh
 
 const snapshot = JSON.parse(fs.readFileSync(path.join(process.cwd(), "data", "live-meta.generated.json"), "utf8"));
 const unresolvedSourceUnits = [];
-for (const record of snapshot.records || []) {
+const opggSnapshot = JSON.parse(fs.readFileSync("data/opgg-meta.generated.json", "utf8"));
+for (const record of [...(snapshot.records || []), ...opggSnapshot.records]) {
   const sourceUnits = new Set([...(record.coreUnits || []), ...(record.flexUnits || []), ...((record.board || []).map((position) => position.unit))]);
   for (const unit of sourceUnits) if (!championLookup.has(normalize(unit))) unresolvedSourceUnits.push(`${record.id}:${unit}`);
 }

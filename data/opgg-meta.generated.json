@@ -1,0 +1,1888 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-17T20:30:24Z",
+  "sourceUrl": "https://op.gg/tft/meta-trends/comps",
+  "officialPatchUrl": "https://teamfighttactics.leagueoflegends.com/en-us/news/game-updates/teamfight-tactics-patch-18-2/",
+  "sourceUpdatedLabel": "1 week ago",
+  "scope": "global / ALL tiers / ALL modes",
+  "sourceStates": [
+    {
+      "sourceId": "opgg",
+      "status": "curated",
+      "lastCheckedAt": "2026-09-17T20:30:24Z",
+      "lastChangedAt": null,
+      "message": "已抓取 15 套 OP/S/A 阵容；来源显示 1 week ago 更新。统计是否覆盖9月14日热修未确认；手动快照，不是实时同步。"
+    }
+  ],
+  "articles": [
+    {
+      "id": "opgg-182-c5a44db118188c9565578d30c786b078",
+      "sourceId": "opgg",
+      "title": "Elderwood Draven · OP.GG 18.2",
+      "url": "https://op.gg/tft/meta-trends/comps/c5a44db118188c9565578d30c786b078",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "e869f5a46491fd646f1a6396d65a9857aaa473aeebda6d6cdb16a5f09f65d5bd",
+      "status": "parsed",
+      "gameMode": "TFT"
+    },
+    {
+      "id": "opgg-182-25e6c08cee3fb517b00a8c3cb27179a7",
+      "sourceId": "opgg",
+      "title": "Riftbeast Elder Dragon · OP.GG 18.2",
+      "url": "https://op.gg/tft/meta-trends/comps/25e6c08cee3fb517b00a8c3cb27179a7",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "f82c76e3b0c24d642bf366956a190c368835a83d794847b4096bd4c521beb0e6",
+      "status": "parsed",
+      "gameMode": "TFT"
+    },
+    {
+      "id": "opgg-182-744234e84d716f4b87a69a7d85888ea3",
+      "sourceId": "opgg",
+      "title": "Defender Cassiopeia · OP.GG 18.2",
+      "url": "https://op.gg/tft/meta-trends/comps/744234e84d716f4b87a69a7d85888ea3",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "0d76887f49527990a10de30bf4efacde8fc26a2e5346cef80d79694870a6d35a",
+      "status": "parsed",
+      "gameMode": "TFT"
+    },
+    {
+      "id": "opgg-182-d29ea90617cb45719e83f833fb98220d",
+      "sourceId": "opgg",
+      "title": "Rapidfire Kayle · OP.GG 18.2",
+      "url": "https://op.gg/tft/meta-trends/comps/d29ea90617cb45719e83f833fb98220d",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "a4548f49b649f87fe0ab64545294d5aef1917edc7fd5b0a9c720d9b9b0717a20",
+      "status": "parsed",
+      "gameMode": "TFT"
+    },
+    {
+      "id": "opgg-182-cd2ff8ee4b6b682adfd9e77363573881",
+      "sourceId": "opgg",
+      "title": "Adaptor Rengar · OP.GG 18.2",
+      "url": "https://op.gg/tft/meta-trends/comps/cd2ff8ee4b6b682adfd9e77363573881",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "c6095a556650b1359863fd66730a1d52663545145745c86ec453c99f78038a5b",
+      "status": "parsed",
+      "gameMode": "TFT"
+    },
+    {
+      "id": "opgg-182-e63491d43d40f5cefe3a5f004342845a",
+      "sourceId": "opgg",
+      "title": "Sprykin Rek'Sai · OP.GG 18.2",
+      "url": "https://op.gg/tft/meta-trends/comps/e63491d43d40f5cefe3a5f004342845a",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "fe4304d3d0c14880a7d0a262e4bf170880a5b64095aac1517d2eba0886112073",
+      "status": "parsed",
+      "gameMode": "TFT"
+    },
+    {
+      "id": "opgg-182-b6a673e27487318cb9d61351edf6dd1b",
+      "sourceId": "opgg",
+      "title": "Blossom Sett · OP.GG 18.2",
+      "url": "https://op.gg/tft/meta-trends/comps/b6a673e27487318cb9d61351edf6dd1b",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "8def88b35ea789a0e220abc7a1e863c7332f4086d52fdb3edff15b39d39478d2",
+      "status": "parsed",
+      "gameMode": "TFT"
+    },
+    {
+      "id": "opgg-182-f2b9a00d55dd77ad40df47a20bf987ef",
+      "sourceId": "opgg",
+      "title": "Hunter Sivir · OP.GG 18.2",
+      "url": "https://op.gg/tft/meta-trends/comps/f2b9a00d55dd77ad40df47a20bf987ef",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "bba587acd405f751685d803791045fccd8e51e895ce47bce432f79f3dfded325",
+      "status": "parsed",
+      "gameMode": "TFT"
+    },
+    {
+      "id": "opgg-182-f2d46d4c62c4357ae71e3fcf51cba08a",
+      "sourceId": "opgg",
+      "title": "Inferno Akali · OP.GG 18.2",
+      "url": "https://op.gg/tft/meta-trends/comps/f2d46d4c62c4357ae71e3fcf51cba08a",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "3353f2fc8095e49507d9b00cca1fdf66ccf021e7897f3892fa966253268844b9",
+      "status": "parsed",
+      "gameMode": "TFT"
+    },
+    {
+      "id": "opgg-182-96aeda6509f73e075c028fbbfc984091",
+      "sourceId": "opgg",
+      "title": "Inferno Draven · OP.GG 18.2",
+      "url": "https://op.gg/tft/meta-trends/comps/96aeda6509f73e075c028fbbfc984091",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "58313eecedcf7bc8b91f48e447a58d122e38a2ba349826636ff7b3fcdaef277c",
+      "status": "parsed",
+      "gameMode": "TFT"
+    },
+    {
+      "id": "opgg-182-199fc60ef48d77b2b6e59fe673f58509",
+      "sourceId": "opgg",
+      "title": "Hunter Scuttlecrab · OP.GG 18.2",
+      "url": "https://op.gg/tft/meta-trends/comps/199fc60ef48d77b2b6e59fe673f58509",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "50587110f3986e1f48b5970b5e39c57445f5004f25c26e960e3d0ed28611299d",
+      "status": "parsed",
+      "gameMode": "TFT"
+    },
+    {
+      "id": "opgg-182-ec4c737b5836635daa916e4510e45196",
+      "sourceId": "opgg",
+      "title": "Riftbeast Pebbles · OP.GG 18.2",
+      "url": "https://op.gg/tft/meta-trends/comps/ec4c737b5836635daa916e4510e45196",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "fe09ff5617628c8291d645b6fa6cbbafbea473d501ce6f425ec99a474bfea896",
+      "status": "parsed",
+      "gameMode": "TFT"
+    },
+    {
+      "id": "opgg-182-b9c6def24ca3b0a91858604e62d280cd",
+      "sourceId": "opgg",
+      "title": "Vanguard Morgana · OP.GG 18.2",
+      "url": "https://op.gg/tft/meta-trends/comps/b9c6def24ca3b0a91858604e62d280cd",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "9cbe78978da25b582d0b569ea44f016bbc1b9d59b9d8644e7f45f0ef18ad035a",
+      "status": "parsed",
+      "gameMode": "TFT"
+    },
+    {
+      "id": "opgg-182-8ff8472e05018239b3bb79e2a57cbf2a",
+      "sourceId": "opgg",
+      "title": "Elderwood Aphelios · OP.GG 18.2",
+      "url": "https://op.gg/tft/meta-trends/comps/8ff8472e05018239b3bb79e2a57cbf2a",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "878137cdf1fa83d9ae9052dcb293f0388bbe4cbf91a63c96cadeeea9bca6e5d0",
+      "status": "parsed",
+      "gameMode": "TFT"
+    },
+    {
+      "id": "opgg-182-454706bba85535d10f9a73c6bca8da80",
+      "sourceId": "opgg",
+      "title": "Elderwood Rengar · OP.GG 18.2",
+      "url": "https://op.gg/tft/meta-trends/comps/454706bba85535d10f9a73c6bca8da80",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "0ceeb411eac0f9d06f36ba1331fec1895cba1e4fa0d59f4d70b5408b23fc85ed",
+      "status": "parsed",
+      "gameMode": "TFT"
+    }
+  ],
+  "records": [
+    {
+      "id": "opgg-182-c5a44db118188c9565578d30c786b078",
+      "sourceId": "opgg",
+      "articleId": "opgg-182-c5a44db118188c9565578d30c786b078",
+      "articleTitle": "Elderwood Draven · OP.GG 18.2",
+      "articleUrl": "https://op.gg/tft/meta-trends/comps/c5a44db118188c9565578d30c786b078",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "e869f5a46491fd646f1a6396d65a9857aaa473aeebda6d6cdb16a5f09f65d5bd",
+      "patch": "18.2",
+      "name": "Elderwood Draven",
+      "nameZh": "永恒之森 德莱文",
+      "tier": "S",
+      "playstyle": "Fast 9",
+      "difficulty": "HARD",
+      "coreUnits": [
+        "Draven",
+        "Maokai",
+        "Ezreal"
+      ],
+      "flexUnits": [
+        "Alistar",
+        "Amumu",
+        "Gnar",
+        "Ivern",
+        "Kennen",
+        "Taric"
+      ],
+      "itemFocus": [
+        "Ezreal: Deathblade / Last Whisper / Spear of Shojin",
+        "Kennen: Edge of Night / Hand of Justice / Rabadon's Deathcap",
+        "Maokai: Gargoyle Stoneplate / Spirit Visage / Warmog's Armor",
+        "Draven: Deathblade / Guinsoo's Rageblade / Kraken's Fury"
+      ],
+      "traits": [
+        "Greenfather",
+        "Old Growth",
+        "Bounty Seeker",
+        "Emerald Aspect",
+        "Brawler",
+        "Executioner",
+        "Inferno",
+        "Juggernaut",
+        "Elderwood"
+      ],
+      "whenToPlay": "先核对主C来牌与推荐装备；来源标注 9 人口搜牌。排行榜评级不代表任意开局都适用。",
+      "keyNotes": [
+        "来源评级：OP",
+        "来源第一优先核心：Draven",
+        "榜单统计口径：全服务器 / 全段位 / ALL 模式；非 NA 专属。",
+        "来源页面更新时间：1 week ago；无法确认统计是否覆盖 9月14日热修，不能视为实时胜率。",
+        "来源第二优先核心：Maokai",
+        "来源搜牌人口标记：9。",
+        "阵容码：023eb3ff3ed40140540b4153fb430000TFTSet18"
+      ],
+      "stages": [
+        {
+          "stage": "Stage 2",
+          "text": "OP.GG 5人口过渡示例：Akali / Camille / Rakan / Varus / Xayah。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 3",
+          "text": "OP.GG 7人口过渡示例：Akali / Camille / Rakan / Varus / Xayah / Alistar / Scuttle Crab。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 4",
+          "text": "来源最终阵容：Alistar / Ezreal / Amumu / Gnar / Ivern / Kennen / Maokai / Draven / Taric。这是成型参考，来源未承诺必须在第四阶段完成。"
+        }
+      ],
+      "board": [
+        {
+          "unit": "Alistar",
+          "row": 1,
+          "col": 1
+        },
+        {
+          "unit": "Ezreal",
+          "row": 3,
+          "col": 2
+        },
+        {
+          "unit": "Amumu",
+          "row": 0,
+          "col": 4
+        },
+        {
+          "unit": "Gnar",
+          "row": 1,
+          "col": 3
+        },
+        {
+          "unit": "Ivern",
+          "row": 3,
+          "col": 4
+        },
+        {
+          "unit": "Kennen",
+          "row": 1,
+          "col": 2
+        },
+        {
+          "unit": "Maokai",
+          "row": 0,
+          "col": 3
+        },
+        {
+          "unit": "Draven",
+          "row": 3,
+          "col": 6
+        },
+        {
+          "unit": "Taric",
+          "row": 1,
+          "col": 0
+        }
+      ],
+      "positioningNote": "OP.GG 来源站位：前排在上、后排在下；按实际对手调整。",
+      "gameMode": "TFT",
+      "ranking": {
+        "sourceTier": "OP",
+        "sourceOrder": 1,
+        "averagePlacement": 2.78,
+        "winRate": 0.4101,
+        "top4Rate": 0.7832,
+        "pickRate": 0.03429652176008095,
+        "games": 8541,
+        "totalGames": 249034,
+        "capturedAt": "2026-09-17T20:30:24Z",
+        "sourceUpdatedLabel": "1 week ago",
+        "scope": "global / ALL tiers / ALL modes",
+        "statisticsBasis": "label",
+        "teamCode": "023eb3ff3ed40140540b4153fb430000TFTSet18"
+      }
+    },
+    {
+      "id": "opgg-182-25e6c08cee3fb517b00a8c3cb27179a7",
+      "sourceId": "opgg",
+      "articleId": "opgg-182-25e6c08cee3fb517b00a8c3cb27179a7",
+      "articleTitle": "Riftbeast Elder Dragon · OP.GG 18.2",
+      "articleUrl": "https://op.gg/tft/meta-trends/comps/25e6c08cee3fb517b00a8c3cb27179a7",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "f82c76e3b0c24d642bf366956a190c368835a83d794847b4096bd4c521beb0e6",
+      "patch": "18.2",
+      "name": "Riftbeast Elder Dragon",
+      "nameZh": "峡谷野怪 远古巨龙",
+      "tier": "S",
+      "playstyle": "来源未标注节奏 / Tempo unspecified",
+      "difficulty": "HARD",
+      "coreUnits": [
+        "Elder Dragon",
+        "Pebbles",
+        "Blue Sentinel"
+      ],
+      "flexUnits": [
+        "Murk Wolf",
+        "Krug",
+        "Red Brambleback",
+        "Gnar",
+        "Taric"
+      ],
+      "itemFocus": [
+        "Pebbles: Blue Buff / Jeweled Gauntlet / Rabadon's Deathcap",
+        "Red Brambleback: Edge of Night / Giant Slayer / Sterak's Gage",
+        "Blue Sentinel: Gargoyle Stoneplate / Protector's Vow / Warmog's Armor",
+        "Elder Dragon: Infinity Edge / Last Whisper / Striker's Flail"
+      ],
+      "traits": [
+        "Apex Predator",
+        "Emerald Aspect",
+        "Riftbeast",
+        "Brawler",
+        "Invoker",
+        "Ravager",
+        "Vanguard"
+      ],
+      "whenToPlay": "先核对主C来牌与推荐装备；来源未标注固定搜牌人口。排行榜评级不代表任意开局都适用。",
+      "keyNotes": [
+        "来源评级：OP",
+        "来源第一优先核心：Elder Dragon",
+        "榜单统计口径：全服务器 / 全段位 / ALL 模式；非 NA 专属。",
+        "来源页面更新时间：1 week ago；无法确认统计是否覆盖 9月14日热修，不能视为实时胜率。",
+        "来源第二优先核心：Pebbles",
+        "阵容码：0242941940f3f34283fc401430000000TFTSet18"
+      ],
+      "stages": [
+        {
+          "stage": "Stage 2",
+          "text": "OP.GG 5人口过渡示例：Pebbles / Cinderling / Murk Wolf / Scuttle Crab / Krug。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 3",
+          "text": "OP.GG 7人口过渡示例：Pebbles / Cinderling / Gromp / Murk Wolf / Scuttle Crab / Crimson Raptor / Krug。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 4",
+          "text": "来源最终阵容：Pebbles / Murk Wolf / Krug / Red Brambleback / Blue Sentinel / Elder Dragon / Gnar / Taric。这是成型参考，来源未承诺必须在第四阶段完成。"
+        }
+      ],
+      "board": [],
+      "positioningNote": "来源未提供最终站位。Builder 保留英雄名单，请手动放置；不把自动推导站位视作来源攻略。",
+      "gameMode": "TFT",
+      "ranking": {
+        "sourceTier": "OP",
+        "sourceOrder": 2,
+        "averagePlacement": 3.1,
+        "winRate": 0.2571,
+        "top4Rate": 0.7684,
+        "pickRate": 0.020081595284178064,
+        "games": 5001,
+        "totalGames": 249034,
+        "capturedAt": "2026-09-17T20:30:24Z",
+        "sourceUpdatedLabel": "1 week ago",
+        "scope": "global / ALL tiers / ALL modes",
+        "statisticsBasis": "label",
+        "teamCode": "0242941940f3f34283fc401430000000TFTSet18"
+      }
+    },
+    {
+      "id": "opgg-182-744234e84d716f4b87a69a7d85888ea3",
+      "sourceId": "opgg",
+      "articleId": "opgg-182-744234e84d716f4b87a69a7d85888ea3",
+      "articleTitle": "Defender Cassiopeia · OP.GG 18.2",
+      "articleUrl": "https://op.gg/tft/meta-trends/comps/744234e84d716f4b87a69a7d85888ea3",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "0d76887f49527990a10de30bf4efacde8fc26a2e5346cef80d79694870a6d35a",
+      "patch": "18.2",
+      "name": "Defender Cassiopeia",
+      "nameZh": "护卫 卡西奥佩娅",
+      "tier": "S",
+      "playstyle": "Reroll 7",
+      "difficulty": "MEDIUM",
+      "coreUnits": [
+        "Cassiopeia",
+        "Rammus",
+        "Fiddlesticks"
+      ],
+      "flexUnits": [
+        "Leona",
+        "Ornn",
+        "Shen",
+        "Lillia",
+        "Soraka"
+      ],
+      "itemFocus": [
+        "Cassiopeia: Archangel's Staff / Blue Buff / Hextech Gunblade",
+        "Rammus: Gargoyle Stoneplate / Steadfast Heart / Warmog's Armor",
+        "Fiddlesticks: Ionic Spark / Spirit Visage / Sunfire Cape",
+        "Soraka: Jeweled Gauntlet / Nashor's Tooth / Spear of Shojin"
+      ],
+      "traits": [
+        "Flora Fatalis",
+        "Defender",
+        "Spellweaver"
+      ],
+      "whenToPlay": "先核对主C来牌与推荐装备；来源标注 7 人口搜牌。排行榜评级不代表任意开局都适用。",
+      "keyNotes": [
+        "来源评级：S",
+        "来源第一优先核心：Cassiopeia",
+        "榜单统计口径：全服务器 / 全段位 / ALL 模式；非 NA 专属。",
+        "来源页面更新时间：1 week ago；无法确认统计是否覆盖 9月14日热修，不能视为实时胜率。",
+        "来源第二优先核心：Rammus",
+        "来源搜牌人口标记：7。",
+        "阵容码：0241141f42b3f642140041242e000000TFTSet18"
+      ],
+      "stages": [
+        {
+          "stage": "Stage 2",
+          "text": "OP.GG 5人口过渡示例：Leona / Ornn / Shen / Cassiopeia / Fiddlesticks。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 3",
+          "text": "OP.GG 7人口过渡示例：Leona / Ornn / Shen / Cassiopeia / Rammus / Fiddlesticks / Lillia。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 4",
+          "text": "来源最终阵容：Leona / Ornn / Shen / Cassiopeia / Rammus / Fiddlesticks / Lillia / Soraka。这是成型参考，来源未承诺必须在第四阶段完成。"
+        }
+      ],
+      "board": [
+        {
+          "unit": "Leona",
+          "row": 0,
+          "col": 0
+        },
+        {
+          "unit": "Ornn",
+          "row": 0,
+          "col": 5
+        },
+        {
+          "unit": "Shen",
+          "row": 0,
+          "col": 1
+        },
+        {
+          "unit": "Cassiopeia",
+          "row": 3,
+          "col": 0
+        },
+        {
+          "unit": "Rammus",
+          "row": 0,
+          "col": 4
+        },
+        {
+          "unit": "Fiddlesticks",
+          "row": 0,
+          "col": 3
+        },
+        {
+          "unit": "Lillia",
+          "row": 0,
+          "col": 2
+        },
+        {
+          "unit": "Soraka",
+          "row": 3,
+          "col": 1
+        }
+      ],
+      "positioningNote": "OP.GG 来源站位：前排在上、后排在下；按实际对手调整。",
+      "gameMode": "TFT",
+      "ranking": {
+        "sourceTier": "S",
+        "sourceOrder": 3,
+        "averagePlacement": 3.42,
+        "winRate": 0.1423,
+        "top4Rate": 0.7359,
+        "pickRate": 0.013488118088293165,
+        "games": 3359,
+        "totalGames": 249034,
+        "capturedAt": "2026-09-17T20:30:24Z",
+        "sourceUpdatedLabel": "1 week ago",
+        "scope": "global / ALL tiers / ALL modes",
+        "statisticsBasis": "label",
+        "teamCode": "0241141f42b3f642140041242e000000TFTSet18"
+      }
+    },
+    {
+      "id": "opgg-182-d29ea90617cb45719e83f833fb98220d",
+      "sourceId": "opgg",
+      "articleId": "opgg-182-d29ea90617cb45719e83f833fb98220d",
+      "articleTitle": "Rapidfire Kayle · OP.GG 18.2",
+      "articleUrl": "https://op.gg/tft/meta-trends/comps/d29ea90617cb45719e83f833fb98220d",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "a4548f49b649f87fe0ab64545294d5aef1917edc7fd5b0a9c720d9b9b0717a20",
+      "patch": "18.2",
+      "name": "Rapidfire Kayle",
+      "nameZh": "迅捷射手 凯尔",
+      "tier": "S",
+      "playstyle": "来源未标注节奏 / Tempo unspecified",
+      "difficulty": "MEDIUM",
+      "coreUnits": [
+        "Kayle",
+        "Ornn",
+        "Xayah"
+      ],
+      "flexUnits": [
+        "Leona",
+        "Rakan",
+        "Sejuani",
+        "Hecarim",
+        "Aphelios"
+      ],
+      "itemFocus": [
+        "Ornn: Gargoyle Stoneplate / Spirit Visage / Warmog's Armor",
+        "Xayah: Deathblade / Guinsoo's Rageblade / Red Buff",
+        "Kayle: Guinsoo's Rageblade / Jeweled Gauntlet / Rabadon's Deathcap",
+        "Sejuani: Gargoyle Stoneplate / Spirit Visage / Warmog's Armor"
+      ],
+      "traits": [
+        "Solar",
+        "Rapidfire",
+        "Vanguard",
+        "Defender",
+        "Fae",
+        "Juggernaut",
+        "Elderwood"
+      ],
+      "whenToPlay": "先核对主C来牌与推荐装备；来源未标注固定搜牌人口。排行榜评级不代表任意开局都适用。",
+      "keyNotes": [
+        "来源评级：S",
+        "来源第一优先核心：Kayle",
+        "榜单统计口径：全服务器 / 全段位 / ALL 模式；非 NA 专属。",
+        "来源页面更新时间：1 week ago；无法确认统计是否覆盖 9月14日热修，不能视为实时胜率。",
+        "来源第二优先核心：Ornn",
+        "阵容码：0241141f42043940a4274033ef000000TFTSet18"
+      ],
+      "stages": [
+        {
+          "stage": "Stage 2",
+          "text": "OP.GG 5人口过渡示例：Leona / Ornn / Xayah / Kayle / Sejuani。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 3",
+          "text": "来源未提供可核验的该阶段过渡方案；根据实际来牌保留经济，不把最终阵容当作固定过渡。"
+        },
+        {
+          "stage": "Stage 4",
+          "text": "来源最终阵容：Leona / Ornn / Rakan / Xayah / Kayle / Sejuani / Hecarim / Aphelios。这是成型参考，来源未承诺必须在第四阶段完成。"
+        }
+      ],
+      "board": [],
+      "positioningNote": "来源未提供最终站位。Builder 保留英雄名单，请手动放置；不把自动推导站位视作来源攻略。",
+      "gameMode": "TFT",
+      "ranking": {
+        "sourceTier": "S",
+        "sourceOrder": 4,
+        "averagePlacement": 2.78,
+        "winRate": 0.2953,
+        "top4Rate": 0.8294,
+        "pickRate": 0.011789554839901378,
+        "games": 2936,
+        "totalGames": 249034,
+        "capturedAt": "2026-09-17T20:30:24Z",
+        "sourceUpdatedLabel": "1 week ago",
+        "scope": "global / ALL tiers / ALL modes",
+        "statisticsBasis": "label",
+        "teamCode": "0241141f42043940a4274033ef000000TFTSet18"
+      }
+    },
+    {
+      "id": "opgg-182-cd2ff8ee4b6b682adfd9e77363573881",
+      "sourceId": "opgg",
+      "articleId": "opgg-182-cd2ff8ee4b6b682adfd9e77363573881",
+      "articleTitle": "Adaptor Rengar · OP.GG 18.2",
+      "articleUrl": "https://op.gg/tft/meta-trends/comps/cd2ff8ee4b6b682adfd9e77363573881",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "c6095a556650b1359863fd66730a1d52663545145745c86ec453c99f78038a5b",
+      "patch": "18.2",
+      "name": "Adaptor Rengar",
+      "nameZh": "魔战士 雷恩加尔",
+      "tier": "S",
+      "playstyle": "Reroll 7",
+      "difficulty": "MEDIUM",
+      "coreUnits": [
+        "Rengar",
+        "Master Yi",
+        "Vi"
+      ],
+      "flexUnits": [
+        "Yorick",
+        "Kog'Maw",
+        "Krug",
+        "Sett",
+        "Nidalee"
+      ],
+      "itemFocus": [
+        "Master Yi: Edge of Night / Guinsoo's Rageblade / Titan's Resolve",
+        "Rengar: Edge of Night / Guinsoo's Rageblade / Titan's Resolve",
+        "Vi: Evenshroud / Gargoyle Stoneplate / Warmog's Armor",
+        "Nidalee: Guinsoo's Rageblade / Jeweled Gauntlet / Striker's Flail"
+      ],
+      "traits": [
+        "Rival",
+        "Caustic",
+        "Adaptor",
+        "Brawler",
+        "Juggernaut",
+        "Primal",
+        "Blossom"
+      ],
+      "whenToPlay": "先核对主C来牌与推荐装备；来源标注 7 人口搜牌。排行榜评级不代表任意开局都适用。",
+      "keyNotes": [
+        "来源评级：S",
+        "来源第一优先核心：Rengar",
+        "榜单统计口径：全服务器 / 全段位 / ALL 模式；非 NA 专属。",
+        "来源页面更新时间：1 week ago；无法确认统计是否覆盖 9月14日热修，不能视为实时胜率。",
+        "来源第二优先核心：Master Yi",
+        "来源搜牌人口标记：7。",
+        "阵容码：0243a41642440e40f43742a41b000000TFTSet18"
+      ],
+      "stages": [
+        {
+          "stage": "Stage 2",
+          "text": "OP.GG 5人口过渡示例：Yorick / Master Yi / Rengar / Kog'Maw / Vi。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 3",
+          "text": "OP.GG 7人口过渡示例：Yorick / Master Yi / Rengar / Kog'Maw / Krug / Vi / Sett。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 4",
+          "text": "来源最终阵容：Yorick / Master Yi / Rengar / Kog'Maw / Krug / Vi / Sett / Nidalee。这是成型参考，来源未承诺必须在第四阶段完成。"
+        }
+      ],
+      "board": [
+        {
+          "unit": "Yorick",
+          "row": 2,
+          "col": 0
+        },
+        {
+          "unit": "Master Yi",
+          "row": 2,
+          "col": 6
+        },
+        {
+          "unit": "Rengar",
+          "row": 2,
+          "col": 5
+        },
+        {
+          "unit": "Kog'Maw",
+          "row": 3,
+          "col": 0
+        },
+        {
+          "unit": "Krug",
+          "row": 0,
+          "col": 1
+        },
+        {
+          "unit": "Vi",
+          "row": 0,
+          "col": 5
+        },
+        {
+          "unit": "Sett",
+          "row": 0,
+          "col": 0
+        },
+        {
+          "unit": "Nidalee",
+          "row": 3,
+          "col": 6
+        }
+      ],
+      "positioningNote": "OP.GG 来源站位：前排在上、后排在下；按实际对手调整。",
+      "gameMode": "TFT",
+      "ranking": {
+        "sourceTier": "S",
+        "sourceOrder": 5,
+        "averagePlacement": 3,
+        "winRate": 0.2239,
+        "top4Rate": 0.8048,
+        "pickRate": 0.01466867977866476,
+        "games": 3653,
+        "totalGames": 249034,
+        "capturedAt": "2026-09-17T20:30:24Z",
+        "sourceUpdatedLabel": "1 week ago",
+        "scope": "global / ALL tiers / ALL modes",
+        "statisticsBasis": "label",
+        "teamCode": "0243a41642440e40f43742a41b000000TFTSet18"
+      }
+    },
+    {
+      "id": "opgg-182-e63491d43d40f5cefe3a5f004342845a",
+      "sourceId": "opgg",
+      "articleId": "opgg-182-e63491d43d40f5cefe3a5f004342845a",
+      "articleTitle": "Sprykin Rek'Sai · OP.GG 18.2",
+      "articleUrl": "https://op.gg/tft/meta-trends/comps/e63491d43d40f5cefe3a5f004342845a",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "fe4304d3d0c14880a7d0a262e4bf170880a5b64095aac1517d2eba0886112073",
+      "patch": "18.2",
+      "name": "Sprykin Rek'Sai",
+      "nameZh": "约德尔人和朋友 雷克塞",
+      "tier": "S",
+      "playstyle": "Reroll 5",
+      "difficulty": "EASY",
+      "coreUnits": [
+        "Rek'Sai",
+        "Veigar",
+        "Teemo"
+      ],
+      "flexUnits": [
+        "Kobuko",
+        "Rammus",
+        "Fiddlesticks",
+        "Sett",
+        "Gnar"
+      ],
+      "itemFocus": [
+        "Rek'Sai: Gargoyle Stoneplate / Gargoyle Stoneplate / Warmog's Armor",
+        "Veigar: Flora Fatalis Emblem / Blue Buff / Jeweled Gauntlet",
+        "Teemo: Morellonomicon / Spear of Shojin / Void Staff",
+        "Gnar: Bloodthirster / Sterak's Gage / Titan's Resolve"
+      ],
+      "traits": [
+        "Brawler",
+        "Sprykin",
+        "Flora Fatalis",
+        "Defender",
+        "Blackthorn",
+        "Spellweaver"
+      ],
+      "whenToPlay": "先核对主C来牌与推荐装备；来源标注 5 人口搜牌。排行榜评级不代表任意开局都适用。",
+      "keyNotes": [
+        "来源评级：S",
+        "来源第一优先核心：Rek'Sai",
+        "榜单统计口径：全服务器 / 全段位 / ALL 模式；非 NA 专属。",
+        "来源页面更新时间：1 week ago；无法确认统计是否覆盖 9月14日热修，不能视为实时胜率。",
+        "来源第二优先核心：Veigar",
+        "来源搜牌人口标记：5。",
+        "阵容码：0243d42343643142140042a401000000TFTSet18"
+      ],
+      "stages": [
+        {
+          "stage": "Stage 2",
+          "text": "OP.GG 5人口过渡示例：Kobuko / Rek'Sai / Veigar / Teemo / Fiddlesticks。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 3",
+          "text": "OP.GG 7人口过渡示例：Kobuko / Rek'Sai / Veigar / Teemo / Rammus / Tristana / Fiddlesticks。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 4",
+          "text": "来源最终阵容：Kobuko / Rek'Sai / Veigar / Teemo / Rammus / Fiddlesticks / Sett / Gnar。这是成型参考，来源未承诺必须在第四阶段完成。"
+        }
+      ],
+      "board": [
+        {
+          "unit": "Kobuko",
+          "row": 2,
+          "col": 3
+        },
+        {
+          "unit": "Rek'Sai",
+          "row": 0,
+          "col": 3
+        },
+        {
+          "unit": "Veigar",
+          "row": 3,
+          "col": 0
+        },
+        {
+          "unit": "Teemo",
+          "row": 3,
+          "col": 1
+        },
+        {
+          "unit": "Rammus",
+          "row": 2,
+          "col": 4
+        },
+        {
+          "unit": "Fiddlesticks",
+          "row": 2,
+          "col": 2
+        },
+        {
+          "unit": "Sett",
+          "row": 2,
+          "col": 1
+        },
+        {
+          "unit": "Gnar",
+          "row": 1,
+          "col": 2
+        }
+      ],
+      "positioningNote": "OP.GG 来源站位：前排在上、后排在下；按实际对手调整。",
+      "gameMode": "TFT",
+      "ranking": {
+        "sourceTier": "S",
+        "sourceOrder": 6,
+        "averagePlacement": 3.15,
+        "winRate": 0.1723,
+        "top4Rate": 0.7875,
+        "pickRate": 0.015170619272870372,
+        "games": 3778,
+        "totalGames": 249034,
+        "capturedAt": "2026-09-17T20:30:24Z",
+        "sourceUpdatedLabel": "1 week ago",
+        "scope": "global / ALL tiers / ALL modes",
+        "statisticsBasis": "label",
+        "teamCode": "0243d42343643142140042a401000000TFTSet18"
+      }
+    },
+    {
+      "id": "opgg-182-b6a673e27487318cb9d61351edf6dd1b",
+      "sourceId": "opgg",
+      "articleId": "opgg-182-b6a673e27487318cb9d61351edf6dd1b",
+      "articleTitle": "Blossom Sett · OP.GG 18.2",
+      "articleUrl": "https://op.gg/tft/meta-trends/comps/b6a673e27487318cb9d61351edf6dd1b",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "8def88b35ea789a0e220abc7a1e863c7332f4086d52fdb3edff15b39d39478d2",
+      "patch": "18.2",
+      "name": "Blossom Sett",
+      "nameZh": "灵魂莲华 瑟提",
+      "tier": "S",
+      "playstyle": "Fast 8",
+      "difficulty": "MEDIUM",
+      "coreUnits": [
+        "Sett",
+        "Ahri",
+        "Ashe"
+      ],
+      "flexUnits": [
+        "Yorick",
+        "Karma",
+        "Vi",
+        "Sivir",
+        "Zyra",
+        "Gnar"
+      ],
+      "itemFocus": [
+        "Ahri: Jeweled Gauntlet / Spear of Shojin / Striker's Flail",
+        "Sett: Gargoyle Stoneplate / Gargoyle Stoneplate / Warmog's Armor",
+        "Sivir: Deathblade / Infinity Edge / Spear of Shojin",
+        "Ashe: Last Whisper / Red Buff / Spear of Shojin"
+      ],
+      "traits": [
+        "Thornmaiden",
+        "Blossom",
+        "Spellweaver",
+        "Hunter",
+        "Brawler",
+        "Primal",
+        "Juggernaut",
+        "Summoner"
+      ],
+      "whenToPlay": "先核对主C来牌与推荐装备；来源标注 8 人口搜牌。排行榜评级不代表任意开局都适用。",
+      "keyNotes": [
+        "来源评级：S",
+        "来源第一优先核心：Sett",
+        "榜单统计口径：全服务器 / 全段位 / ALL 模式；非 NA 专属。",
+        "来源页面更新时间：1 week ago；无法确认统计是否覆盖 9月14日热修，不能视为实时胜率。",
+        "来源第二优先核心：Ahri",
+        "来源搜牌人口标记：8。",
+        "阵容码：0243a4074373e942a42c43c3f0401000TFTSet18"
+      ],
+      "stages": [
+        {
+          "stage": "Stage 2",
+          "text": "OP.GG 5人口过渡示例：Rakan / Veigar / Yorick / Karma / Yunara。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 3",
+          "text": "OP.GG 7人口过渡示例：Yorick / Karma / Yunara / Vi / Ahri / Sett / Sivir。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 4",
+          "text": "来源最终阵容：Yorick / Karma / Vi / Ahri / Sett / Sivir / Zyra / Ashe / Gnar。这是成型参考，来源未承诺必须在第四阶段完成。"
+        }
+      ],
+      "board": [
+        {
+          "unit": "Yorick",
+          "row": 2,
+          "col": 4
+        },
+        {
+          "unit": "Karma",
+          "row": 3,
+          "col": 3
+        },
+        {
+          "unit": "Vi",
+          "row": 2,
+          "col": 2
+        },
+        {
+          "unit": "Ahri",
+          "row": 3,
+          "col": 0
+        },
+        {
+          "unit": "Sett",
+          "row": 0,
+          "col": 3
+        },
+        {
+          "unit": "Sivir",
+          "row": 3,
+          "col": 1
+        },
+        {
+          "unit": "Zyra",
+          "row": 3,
+          "col": 2
+        },
+        {
+          "unit": "Ashe",
+          "row": 3,
+          "col": 6
+        },
+        {
+          "unit": "Gnar",
+          "row": 2,
+          "col": 3
+        }
+      ],
+      "positioningNote": "OP.GG 来源站位：前排在上、后排在下；按实际对手调整。",
+      "gameMode": "TFT",
+      "ranking": {
+        "sourceTier": "S",
+        "sourceOrder": 7,
+        "averagePlacement": 3.94,
+        "winRate": 0.1596,
+        "top4Rate": 0.6041,
+        "pickRate": 0.0058626532923215305,
+        "games": 1460,
+        "totalGames": 249034,
+        "capturedAt": "2026-09-17T20:30:24Z",
+        "sourceUpdatedLabel": "1 week ago",
+        "scope": "global / ALL tiers / ALL modes",
+        "statisticsBasis": "label",
+        "teamCode": "0243a4074373e942a42c43c3f0401000TFTSet18"
+      }
+    },
+    {
+      "id": "opgg-182-f2b9a00d55dd77ad40df47a20bf987ef",
+      "sourceId": "opgg",
+      "articleId": "opgg-182-f2b9a00d55dd77ad40df47a20bf987ef",
+      "articleTitle": "Hunter Sivir · OP.GG 18.2",
+      "articleUrl": "https://op.gg/tft/meta-trends/comps/f2b9a00d55dd77ad40df47a20bf987ef",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "bba587acd405f751685d803791045fccd8e51e895ce47bce432f79f3dfded325",
+      "patch": "18.2",
+      "name": "Hunter Sivir",
+      "nameZh": "猎人 希维尔",
+      "tier": "A",
+      "playstyle": "Fast 8",
+      "difficulty": "HARD",
+      "coreUnits": [
+        "Sivir",
+        "Ashe",
+        "Amumu"
+      ],
+      "flexUnits": [
+        "Shen",
+        "Tristana",
+        "Vi",
+        "Lillia",
+        "Ivern",
+        "Kennen"
+      ],
+      "itemFocus": [
+        "Lillia: Crownguard / Protector's Vow / Warmog's Armor",
+        "Sivir: Infinity Edge / Spear of Shojin / Striker's Flail",
+        "Amumu: Gargoyle Stoneplate / Gargoyle Stoneplate / Warmog's Armor",
+        "Ashe: Last Whisper / Red Buff / Spear of Shojin"
+      ],
+      "traits": [
+        "Greenfather",
+        "Hunter",
+        "Inferno",
+        "Defender",
+        "Fae",
+        "Primal",
+        "Juggernaut"
+      ],
+      "whenToPlay": "先核对主C来牌与推荐装备；来源标注 8 人口搜牌。排行榜评级不代表任意开局都适用。",
+      "keyNotes": [
+        "来源评级：A",
+        "来源第一优先核心：Sivir",
+        "榜单统计口径：全服务器 / 全段位 / ALL 模式；非 NA 专属。",
+        "来源页面更新时间：1 week ago；无法确认统计是否覆盖 9月14日热修，不能视为实时胜率。",
+        "来源第二优先核心：Ashe",
+        "来源搜牌人口标记：8。",
+        "阵容码：0242b43343741242c3ed3f040540b000TFTSet18"
+      ],
+      "stages": [
+        {
+          "stage": "Stage 2",
+          "text": "来源未提供可核验的该阶段过渡方案；根据实际来牌保留经济，不把最终阵容当作固定过渡。"
+        },
+        {
+          "stage": "Stage 3",
+          "text": "来源未提供可核验的该阶段过渡方案；根据实际来牌保留经济，不把最终阵容当作固定过渡。"
+        },
+        {
+          "stage": "Stage 4",
+          "text": "来源最终阵容：Shen / Tristana / Vi / Lillia / Sivir / Amumu / Ashe / Ivern / Kennen。这是成型参考，来源未承诺必须在第四阶段完成。"
+        }
+      ],
+      "board": [
+        {
+          "unit": "Shen",
+          "row": 0,
+          "col": 1
+        },
+        {
+          "unit": "Tristana",
+          "row": 3,
+          "col": 4
+        },
+        {
+          "unit": "Vi",
+          "row": 0,
+          "col": 2
+        },
+        {
+          "unit": "Lillia",
+          "row": 0,
+          "col": 3
+        },
+        {
+          "unit": "Sivir",
+          "row": 3,
+          "col": 6
+        },
+        {
+          "unit": "Amumu",
+          "row": 0,
+          "col": 4
+        },
+        {
+          "unit": "Ashe",
+          "row": 3,
+          "col": 5
+        },
+        {
+          "unit": "Ivern",
+          "row": 3,
+          "col": 0
+        },
+        {
+          "unit": "Kennen",
+          "row": 1,
+          "col": 3
+        }
+      ],
+      "positioningNote": "OP.GG 来源站位：前排在上、后排在下；按实际对手调整。",
+      "gameMode": "TFT",
+      "ranking": {
+        "sourceTier": "A",
+        "sourceOrder": 8,
+        "averagePlacement": 3.36,
+        "winRate": 0.2318,
+        "top4Rate": 0.729,
+        "pickRate": 0.0034814523318101144,
+        "games": 867,
+        "totalGames": 249034,
+        "capturedAt": "2026-09-17T20:30:24Z",
+        "sourceUpdatedLabel": "1 week ago",
+        "scope": "global / ALL tiers / ALL modes",
+        "statisticsBasis": "label",
+        "teamCode": "0242b43343741242c3ed3f040540b000TFTSet18"
+      }
+    },
+    {
+      "id": "opgg-182-f2d46d4c62c4357ae71e3fcf51cba08a",
+      "sourceId": "opgg",
+      "articleId": "opgg-182-f2d46d4c62c4357ae71e3fcf51cba08a",
+      "articleTitle": "Inferno Akali · OP.GG 18.2",
+      "articleUrl": "https://op.gg/tft/meta-trends/comps/f2d46d4c62c4357ae71e3fcf51cba08a",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "3353f2fc8095e49507d9b00cca1fdf66ccf021e7897f3892fa966253268844b9",
+      "patch": "18.2",
+      "name": "Inferno Akali",
+      "nameZh": "地狱火 阿卡丽",
+      "tier": "A",
+      "playstyle": "Reroll 5",
+      "difficulty": "EASY",
+      "coreUnits": [
+        "Akali",
+        "Varus",
+        "Camille"
+      ],
+      "flexUnits": [
+        "Leona",
+        "Ornn",
+        "Kayle",
+        "Sejuani",
+        "Amumu"
+      ],
+      "itemFocus": [
+        "Akali: Edge of Night / Hand of Justice / Jeweled Gauntlet",
+        "Camille: Edge of Night / Infinity Edge / Sterak's Gage",
+        "Ornn: Crownguard / Gargoyle Stoneplate / Warmog's Armor",
+        "Varus: Infinity Edge / Last Whisper / Spear of Shojin"
+      ],
+      "traits": [
+        "Solar",
+        "Inferno",
+        "Ravager",
+        "Rapidfire",
+        "Defender",
+        "Juggernaut"
+      ],
+      "whenToPlay": "先核对主C来牌与推荐装备；来源标注 5 人口搜牌。排行榜评级不代表任意开局都适用。",
+      "keyNotes": [
+        "来源评级：A",
+        "来源第一优先核心：Akali",
+        "榜单统计口径：全服务器 / 全段位 / ALL 模式；非 NA 专属。",
+        "来源页面更新时间：1 week ago；无法确认统计是否覆盖 9月14日热修，不能视为实时胜率。",
+        "来源第二优先核心：Varus",
+        "来源搜牌人口标记：5。",
+        "阵容码：023ea3f541141f43540a4273ed000000TFTSet18"
+      ],
+      "stages": [
+        {
+          "stage": "Stage 2",
+          "text": "来源未提供可核验的该阶段过渡方案；根据实际来牌保留经济，不把最终阵容当作固定过渡。"
+        },
+        {
+          "stage": "Stage 3",
+          "text": "来源未提供可核验的该阶段过渡方案；根据实际来牌保留经济，不把最终阵容当作固定过渡。"
+        },
+        {
+          "stage": "Stage 4",
+          "text": "来源最终阵容：Akali / Camille / Leona / Ornn / Varus / Kayle / Sejuani / Amumu。这是成型参考，来源未承诺必须在第四阶段完成。"
+        }
+      ],
+      "board": [
+        {
+          "unit": "Akali",
+          "row": 0,
+          "col": 1
+        },
+        {
+          "unit": "Camille",
+          "row": 1,
+          "col": 0
+        },
+        {
+          "unit": "Leona",
+          "row": 2,
+          "col": 3
+        },
+        {
+          "unit": "Ornn",
+          "row": 0,
+          "col": 2
+        },
+        {
+          "unit": "Varus",
+          "row": 3,
+          "col": 4
+        },
+        {
+          "unit": "Kayle",
+          "row": 3,
+          "col": 3
+        },
+        {
+          "unit": "Sejuani",
+          "row": 1,
+          "col": 2
+        },
+        {
+          "unit": "Amumu",
+          "row": 2,
+          "col": 4
+        }
+      ],
+      "positioningNote": "OP.GG 来源站位：前排在上、后排在下；按实际对手调整。",
+      "gameMode": "TFT",
+      "ranking": {
+        "sourceTier": "A",
+        "sourceOrder": 9,
+        "averagePlacement": 3.35,
+        "winRate": 0.1474,
+        "top4Rate": 0.7568,
+        "pickRate": 0.007874426785097617,
+        "games": 1961,
+        "totalGames": 249034,
+        "capturedAt": "2026-09-17T20:30:24Z",
+        "sourceUpdatedLabel": "1 week ago",
+        "scope": "global / ALL tiers / ALL modes",
+        "statisticsBasis": "label",
+        "teamCode": "023ea3f541141f43540a4273ed000000TFTSet18"
+      }
+    },
+    {
+      "id": "opgg-182-96aeda6509f73e075c028fbbfc984091",
+      "sourceId": "opgg",
+      "articleId": "opgg-182-96aeda6509f73e075c028fbbfc984091",
+      "articleTitle": "Inferno Draven · OP.GG 18.2",
+      "articleUrl": "https://op.gg/tft/meta-trends/comps/96aeda6509f73e075c028fbbfc984091",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "58313eecedcf7bc8b91f48e447a58d122e38a2ba349826636ff7b3fcdaef277c",
+      "patch": "18.2",
+      "name": "Inferno Draven",
+      "nameZh": "地狱火 德莱文",
+      "tier": "A",
+      "playstyle": "来源未标注节奏 / Tempo unspecified",
+      "difficulty": "HARD",
+      "coreUnits": [
+        "Draven",
+        "Maokai",
+        "Elder Dragon"
+      ],
+      "flexUnits": [
+        "Amumu",
+        "Blue Sentinel",
+        "Ivern",
+        "Kennen",
+        "Taric"
+      ],
+      "itemFocus": [
+        "Elder Dragon: Infinity Edge / Last Whisper / Striker's Flail",
+        "Kennen: Bloodthirster / Hextech Gunblade / Thief's Gloves",
+        "Maokai: Gargoyle Stoneplate / Spirit Visage / Warmog's Armor",
+        "Draven: Deathblade / Guinsoo's Rageblade / Kraken's Fury"
+      ],
+      "traits": [
+        "Apex Predator",
+        "Greenfather",
+        "Old Growth",
+        "Bounty Seeker",
+        "Emerald Aspect",
+        "Inferno",
+        "Juggernaut",
+        "Vanguard"
+      ],
+      "whenToPlay": "先核对主C来牌与推荐装备；来源未标注固定搜牌人口。排行榜评级不代表任意开局都适用。",
+      "keyNotes": [
+        "来源评级：A",
+        "来源第一优先核心：Draven",
+        "榜单统计口径：全服务器 / 全段位 / ALL 模式；非 NA 专属。",
+        "来源页面更新时间：1 week ago；无法确认统计是否覆盖 9月14日热修，不能视为实时胜率。",
+        "来源第二优先核心：Maokai",
+        "阵容码：023ed4283fc40540b4153fb430000000TFTSet18"
+      ],
+      "stages": [
+        {
+          "stage": "Stage 2",
+          "text": "来源未提供可核验的该阶段过渡方案；根据实际来牌保留经济，不把最终阵容当作固定过渡。"
+        },
+        {
+          "stage": "Stage 3",
+          "text": "来源未提供可核验的该阶段过渡方案；根据实际来牌保留经济，不把最终阵容当作固定过渡。"
+        },
+        {
+          "stage": "Stage 4",
+          "text": "来源最终阵容：Amumu / Blue Sentinel / Elder Dragon / Ivern / Kennen / Maokai / Draven / Taric。这是成型参考，来源未承诺必须在第四阶段完成。"
+        }
+      ],
+      "board": [],
+      "positioningNote": "来源未提供最终站位。Builder 保留英雄名单，请手动放置；不把自动推导站位视作来源攻略。",
+      "gameMode": "TFT",
+      "ranking": {
+        "sourceTier": "A",
+        "sourceOrder": 10,
+        "averagePlacement": 3.14,
+        "winRate": 0.3284,
+        "top4Rate": 0.7337,
+        "pickRate": 0.005428977569327883,
+        "games": 1352,
+        "totalGames": 249034,
+        "capturedAt": "2026-09-17T20:30:24Z",
+        "sourceUpdatedLabel": "1 week ago",
+        "scope": "global / ALL tiers / ALL modes",
+        "statisticsBasis": "label",
+        "teamCode": "023ed4283fc40540b4153fb430000000TFTSet18"
+      }
+    },
+    {
+      "id": "opgg-182-199fc60ef48d77b2b6e59fe673f58509",
+      "sourceId": "opgg",
+      "articleId": "opgg-182-199fc60ef48d77b2b6e59fe673f58509",
+      "articleTitle": "Hunter Scuttlecrab · OP.GG 18.2",
+      "articleUrl": "https://op.gg/tft/meta-trends/comps/199fc60ef48d77b2b6e59fe673f58509",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "50587110f3986e1f48b5970b5e39c57445f5004f25c26e960e3d0ed28611299d",
+      "patch": "18.2",
+      "name": "Hunter Scuttlecrab",
+      "nameZh": "猎人 峡谷迅捷蟹",
+      "tier": "A",
+      "playstyle": "Reroll 6",
+      "difficulty": "EASY",
+      "coreUnits": [
+        "Scuttle Crab",
+        "Caitlyn",
+        "Sivir"
+      ],
+      "flexUnits": [
+        "Rakan",
+        "Sejuani",
+        "Tristana",
+        "Vi",
+        "Ashe"
+      ],
+      "itemFocus": [
+        "Caitlyn: Guinsoo's Rageblade / Kraken's Fury / Kraken's Fury",
+        "Sejuani: Gargoyle Stoneplate / Spirit Visage / Warmog's Armor",
+        "Scuttle Crab: Gargoyle Stoneplate / Spirit Visage / Warmog's Armor",
+        "Sivir: Infinity Edge / Last Whisper / Red Buff"
+      ],
+      "traits": [
+        "Hunter",
+        "Juggernaut",
+        "Fae",
+        "Primal"
+      ],
+      "whenToPlay": "先核对主C来牌与推荐装备；来源标注 6 人口搜牌。排行榜评级不代表任意开局都适用。",
+      "keyNotes": [
+        "来源评级：A",
+        "来源第一优先核心：Scuttle Crab",
+        "榜单统计口径：全服务器 / 全段位 / ALL 模式；非 NA 专属。",
+        "来源页面更新时间：1 week ago；无法确认统计是否覆盖 9月14日热修，不能视为实时胜率。",
+        "来源第二优先核心：Caitlyn",
+        "来源搜牌人口标记：6。",
+        "阵容码：024203f442742643343742c3f0000000TFTSet18"
+      ],
+      "stages": [
+        {
+          "stage": "Stage 2",
+          "text": "OP.GG 5人口过渡示例：Rakan / Caitlyn / Sejuani / Scuttle Crab / Vi。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 3",
+          "text": "OP.GG 7人口过渡示例：Rakan / Caitlyn / Sejuani / Scuttle Crab / Tristana / Vi / Sivir。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 4",
+          "text": "来源最终阵容：Rakan / Caitlyn / Sejuani / Scuttle Crab / Tristana / Vi / Sivir / Ashe。这是成型参考，来源未承诺必须在第四阶段完成。"
+        }
+      ],
+      "board": [
+        {
+          "unit": "Rakan",
+          "row": 2,
+          "col": 2
+        },
+        {
+          "unit": "Caitlyn",
+          "row": 3,
+          "col": 0
+        },
+        {
+          "unit": "Sejuani",
+          "row": 2,
+          "col": 1
+        },
+        {
+          "unit": "Scuttle Crab",
+          "row": 0,
+          "col": 3
+        },
+        {
+          "unit": "Tristana",
+          "row": 3,
+          "col": 2
+        },
+        {
+          "unit": "Vi",
+          "row": 2,
+          "col": 3
+        },
+        {
+          "unit": "Sivir",
+          "row": 3,
+          "col": 1
+        },
+        {
+          "unit": "Ashe",
+          "row": 3,
+          "col": 6
+        }
+      ],
+      "positioningNote": "OP.GG 来源站位：前排在上、后排在下；按实际对手调整。",
+      "gameMode": "TFT",
+      "ranking": {
+        "sourceTier": "A",
+        "sourceOrder": 11,
+        "averagePlacement": 3.06,
+        "winRate": 0.169,
+        "top4Rate": 0.8033,
+        "pickRate": 0.003184304151240393,
+        "games": 793,
+        "totalGames": 249034,
+        "capturedAt": "2026-09-17T20:30:24Z",
+        "sourceUpdatedLabel": "1 week ago",
+        "scope": "global / ALL tiers / ALL modes",
+        "statisticsBasis": "label",
+        "teamCode": "024203f442742643343742c3f0000000TFTSet18"
+      }
+    },
+    {
+      "id": "opgg-182-ec4c737b5836635daa916e4510e45196",
+      "sourceId": "opgg",
+      "articleId": "opgg-182-ec4c737b5836635daa916e4510e45196",
+      "articleTitle": "Riftbeast Pebbles · OP.GG 18.2",
+      "articleUrl": "https://op.gg/tft/meta-trends/comps/ec4c737b5836635daa916e4510e45196",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "fe09ff5617628c8291d645b6fa6cbbafbea473d501ce6f425ec99a474bfea896",
+      "patch": "18.2",
+      "name": "Riftbeast Pebbles",
+      "nameZh": "峡谷野怪 苍蓝哨戒",
+      "tier": "A",
+      "playstyle": "来源未标注节奏 / Tempo unspecified",
+      "difficulty": "MEDIUM",
+      "coreUnits": [
+        "Pebbles",
+        "Red Brambleback",
+        "Krug"
+      ],
+      "flexUnits": [
+        "Cinderling",
+        "Gromp",
+        "Murk Wolf",
+        "Scuttle Crab",
+        "Crimson Raptor",
+        "Blue Sentinel"
+      ],
+      "itemFocus": [
+        "Pebbles: Blue Buff / Jeweled Gauntlet / Rabadon's Deathcap",
+        "Crimson Raptor: Deathblade / Guinsoo's Rageblade / Kraken's Fury",
+        "Krug: Gargoyle Stoneplate / Spirit Visage / Warmog's Armor",
+        "Red Brambleback: Bloodthirster / Sterak's Gage / Titan's Resolve"
+      ],
+      "traits": [
+        "Riftbeast",
+        "Invoker",
+        "Ravager"
+      ],
+      "whenToPlay": "先核对主C来牌与推荐装备；来源未标注固定搜牌人口。排行榜评级不代表任意开局都适用。",
+      "keyNotes": [
+        "来源评级：A",
+        "来源第一优先核心：Pebbles",
+        "榜单统计口径：全服务器 / 全段位 / ALL 模式；非 NA 专属。",
+        "来源页面更新时间：1 week ago；无法确认统计是否覆盖 9月14日热修，不能视为实时胜率。",
+        "来源第二优先核心：Red Brambleback",
+        "阵容码：024293f740241942642240f3f3428000TFTSet18"
+      ],
+      "stages": [
+        {
+          "stage": "Stage 2",
+          "text": "OP.GG 5人口过渡示例：Pebbles / Cinderling / Murk Wolf / Scuttle Crab / Krug。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 3",
+          "text": "OP.GG 7人口过渡示例：Pebbles / Cinderling / Gromp / Murk Wolf / Scuttle Crab / Crimson Raptor / Krug。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 4",
+          "text": "来源最终阵容：Pebbles / Cinderling / Gromp / Murk Wolf / Scuttle Crab / Crimson Raptor / Krug / Red Brambleback / Blue Sentinel。这是成型参考，来源未承诺必须在第四阶段完成。"
+        }
+      ],
+      "board": [
+        {
+          "unit": "Pebbles",
+          "row": 3,
+          "col": 0
+        },
+        {
+          "unit": "Cinderling",
+          "row": 3,
+          "col": 2
+        },
+        {
+          "unit": "Gromp",
+          "row": 3,
+          "col": 1
+        },
+        {
+          "unit": "Murk Wolf",
+          "row": 2,
+          "col": 3
+        },
+        {
+          "unit": "Scuttle Crab",
+          "row": 1,
+          "col": 3
+        },
+        {
+          "unit": "Crimson Raptor",
+          "row": 3,
+          "col": 3
+        },
+        {
+          "unit": "Krug",
+          "row": 0,
+          "col": 3
+        },
+        {
+          "unit": "Red Brambleback",
+          "row": 2,
+          "col": 2
+        },
+        {
+          "unit": "Blue Sentinel",
+          "row": 2,
+          "col": 4
+        }
+      ],
+      "positioningNote": "OP.GG 来源站位：前排在上、后排在下；按实际对手调整。",
+      "gameMode": "TFT",
+      "ranking": {
+        "sourceTier": "A",
+        "sourceOrder": 12,
+        "averagePlacement": 4.45,
+        "winRate": 0.0479,
+        "top4Rate": 0.514,
+        "pickRate": 0.014656633230803826,
+        "games": 3650,
+        "totalGames": 249034,
+        "capturedAt": "2026-09-17T20:30:24Z",
+        "sourceUpdatedLabel": "1 week ago",
+        "scope": "global / ALL tiers / ALL modes",
+        "statisticsBasis": "label",
+        "teamCode": "024293f740241942642240f3f3428000TFTSet18"
+      }
+    },
+    {
+      "id": "opgg-182-b9c6def24ca3b0a91858604e62d280cd",
+      "sourceId": "opgg",
+      "articleId": "opgg-182-b9c6def24ca3b0a91858604e62d280cd",
+      "articleTitle": "Vanguard Morgana · OP.GG 18.2",
+      "articleUrl": "https://op.gg/tft/meta-trends/comps/b9c6def24ca3b0a91858604e62d280cd",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "9cbe78978da25b582d0b569ea44f016bbc1b9d59b9d8644e7f45f0ef18ad035a",
+      "patch": "18.2",
+      "name": "Vanguard Morgana",
+      "nameZh": "重装战士 莫甘娜",
+      "tier": "A",
+      "playstyle": "Fast 9",
+      "difficulty": "MEDIUM",
+      "coreUnits": [
+        "Morgana",
+        "Red Brambleback",
+        "Blue Sentinel"
+      ],
+      "flexUnits": [
+        "Pebbles",
+        "Diana",
+        "Hecarim",
+        "Kog'Maw",
+        "Alune",
+        "Taric"
+      ],
+      "itemFocus": [
+        "Morgana: Morellonomicon / Rabadon's Deathcap / Void Staff",
+        "Red Brambleback: Edge of Night / Giant Slayer / Quicksilver",
+        "Blue Sentinel: Gargoyle Stoneplate / Protector's Vow / Warmog's Armor",
+        "Alune: Archangel's Staff / Blue Buff / Jeweled Gauntlet"
+      ],
+      "traits": [
+        "Attuned",
+        "Caustic",
+        "Emerald Aspect",
+        "Vanguard",
+        "Invoker",
+        "Lunar",
+        "Ravager",
+        "Riftbeast"
+      ],
+      "whenToPlay": "先核对主C来牌与推荐装备；来源标注 8 人口搜牌。排行榜评级不代表任意开局都适用。",
+      "keyNotes": [
+        "来源评级：A",
+        "来源第一优先核心：Morgana",
+        "榜单统计口径：全服务器 / 全段位 / ALL 模式；非 NA 专属。",
+        "来源页面更新时间：1 week ago；无法确认统计是否覆盖 9月14日热修，不能视为实时胜率。",
+        "来源第二优先核心：Red Brambleback",
+        "来源搜牌人口标记：8。",
+        "阵容码：024293fa40340e4183f34283ec430000TFTSet18"
+      ],
+      "stages": [
+        {
+          "stage": "Stage 2",
+          "text": "OP.GG 5人口过渡示例：Pebbles / Gromp / Murk Wolf / Scuttle Crab / Krug。来源未给出固定回合或经济条件。"
+        },
+        {
+          "stage": "Stage 3",
+          "text": "来源未提供可核验的该阶段过渡方案；根据实际来牌保留经济，不把最终阵容当作固定过渡。"
+        },
+        {
+          "stage": "Stage 4",
+          "text": "来源最终阵容：Pebbles / Diana / Hecarim / Kog'Maw / Morgana / Red Brambleback / Blue Sentinel / Alune / Taric。这是成型参考，来源未承诺必须在第四阶段完成。"
+        }
+      ],
+      "board": [
+        {
+          "unit": "Pebbles",
+          "row": 3,
+          "col": 3
+        },
+        {
+          "unit": "Diana",
+          "row": 0,
+          "col": 1
+        },
+        {
+          "unit": "Hecarim",
+          "row": 0,
+          "col": 4
+        },
+        {
+          "unit": "Kog'Maw",
+          "row": 3,
+          "col": 6
+        },
+        {
+          "unit": "Morgana",
+          "row": 1,
+          "col": 0
+        },
+        {
+          "unit": "Red Brambleback",
+          "row": 1,
+          "col": 3
+        },
+        {
+          "unit": "Blue Sentinel",
+          "row": 0,
+          "col": 3
+        },
+        {
+          "unit": "Alune",
+          "row": 3,
+          "col": 0
+        },
+        {
+          "unit": "Taric",
+          "row": 0,
+          "col": 0
+        }
+      ],
+      "positioningNote": "OP.GG 来源站位：前排在上、后排在下；按实际对手调整。",
+      "gameMode": "TFT",
+      "ranking": {
+        "sourceTier": "A",
+        "sourceOrder": 13,
+        "averagePlacement": 3.99,
+        "winRate": 0.1557,
+        "top4Rate": 0.618,
+        "pickRate": 0.002501666439120763,
+        "games": 623,
+        "totalGames": 249034,
+        "capturedAt": "2026-09-17T20:30:24Z",
+        "sourceUpdatedLabel": "1 week ago",
+        "scope": "global / ALL tiers / ALL modes",
+        "statisticsBasis": "label",
+        "teamCode": "024293fa40340e4183f34283ec430000TFTSet18"
+      }
+    },
+    {
+      "id": "opgg-182-8ff8472e05018239b3bb79e2a57cbf2a",
+      "sourceId": "opgg",
+      "articleId": "opgg-182-8ff8472e05018239b3bb79e2a57cbf2a",
+      "articleTitle": "Elderwood Aphelios · OP.GG 18.2",
+      "articleUrl": "https://op.gg/tft/meta-trends/comps/8ff8472e05018239b3bb79e2a57cbf2a",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "878137cdf1fa83d9ae9052dcb293f0388bbe4cbf91a63c96cadeeea9bca6e5d0",
+      "patch": "18.2",
+      "name": "Elderwood Aphelios",
+      "nameZh": "永恒之森 厄斐琉斯",
+      "tier": "A",
+      "playstyle": "来源未标注节奏 / Tempo unspecified",
+      "difficulty": "MEDIUM",
+      "coreUnits": [
+        "Aphelios",
+        "Lillia",
+        "Alune"
+      ],
+      "flexUnits": [
+        "Ornn",
+        "Xayah",
+        "Alistar",
+        "Diana",
+        "Hecarim",
+        "Gnar"
+      ],
+      "itemFocus": [
+        "Aphelios: Guinsoo's Rageblade / Infinity Edge / Kraken's Fury",
+        "Lillia: Evenshroud / Protector's Vow / Sunfire Cape",
+        "Alune: Jeweled Gauntlet / Rabadon's Deathcap / Spear of Shojin",
+        "Gnar: Edge of Night / Sterak's Gage / Titan's Resolve"
+      ],
+      "traits": [
+        "Attuned",
+        "Lunar",
+        "Elderwood",
+        "Brawler",
+        "Rapidfire",
+        "Vanguard",
+        "Defender",
+        "Fae"
+      ],
+      "whenToPlay": "先核对主C来牌与推荐装备；来源未标注固定搜牌人口。排行榜评级不代表任意开局都适用。",
+      "keyNotes": [
+        "来源评级：A",
+        "来源第一优先核心：Aphelios",
+        "榜单统计口径：全服务器 / 全段位 / ALL 模式；非 NA 专属。",
+        "来源页面更新时间：1 week ago；无法确认统计是否覆盖 9月14日热修，不能视为实时胜率。",
+        "来源第二优先核心：Lillia",
+        "阵容码：0241f4393eb3fa4033ef4123ec401000TFTSet18"
+      ],
+      "stages": [
+        {
+          "stage": "Stage 2",
+          "text": "来源未提供可核验的该阶段过渡方案；根据实际来牌保留经济，不把最终阵容当作固定过渡。"
+        },
+        {
+          "stage": "Stage 3",
+          "text": "来源未提供可核验的该阶段过渡方案；根据实际来牌保留经济，不把最终阵容当作固定过渡。"
+        },
+        {
+          "stage": "Stage 4",
+          "text": "来源最终阵容：Ornn / Xayah / Alistar / Diana / Hecarim / Aphelios / Lillia / Alune / Gnar。这是成型参考，来源未承诺必须在第四阶段完成。"
+        }
+      ],
+      "board": [],
+      "positioningNote": "来源未提供最终站位。Builder 保留英雄名单，请手动放置；不把自动推导站位视作来源攻略。",
+      "gameMode": "TFT",
+      "ranking": {
+        "sourceTier": "A",
+        "sourceOrder": 14,
+        "averagePlacement": 3.93,
+        "winRate": 0.1237,
+        "top4Rate": 0.6281,
+        "pickRate": 0.004999317362287881,
+        "games": 1245,
+        "totalGames": 249034,
+        "capturedAt": "2026-09-17T20:30:24Z",
+        "sourceUpdatedLabel": "1 week ago",
+        "scope": "global / ALL tiers / ALL modes",
+        "statisticsBasis": "label",
+        "teamCode": "0241f4393eb3fa4033ef4123ec401000TFTSet18"
+      }
+    },
+    {
+      "id": "opgg-182-454706bba85535d10f9a73c6bca8da80",
+      "sourceId": "opgg",
+      "articleId": "opgg-182-454706bba85535d10f9a73c6bca8da80",
+      "articleTitle": "Elderwood Rengar · OP.GG 18.2",
+      "articleUrl": "https://op.gg/tft/meta-trends/comps/454706bba85535d10f9a73c6bca8da80",
+      "publishedAt": "",
+      "updatedAt": "",
+      "contentHash": "0ceeb411eac0f9d06f36ba1331fec1895cba1e4fa0d59f4d70b5408b23fc85ed",
+      "patch": "18.2",
+      "name": "Elderwood Rengar",
+      "nameZh": "永恒之森 雷恩加尔",
+      "tier": "A",
+      "playstyle": "来源未标注节奏 / Tempo unspecified",
+      "difficulty": "MEDIUM",
+      "coreUnits": [
+        "Rengar",
+        "Kha'Zix",
+        "Hecarim"
+      ],
+      "flexUnits": [
+        "LeBlanc",
+        "Diana",
+        "Aphelios",
+        "Ezreal",
+        "Soraka"
+      ],
+      "itemFocus": [
+        "Hecarim: Gargoyle Stoneplate / Spirit Visage / Warmog's Armor",
+        "Kha'Zix: Edge of Night / Hand of Justice / Rabadon's Deathcap",
+        "Rengar: Edge of Night / Guinsoo's Rageblade / Titan's Resolve",
+        "Aphelios: Infinity Edge / Red Buff"
+      ],
+      "traits": [
+        "Rival",
+        "Flora Fatalis",
+        "Lunar",
+        "Vanguard",
+        "Executioner",
+        "Elderwood"
+      ],
+      "whenToPlay": "先核对主C来牌与推荐装备；来源未标注固定搜牌人口。排行榜评级不代表任意开局都适用。",
+      "keyNotes": [
+        "来源评级：A",
+        "来源第一优先核心：Rengar",
+        "榜单统计口径：全服务器 / 全段位 / ALL 模式；非 NA 专属。",
+        "来源页面更新时间：1 week ago；无法确认统计是否覆盖 9月14日热修，不能视为实时胜率。",
+        "来源第二优先核心：Kha'Zix",
+        "阵容码：024103fa40340c4243ef3ff42e000000TFTSet18"
+      ],
+      "stages": [
+        {
+          "stage": "Stage 2",
+          "text": "来源未提供可核验的该阶段过渡方案；根据实际来牌保留经济，不把最终阵容当作固定过渡。"
+        },
+        {
+          "stage": "Stage 3",
+          "text": "来源未提供可核验的该阶段过渡方案；根据实际来牌保留经济，不把最终阵容当作固定过渡。"
+        },
+        {
+          "stage": "Stage 4",
+          "text": "来源最终阵容：LeBlanc / Diana / Hecarim / Kha'Zix / Rengar / Aphelios / Ezreal / Soraka。这是成型参考，来源未承诺必须在第四阶段完成。"
+        }
+      ],
+      "board": [],
+      "positioningNote": "来源未提供最终站位。Builder 保留英雄名单，请手动放置；不把自动推导站位视作来源攻略。",
+      "gameMode": "TFT",
+      "ranking": {
+        "sourceTier": "A",
+        "sourceOrder": 15,
+        "averagePlacement": 2.79,
+        "winRate": 0.2796,
+        "top4Rate": 0.8374,
+        "pickRate": 0.002987543869511794,
+        "games": 744,
+        "totalGames": 249034,
+        "capturedAt": "2026-09-17T20:30:24Z",
+        "sourceUpdatedLabel": "1 week ago",
+        "scope": "global / ALL tiers / ALL modes",
+        "statisticsBasis": "label",
+        "teamCode": "024103fa40340c4243ef3ff42e000000TFTSet18"
+      }
+    }
+  ]
+}

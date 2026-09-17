@@ -1,9 +1,11 @@
+import fs from "node:fs";
+const expectedCompCount = JSON.parse(fs.readFileSync("data/live-meta.generated.json", "utf8")).records.length + JSON.parse(fs.readFileSync("data/opgg-meta.generated.json", "utf8")).records.length;
 const baseUrl = (process.env.SMOKE_BASE_URL || "http://127.0.0.1:3000").replace(/\/$/, "");
 const startupTimeoutMs = Number(process.env.SMOKE_STARTUP_TIMEOUT_MS || 30000);
 const requestTimeoutMs = Number(process.env.SMOKE_REQUEST_TIMEOUT_MS || 10000);
 
 const requiredRoutes = [
-  "/api/health", "/", "/demo", "/opening", "/coach", "/compare", "/focus", "/review", "/review/history", "/insights", "/preferences", "/share", "/builder", "/manifest.webmanifest", "/sw.js", "/opengraph-image", "/robots.txt", "/sitemap.xml",
+  "/api/health", "/api/meta-status", "/comps", "/sources", "/", "/demo", "/opening", "/coach", "/compare", "/focus", "/review", "/review/history", "/insights", "/preferences", "/share", "/builder", "/manifest.webmanifest", "/sw.js", "/opengraph-image", "/robots.txt", "/sitemap.xml",
 ];
 if (process.env.SMOKE_CHECK_TFT === "1") requiredRoutes.push("/api/tft");
 
@@ -35,7 +37,7 @@ for (const path of requiredRoutes) {
     if (!ok) { console.error(`Smoke failed: ${path} returned HTTP ${response.status}`); failed = true; continue; }
     if (path === "/api/health") {
       const payload = await response.json();
-      if (payload?.status !== "ok" || payload?.app !== "tft-cn-companion" || payload?.version !== "1.6.9" || payload?.patch !== "18.2" || payload?.compCount !== 14) { console.error(`Smoke failed: ${path} returned an invalid V1.6.9 health payload.`); failed = true; continue; }
+      if (payload?.status !== "ok" || payload?.app !== "tft-cn-companion" || payload?.version !== "1.6.9" || payload?.patch !== "18.2" || payload?.compCount !== expectedCompCount) { console.error(`Smoke failed: ${path} returned an invalid V1.6.9 health payload.`); failed = true; continue; }
     }
     console.log(`Smoke OK: ${path} -> ${response.status}`);
   } catch (error) { console.error(`Smoke failed: ${path}: ${error instanceof Error ? error.message : String(error)}`); failed = true; }
