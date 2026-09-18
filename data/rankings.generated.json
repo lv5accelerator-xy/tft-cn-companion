@@ -1,0 +1,2309 @@
+{
+  "capturedAt": "2026-09-18T18:12:24Z",
+  "sources": [
+    {
+      "id": "tft-academy",
+      "name": "TFT Academy",
+      "url": "https://tftacademy.com/tierlist/comps",
+      "patch": "18.2b",
+      "kind": "expert",
+      "sourceUpdatedAt": null,
+      "sourceUpdatedLabel": "4 hours ago",
+      "scope": "专家评级；条件阵容单列 X，保留条件评级。",
+      "scopeEn": "Expert tiers; situational comps retain X and their conditional tier.",
+      "recordCount": 29
+    },
+    {
+      "id": "metatft",
+      "name": "MetaTFT",
+      "url": "https://www.metatft.com/comps",
+      "patch": "18.2b",
+      "kind": "statistics",
+      "sourceUpdatedAt": null,
+      "sourceUpdatedLabel": "a minute ago",
+      "scope": "排位 · 白金以上 · 最近三天；地区未明确标注。",
+      "scopeEn": "Ranked · Platinum+ · Last 3 days; region not explicitly stated.",
+      "totalCompsAnalyzed": 6667725,
+      "recordCount": 47
+    }
+  ],
+  "records": [
+    {
+      "id": "set-18-ahri-morgana",
+      "sourceId": "tft-academy",
+      "name": "Ahri Morgana",
+      "nameZh": "阿狸莫甘娜",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": "Rising",
+      "url": "https://tftacademy.com/tierlist/comps/set-18-ahri-morgana",
+      "units": [
+        "Karma",
+        "Taric",
+        "Sett",
+        "Sentinel",
+        "Krug",
+        "Morgana",
+        "Ahri",
+        "Pebbles"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-dragon-princess",
+      "sourceId": "tft-academy",
+      "name": "Dragon 9",
+      "nameZh": "巨龙九五（莫甘娜）",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": "Falling",
+      "url": "https://tftacademy.com/tierlist/comps/set-18-dragon-princess",
+      "units": [
+        "Amumu",
+        "Sentinel",
+        "Morgana",
+        "Taric",
+        "Kennen",
+        "Elder Dragon",
+        "Ivern",
+        "Maokai"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-elderwood-executioners-copy",
+      "sourceId": "tft-academy",
+      "name": "Draven Ad 9",
+      "nameZh": "德莱文九五",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": "Falling",
+      "url": "https://tftacademy.com/tierlist/comps/set-18-elderwood-executioners-copy",
+      "units": [
+        "Alistar",
+        "Amumu",
+        "Draven",
+        "Ivern",
+        "Taric",
+        "Gnar",
+        "Kennen",
+        "Maokai",
+        "Ezreal"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-ashe-juggernauts",
+      "sourceId": "tft-academy",
+      "name": "Ashe Juggernauts",
+      "nameZh": "主宰艾希",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": "New",
+      "url": "https://tftacademy.com/tierlist/comps/set-18-ashe-juggernauts",
+      "units": [
+        "Vi",
+        "Amumu",
+        "Sivir",
+        "Maokai",
+        "Ashe",
+        "Rakan",
+        "Taric",
+        "Ivern"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-invoker-nidalee-copy",
+      "sourceId": "tft-academy",
+      "name": "Primal Jungle",
+      "nameZh": "野兽双C",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": "Rising",
+      "url": "https://tftacademy.com/tierlist/comps/set-18-invoker-nidalee-copy",
+      "units": [
+        "Cinderling",
+        "Rek'Sai",
+        "Kog'Maw",
+        "Krug",
+        "Sentinel",
+        "Malphite",
+        "Nidalee",
+        "Sivir"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-aphelios-nidalee",
+      "sourceId": "tft-academy",
+      "name": "Aphelios Nidalee",
+      "nameZh": "豹女月男",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": "Rising",
+      "url": "https://tftacademy.com/tierlist/comps/set-18-aphelios-nidalee",
+      "units": [
+        "Varus",
+        "Diana",
+        "Kog'Maw",
+        "Vi",
+        "Amumu",
+        "Aphelios",
+        "Nidalee",
+        "Sentinel"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-soraka-flex",
+      "sourceId": "tft-academy",
+      "name": "Malphite Ap Flex",
+      "nameZh": "裁决婕拉／石头人",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-soraka-flex",
+      "units": [
+        "Yorick",
+        "Azir",
+        "Fiddlesticks",
+        "Amumu",
+        "Malphite",
+        "Soraka",
+        "Zyra",
+        "Kennen"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-caitlyn-hunters",
+      "sourceId": "tft-academy",
+      "name": "Caitlyn Hunters",
+      "nameZh": "猎人女警",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-caitlyn-hunters",
+      "units": [
+        "Rakan",
+        "Sejuani",
+        "Caitlyn",
+        "Scuttlecrab",
+        "Tristana",
+        "Vi",
+        "Sivir"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-riftbeast-reroll",
+      "sourceId": "tft-academy",
+      "name": "Riftbeast Reroll",
+      "nameZh": "野怪重投",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-riftbeast-reroll",
+      "units": [
+        "Cinderling",
+        "Pebbles",
+        "Murkwolf",
+        "Scuttlecrab",
+        "Krug",
+        "Sentinel",
+        "Brambleback",
+        "Gnar"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-adaptor-reroll-copy",
+      "sourceId": "tft-academy",
+      "name": "Yi Rengar",
+      "nameZh": "剑圣狮子狗",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-adaptor-reroll-copy",
+      "units": [
+        "Yorick",
+        "Krug",
+        "Master Yi",
+        "Rengar",
+        "Vi",
+        "Sett",
+        "Nidalee"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-cashout-morgana",
+      "sourceId": "tft-academy",
+      "name": "Invoker Morgana",
+      "nameZh": "神谕莫甘娜",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-cashout-morgana",
+      "units": [
+        "Pebbles",
+        "Diana",
+        "Hecarim",
+        "Kog'Maw",
+        "Brambleback",
+        "Morgana",
+        "Sentinel",
+        "Taric",
+        "Alune"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-6-juggernaut-ap",
+      "sourceId": "tft-academy",
+      "name": "6 Juggernaut Ap",
+      "nameZh": "六主宰法系",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": "New",
+      "url": "https://tftacademy.com/tierlist/comps/set-18-6-juggernaut-ap",
+      "units": [
+        "Yorick",
+        "Scuttlecrab",
+        "Azir",
+        "Vi",
+        "Amumu",
+        "Zyra",
+        "Maokai",
+        "Ivern",
+        "Kennen"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-solar-melee",
+      "sourceId": "tft-academy",
+      "name": "Solar Melee",
+      "nameZh": "日炎近战",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-solar-melee",
+      "units": [],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-defender-cassio",
+      "sourceId": "tft-academy",
+      "name": "Defender Cassio",
+      "nameZh": "护卫蛇女",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-defender-cassio",
+      "units": [],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-lunarwood-khazix",
+      "sourceId": "tft-academy",
+      "name": "Lunarwood Kha'Zix",
+      "nameZh": "月森螳螂",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": "Rising",
+      "url": "https://tftacademy.com/tierlist/comps/set-18-lunarwood-khazix",
+      "units": [],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-woodblossom",
+      "sourceId": "tft-academy",
+      "name": "Woodblossom",
+      "nameZh": "森系莲华",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": "Rising",
+      "url": "https://tftacademy.com/tierlist/comps/set-18-woodblossom",
+      "units": [
+        "Ornn",
+        "Alistar",
+        "Yunara",
+        "Fiddlesticks",
+        "Soraka",
+        "Ahri",
+        "Ezreal",
+        "Sett"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-solara-yunara",
+      "sourceId": "tft-academy",
+      "name": "Solara Yunara",
+      "nameZh": "日蚀芸阿娜",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": "New",
+      "url": "https://tftacademy.com/tierlist/comps/set-18-solara-yunara",
+      "units": [
+        "LeBlanc",
+        "Leona",
+        "Yorick",
+        "Kayle",
+        "Karma",
+        "Sejuani",
+        "Yunara",
+        "Azir"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-veigar-consuming-flora-copy",
+      "sourceId": "tft-academy",
+      "name": "Elderwood Veigar",
+      "nameZh": "森系小法",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": "New",
+      "url": "https://tftacademy.com/tierlist/comps/set-18-veigar-consuming-flora-copy",
+      "units": [
+        "Rek'Sai",
+        "Ornn",
+        "Veigar",
+        "Alistar",
+        "LeBlanc",
+        "Cassiopeia",
+        "Fiddlesticks"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-solar-kayle",
+      "sourceId": "tft-academy",
+      "name": "Solar Kayle",
+      "nameZh": "迅捷凯尔",
+      "tier": "C",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-solar-kayle",
+      "units": [
+        "Leona",
+        "Rakan",
+        "Ornn",
+        "Xayah",
+        "Sejuani",
+        "Kayle",
+        "Hecarim"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-adaptor-nidalee",
+      "sourceId": "tft-academy",
+      "name": "Invoker Nidalee",
+      "nameZh": "神谕豹女",
+      "tier": "C",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-adaptor-nidalee",
+      "units": [
+        "Pebbles",
+        "Scuttlecrab",
+        "Kog'Maw",
+        "Vi",
+        "Morgana",
+        "Nidalee",
+        "Sentinel",
+        "Taric"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-rengar-rr",
+      "sourceId": "tft-academy",
+      "name": "Rengar Reroll",
+      "nameZh": "狮子狗重投",
+      "tier": "C",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-rengar-rr",
+      "units": [],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-warwick-rr",
+      "sourceId": "tft-academy",
+      "name": "Warwick Reroll",
+      "nameZh": "狼人重投",
+      "tier": "C",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-warwick-rr",
+      "units": [],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-sprykin-teemo-copy",
+      "sourceId": "tft-academy",
+      "name": "Teemowood",
+      "nameZh": "森系提莫",
+      "tier": "C",
+      "conditionalTier": null,
+      "trend": "New",
+      "url": "https://tftacademy.com/tierlist/comps/set-18-sprykin-teemo-copy",
+      "units": [
+        "Kobuko",
+        "Veigar",
+        "Alistar",
+        "LeBlanc",
+        "Teemo",
+        "Hecarim",
+        "Sentinel"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-dark-mages",
+      "sourceId": "tft-academy",
+      "name": "Veigar Consuming Flora",
+      "nameZh": "花妖小法（条件阵容）",
+      "tier": "X",
+      "conditionalTier": "A",
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-dark-mages",
+      "units": [
+        "Kobuko",
+        "Rek'Sai",
+        "Veigar",
+        "Teemo",
+        "Fiddlesticks",
+        "Rammus",
+        "Sett",
+        "Gnar"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-trait-ladder",
+      "sourceId": "tft-academy",
+      "name": "Trait Ladder",
+      "nameZh": "羁绊阶梯（条件阵容）",
+      "tier": "X",
+      "conditionalTier": "A",
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-trait-ladder",
+      "units": [],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-sprykin-trist",
+      "sourceId": "tft-academy",
+      "name": "Fae Tristana",
+      "nameZh": "花仙小炮（条件阵容）",
+      "tier": "X",
+      "conditionalTier": "A",
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-sprykin-trist",
+      "units": [],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-unrivaled-reroll",
+      "sourceId": "tft-academy",
+      "name": "Unrivaled Reroll",
+      "nameZh": "宿敌重投（条件阵容）",
+      "tier": "X",
+      "conditionalTier": "B",
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-unrivaled-reroll",
+      "units": [],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-infinite-elise",
+      "sourceId": "tft-academy",
+      "name": "Infinite Elise",
+      "nameZh": "无限蜘蛛（条件阵容）",
+      "tier": "X",
+      "conditionalTier": "B",
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-infinite-elise",
+      "units": [],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "set-18-fae-tristana-copy",
+      "sourceId": "tft-academy",
+      "name": "Emblem Rengar",
+      "nameZh": "转职狮子狗（条件阵容）",
+      "tier": "X",
+      "conditionalTier": "B",
+      "trend": null,
+      "url": "https://tftacademy.com/tierlist/comps/set-18-fae-tristana-copy",
+      "units": [
+        "Kobuko",
+        "Rammus",
+        "Rengar",
+        "Tristana",
+        "Lillia",
+        "Sivir",
+        "Gnar"
+      ],
+      "patch": "18.2b",
+      "stats": null
+    },
+    {
+      "id": "DA_18_Lunar-DA_18_Aphelios-DA_Nidalee18_AP",
+      "sourceId": "metatft",
+      "name": "Lunar Aphelios Nidalee",
+      "nameZh": "豹女月男",
+      "tier": "S",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Aphelios",
+        "Nidalee",
+        "Sentinel",
+        "Amumu",
+        "Diana",
+        "KogMaw",
+        "Vi",
+        "Varus"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.14,
+        "top4Rate": 0.594,
+        "winRate": 0.087
+      }
+    },
+    {
+      "id": "DA_18_Invoker-DA_18_Ahri",
+      "sourceId": "metatft",
+      "name": "Invoker Ahri",
+      "nameZh": "神谕阿狸",
+      "tier": "S",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Ahri",
+        "Morgana",
+        "Sett",
+        "Sentinel",
+        "Taric",
+        "Krug",
+        "Pebbles",
+        "Karma"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.22,
+        "top4Rate": 0.562,
+        "winRate": 0.121
+      }
+    },
+    {
+      "id": "DA_18_Inferno-DA_18_Sivir",
+      "sourceId": "metatft",
+      "name": "Inferno Sivir",
+      "nameZh": "地狱火希维尔",
+      "tier": "S",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Ashe",
+        "Sivir",
+        "Amumu",
+        "Lillia",
+        "Ivern",
+        "Kennen",
+        "Tristana",
+        "Vi",
+        "Shen"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.23,
+        "top4Rate": 0.539,
+        "winRate": 0.17300000000000001
+      }
+    },
+    {
+      "id": "DA_18_Blackthorn-DA_18_Malphite",
+      "sourceId": "metatft",
+      "name": "Blackthorn Malphite",
+      "nameZh": "黑荆石头人",
+      "tier": "S",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Malphite",
+        "Veigar",
+        "Teemo",
+        "Fiddlesticks",
+        "Azir",
+        "Rammus",
+        "Kobuko",
+        "RekSai"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.25,
+        "top4Rate": 0.5529999999999999,
+        "winRate": 0.114
+      }
+    },
+    {
+      "id": "DA_18_Hunter-DA_18_Malphite",
+      "sourceId": "metatft",
+      "name": "Hunter Malphite",
+      "nameZh": "野兽双C",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Malphite",
+        "Nidalee",
+        "Sivir",
+        "Sentinel",
+        "KogMaw",
+        "Krug",
+        "RekSai",
+        "Cinderling"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.25,
+        "top4Rate": 0.562,
+        "winRate": 0.102
+      }
+    },
+    {
+      "id": "DA_18_Inferno-DA_Draven18",
+      "sourceId": "metatft",
+      "name": "Inferno Draven",
+      "nameZh": "德莱文九五",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Draven",
+        "Maokai",
+        "Kennen",
+        "Gnar",
+        "Ivern",
+        "Taric",
+        "Ezreal",
+        "Amumu",
+        "Alistar"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.29,
+        "top4Rate": 0.523,
+        "winRate": 0.209
+      }
+    },
+    {
+      "id": "DA_18_Executioner-DA_18_Sett",
+      "sourceId": "metatft",
+      "name": "Executioner Sett",
+      "nameZh": "裁决瑟提",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Sett",
+        "Ezreal",
+        "Ahri",
+        "Soraka",
+        "Fiddlesticks",
+        "Alistar",
+        "Yunara",
+        "Ornn"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.34,
+        "top4Rate": 0.539,
+        "winRate": 0.099
+      }
+    },
+    {
+      "id": "DA_18_Executioner-DA_18_KhaZix",
+      "sourceId": "metatft",
+      "name": "Executioner Kha'Zix",
+      "nameZh": "裁决螳螂",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "KhaZix",
+        "Hecarim",
+        "Diana",
+        "Aphelios",
+        "Azir",
+        "KogMaw",
+        "Warwick"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.39,
+        "top4Rate": 0.522,
+        "winRate": 0.136
+      }
+    },
+    {
+      "id": "DA_18_Blossom-DA_18_Sett",
+      "sourceId": "metatft",
+      "name": "Blossom Sett",
+      "nameZh": "莲华瑟提",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Sett",
+        "Ahri",
+        "Ashe",
+        "Sivir",
+        "Gnar",
+        "Zyra",
+        "Vi",
+        "Yorick",
+        "Karma"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.39,
+        "top4Rate": 0.514,
+        "winRate": 0.132
+      }
+    },
+    {
+      "id": "DA_18_Rival-DA_18_Rengar",
+      "sourceId": "metatft",
+      "name": "Rival Rengar",
+      "nameZh": "宿敌狮子狗",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Rengar",
+        "KhaZix",
+        "Hecarim",
+        "Diana",
+        "Aphelios",
+        "Ezreal",
+        "LeBlanc"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.39,
+        "top4Rate": 0.521,
+        "winRate": 0.131
+      }
+    },
+    {
+      "id": "DA_18_Executioner-DA_18_Malphite",
+      "sourceId": "metatft",
+      "name": "Executioner Malphite",
+      "nameZh": "裁决石头人／婕拉",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Malphite",
+        "Soraka",
+        "Zyra",
+        "Amumu",
+        "Kennen",
+        "Azir",
+        "Fiddlesticks",
+        "Yorick"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.4,
+        "top4Rate": 0.526,
+        "winRate": 0.1
+      }
+    },
+    {
+      "id": "DA_18_Blackthorn-DA_18_Veigar",
+      "sourceId": "metatft",
+      "name": "Blackthorn Veigar",
+      "nameZh": "黑荆小法",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Veigar",
+        "Malphite",
+        "RekSai",
+        "Azir",
+        "Soraka",
+        "Rammus",
+        "Fiddlesticks",
+        "Kobuko"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.41,
+        "top4Rate": 0.519,
+        "winRate": 0.136
+      }
+    },
+    {
+      "id": "DA_18_Spellweaver-DA_18_LeBlanc",
+      "sourceId": "metatft",
+      "name": "Spellweaver LeBlanc",
+      "nameZh": "法师乐芙兰",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Veigar",
+        "LeBlanc",
+        "Alistar",
+        "Ornn",
+        "Cassiopeia",
+        "Fiddlesticks",
+        "RekSai"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.42,
+        "top4Rate": 0.519,
+        "winRate": 0.109
+      }
+    },
+    {
+      "id": "DA_18_Invoker-DA_18_Morgana",
+      "sourceId": "metatft",
+      "name": "Invoker Morgana",
+      "nameZh": "神谕莫甘娜",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Morgana",
+        "Sentinel",
+        "Brambleback",
+        "Alune",
+        "Taric",
+        "Diana",
+        "Hecarim",
+        "KogMaw",
+        "Pebbles"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.44,
+        "top4Rate": 0.509,
+        "winRate": 0.114
+      }
+    },
+    {
+      "id": "DA_Juggernaut18-DA_18_Caitlyn",
+      "sourceId": "metatft",
+      "name": "Juggernaut Caitlyn",
+      "nameZh": "主宰女警",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Caitlyn",
+        "Scuttlecrab",
+        "Sivir",
+        "Sejuani",
+        "Ashe",
+        "Tristana",
+        "Vi",
+        "Rakan"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.47,
+        "top4Rate": 0.519,
+        "winRate": 0.077
+      }
+    },
+    {
+      "id": "DA_18_Hunter-DA_Nidalee18_AP",
+      "sourceId": "metatft",
+      "name": "Hunter Nidalee",
+      "nameZh": "猎人希豹",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Nidalee",
+        "Sivir",
+        "Sentinel",
+        "Taric",
+        "Amumu",
+        "KogMaw",
+        "Scuttlecrab",
+        "Cinderling"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.48,
+        "top4Rate": 0.509,
+        "winRate": 0.099
+      }
+    },
+    {
+      "id": "DA_18_Adaptor-DA_18_MasterYi_AD",
+      "sourceId": "metatft",
+      "name": "Adaptor Master Yi",
+      "nameZh": "魔战剑圣",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "MasterYi",
+        "Vi",
+        "Nidalee",
+        "Sett",
+        "KogMaw",
+        "Krug",
+        "Yorick"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.48,
+        "top4Rate": 0.511,
+        "winRate": 0.081
+      }
+    },
+    {
+      "id": "DA_Juggernaut18-DA_18_Zyra",
+      "sourceId": "metatft",
+      "name": "Juggernaut Zyra",
+      "nameZh": "主宰婕拉",
+      "tier": "A",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Zyra",
+        "Amumu",
+        "Maokai",
+        "Vi",
+        "Kennen",
+        "Azir",
+        "Sejuani",
+        "Scuttlecrab",
+        "Yorick"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.49,
+        "top4Rate": 0.5,
+        "winRate": 0.11900000000000001
+      }
+    },
+    {
+      "id": "DA_Juggernaut18-DA_18_Ashe",
+      "sourceId": "metatft",
+      "name": "Juggernaut Ashe",
+      "nameZh": "主宰艾希",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Ashe",
+        "Maokai",
+        "Sivir",
+        "ElderDragon",
+        "Ivern",
+        "Taric",
+        "Sentinel",
+        "Vi"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.5,
+        "top4Rate": 0.479,
+        "winRate": 0.19
+      }
+    },
+    {
+      "id": "DA_Primal18-DA_Nidalee18_AP",
+      "sourceId": "metatft",
+      "name": "Primal Nidalee",
+      "nameZh": "野兽豹女",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Nidalee",
+        "Sivir",
+        "Amumu",
+        "Lillia",
+        "Sentinel",
+        "KogMaw",
+        "Shen",
+        "Rakan"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.52,
+        "top4Rate": 0.493,
+        "winRate": 0.10800000000000001
+      }
+    },
+    {
+      "id": "DA_18_Vanguard-DA_18_Morgana",
+      "sourceId": "metatft",
+      "name": "Vanguard Morgana",
+      "nameZh": "重装莫甘娜",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Morgana",
+        "Sentinel",
+        "Ahri",
+        "Alune",
+        "Taric",
+        "Cassiopeia",
+        "Diana",
+        "Fiddlesticks",
+        "Elise"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.53,
+        "top4Rate": 0.484,
+        "winRate": 0.14300000000000002
+      }
+    },
+    {
+      "id": "DA_18_Defender-DA_18_Cassiopeia",
+      "sourceId": "metatft",
+      "name": "Defender Cassiopeia",
+      "nameZh": "护卫蛇女",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Cassiopeia",
+        "Fiddlesticks",
+        "Rammus",
+        "Lillia",
+        "Shen",
+        "Leona",
+        "Ornn"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.54,
+        "top4Rate": 0.499,
+        "winRate": 0.079
+      }
+    },
+    {
+      "id": "DA_Riftbeast18-DA_18_Sentry",
+      "sourceId": "metatft",
+      "name": "Riftbeast Pebbles",
+      "nameZh": "野怪苍蓝哨戒",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Pebbles",
+        "ElderDragon",
+        "Krug",
+        "Sentinel",
+        "Gnar",
+        "Taric",
+        "Brambleback",
+        "Murkwolf"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.55,
+        "top4Rate": 0.489,
+        "winRate": 0.105
+      }
+    },
+    {
+      "id": "DA_18_Spellweaver-DA_18_Veigar",
+      "sourceId": "metatft",
+      "name": "Spellweaver Veigar",
+      "nameZh": "法师小法",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Veigar",
+        "RekSai",
+        "Ornn",
+        "Fiddlesticks",
+        "Soraka",
+        "Cassiopeia",
+        "Alistar",
+        "LeBlanc"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.56,
+        "top4Rate": 0.49,
+        "winRate": 0.10800000000000001
+      }
+    },
+    {
+      "id": "DA_18_Blossom-DA_18_Sett-DA_18_Ashe",
+      "sourceId": "metatft",
+      "name": "Blossom Sett Ashe",
+      "nameZh": "莲华瑟提艾希",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Sett",
+        "Ashe",
+        "Ahri",
+        "Alune",
+        "Gnar",
+        "Lillia",
+        "Diana",
+        "Rammus",
+        "Tristana"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.58,
+        "top4Rate": 0.48,
+        "winRate": 0.11699999999999999
+      }
+    },
+    {
+      "id": "DA_18_Spellweaver-DA_18_Ahri",
+      "sourceId": "metatft",
+      "name": "Spellweaver Ahri",
+      "nameZh": "法师阿狸",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Ahri",
+        "Veigar",
+        "Fiddlesticks",
+        "Alune",
+        "Cassiopeia",
+        "Alistar",
+        "LeBlanc",
+        "Ornn",
+        "RekSai"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.58,
+        "top4Rate": 0.483,
+        "winRate": 0.11
+      }
+    },
+    {
+      "id": "DA_18_Vanguard-DA_18_ElderDragon",
+      "sourceId": "metatft",
+      "name": "Vanguard Elder Dragon",
+      "nameZh": "重装巨龙",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "ElderDragon",
+        "Sentinel",
+        "Maokai",
+        "Morgana",
+        "Ivern",
+        "Kennen",
+        "Taric",
+        "Amumu"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.59,
+        "top4Rate": 0.465,
+        "winRate": 0.16
+      }
+    },
+    {
+      "id": "DA_18_Executioner-DA_18_Yunara",
+      "sourceId": "metatft",
+      "name": "Executioner Yunara",
+      "nameZh": "裁决芸阿娜",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Yunara",
+        "Alistar",
+        "LeBlanc",
+        "Ezreal",
+        "Ahri",
+        "Sett",
+        "Soraka",
+        "Azir"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.6,
+        "top4Rate": 0.49200000000000005,
+        "winRate": 0.091
+      }
+    },
+    {
+      "id": "DA_18_Vanguard-DA_18_Aphelios",
+      "sourceId": "metatft",
+      "name": "Vanguard Aphelios",
+      "nameZh": "重装月男",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Aphelios",
+        "Sentinel",
+        "Brambleback",
+        "Diana",
+        "Taric",
+        "Zyra",
+        "Hecarim",
+        "MamaBeak"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.62,
+        "top4Rate": 0.48200000000000004,
+        "winRate": 0.075
+      }
+    },
+    {
+      "id": "DA_18_Inferno-DA_18_Akali_AD",
+      "sourceId": "metatft",
+      "name": "Inferno Akali",
+      "nameZh": "地狱火阿卡丽",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Akali",
+        "Camille",
+        "Ornn",
+        "Varus",
+        "Kayle",
+        "Sejuani",
+        "Leona"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.66,
+        "top4Rate": 0.484,
+        "winRate": 0.079
+      }
+    },
+    {
+      "id": "DA_18_Elderwood-DA_18_Aphelios-DA_18_Lillia",
+      "sourceId": "metatft",
+      "name": "Elderwood Aphelios Lillia",
+      "nameZh": "森系月男莉莉娅",
+      "tier": "B",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Aphelios",
+        "Lillia",
+        "Alune",
+        "Gnar",
+        "Diana",
+        "Hecarim",
+        "Alistar",
+        "Ornn",
+        "Xayah"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.73,
+        "top4Rate": 0.45799999999999996,
+        "winRate": 0.096
+      }
+    },
+    {
+      "id": "DA_18_Lunar-DA_18_Kayle",
+      "sourceId": "metatft",
+      "name": "Lunar Kayle",
+      "nameZh": "月系凯尔",
+      "tier": "C",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Kayle",
+        "Sejuani",
+        "Aphelios",
+        "Alune",
+        "Diana",
+        "Shen",
+        "Leona",
+        "Varus"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.8,
+        "top4Rate": 0.45,
+        "winRate": 0.08800000000000001
+      }
+    },
+    {
+      "id": "DA_18_Blackthorn-DA_18_Warwick",
+      "sourceId": "metatft",
+      "name": "Blackthorn Warwick",
+      "nameZh": "黑荆狼人",
+      "tier": "C",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Warwick",
+        "Malphite",
+        "Murkwolf",
+        "Brambleback",
+        "Azir",
+        "Diana",
+        "Krug",
+        "RekSai"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.82,
+        "top4Rate": 0.44799999999999995,
+        "winRate": 0.05
+      }
+    },
+    {
+      "id": "DA_18_Blossom-DA_18_Ahri",
+      "sourceId": "metatft",
+      "name": "Blossom Ahri",
+      "nameZh": "莲华阿狸",
+      "tier": "C",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Ahri",
+        "Sett",
+        "Ashe",
+        "Gnar",
+        "Maokai",
+        "MasterYi",
+        "Yunara",
+        "Yorick",
+        "Karma"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.82,
+        "top4Rate": 0.429,
+        "winRate": 0.114
+      }
+    },
+    {
+      "id": "DA_FloraFatalis18-DA_18_KhaZix",
+      "sourceId": "metatft",
+      "name": "Flora Fatalis Kha'Zix",
+      "nameZh": "花妖螳螂",
+      "tier": "C",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "KhaZix",
+        "Fiddlesticks",
+        "Rammus",
+        "Azir",
+        "Diana",
+        "Tristana",
+        "Rakan",
+        "Veigar"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.88,
+        "top4Rate": 0.43200000000000005,
+        "winRate": 0.099
+      }
+    },
+    {
+      "id": "DA_18_Inferno-DA_18_Kayle",
+      "sourceId": "metatft",
+      "name": "Inferno Kayle",
+      "nameZh": "地狱火凯尔",
+      "tier": "C",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Kayle",
+        "Sejuani",
+        "Varus",
+        "Leona",
+        "Shen",
+        "Akali",
+        "Camille"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.89,
+        "top4Rate": 0.429,
+        "winRate": 0.066
+      }
+    },
+    {
+      "id": "DA_18_Lunar-DA_18_Aphelios",
+      "sourceId": "metatft",
+      "name": "Lunar Aphelios",
+      "nameZh": "月系月男",
+      "tier": "C",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Aphelios",
+        "Alune",
+        "Maokai",
+        "Taric",
+        "Diana",
+        "Fiddlesticks",
+        "Kayle",
+        "Sejuani",
+        "Leona"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.89,
+        "top4Rate": 0.423,
+        "winRate": 0.10099999999999999
+      }
+    },
+    {
+      "id": "DA_18_Elderwood-DA_18_Ezreal",
+      "sourceId": "metatft",
+      "name": "Elderwood Ezreal",
+      "nameZh": "森系伊泽瑞尔",
+      "tier": "C",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Ezreal",
+        "Hecarim",
+        "Ornn",
+        "Soraka",
+        "Gnar",
+        "Fiddlesticks",
+        "Alistar",
+        "LeBlanc",
+        "Xayah"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.9,
+        "top4Rate": 0.419,
+        "winRate": 0.109
+      }
+    },
+    {
+      "id": "DA_18_Rapidfire-DA_18_Kayle",
+      "sourceId": "metatft",
+      "name": "Rapidfire Kayle",
+      "nameZh": "迅捷凯尔",
+      "tier": "C",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Kayle",
+        "Ornn",
+        "Xayah",
+        "Sejuani",
+        "Hecarim",
+        "Leona",
+        "Rakan"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.92,
+        "top4Rate": 0.43,
+        "winRate": 0.09
+      }
+    },
+    {
+      "id": "DA_18_Sprykin-DA_18_Rammus",
+      "sourceId": "metatft",
+      "name": "Sprykin Rammus",
+      "nameZh": "约德尔拉莫斯",
+      "tier": "C",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Rammus",
+        "Teemo",
+        "Tristana",
+        "Lillia",
+        "Morgana",
+        "Sentinel",
+        "Kobuko",
+        "Veigar"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.96,
+        "top4Rate": 0.418,
+        "winRate": 0.040999999999999995
+      }
+    },
+    {
+      "id": "DA_FloraFatalis18-DA_18_Soraka",
+      "sourceId": "metatft",
+      "name": "Flora Fatalis Soraka",
+      "nameZh": "花妖索拉卡",
+      "tier": "C",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Soraka",
+        "Alune",
+        "Kennen",
+        "Maokai",
+        "Ivern",
+        "Taric",
+        "Amumu",
+        "Diana",
+        "Fiddlesticks"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 4.99,
+        "top4Rate": 0.405,
+        "winRate": 0.08900000000000001
+      }
+    },
+    {
+      "id": "DA_18_Blossom-DA_18_Yunara",
+      "sourceId": "metatft",
+      "name": "Blossom Yunara",
+      "nameZh": "莲华芸阿娜",
+      "tier": "D",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Yunara",
+        "Sejuani",
+        "LeBlanc",
+        "Yorick",
+        "Kayle",
+        "Leona",
+        "Karma"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 5.03,
+        "top4Rate": 0.41100000000000003,
+        "winRate": 0.094
+      }
+    },
+    {
+      "id": "DA_Juggernaut18-DA_Nidalee18_AP",
+      "sourceId": "metatft",
+      "name": "Juggernaut Nidalee",
+      "nameZh": "主宰豹女",
+      "tier": "D",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Nidalee",
+        "Amumu",
+        "Vi",
+        "Brambleback",
+        "Sentinel",
+        "KogMaw",
+        "Gromp",
+        "Akali"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 5.09,
+        "top4Rate": 0.392,
+        "winRate": 0.06
+      }
+    },
+    {
+      "id": "DA_18_Fae-DA_18_Tristana-DA_18_Lillia",
+      "sourceId": "metatft",
+      "name": "Fae Tristana Lillia",
+      "nameZh": "花仙小炮莉莉娅",
+      "tier": "D",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Tristana",
+        "Lillia",
+        "Xayah",
+        "Amumu",
+        "Hecarim",
+        "Ornn",
+        "Rakan",
+        "Varus"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 5.52,
+        "top4Rate": 0.316,
+        "winRate": 0.057
+      }
+    },
+    {
+      "id": "DA_18_Vanguard-DA_18_Elise",
+      "sourceId": "metatft",
+      "name": "Vanguard Elise",
+      "nameZh": "重装蜘蛛",
+      "tier": "D",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Elise",
+        "Hecarim",
+        "Diana",
+        "Taric",
+        "Aphelios",
+        "Morgana",
+        "Sentinel",
+        "Rakan"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 5.6,
+        "top4Rate": 0.299,
+        "winRate": 0.047
+      }
+    },
+    {
+      "id": "DA_18_Coven-DA_18_Morgana",
+      "sourceId": "metatft",
+      "name": "Coven Morgana",
+      "nameZh": "魔女莫甘娜",
+      "tier": "D",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Morgana",
+        "Cassiopeia",
+        "Elise",
+        "Sentinel",
+        "Diana",
+        "Hecarim",
+        "Caitlyn",
+        "Camille"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 5.74,
+        "top4Rate": 0.252,
+        "winRate": 0.07
+      }
+    },
+    {
+      "id": "DA_18_Coven-DA_18_Caitlyn",
+      "sourceId": "metatft",
+      "name": "Coven Caitlyn",
+      "nameZh": "魔女女警",
+      "tier": "D",
+      "conditionalTier": null,
+      "trend": null,
+      "url": "https://www.metatft.com/comps",
+      "units": [
+        "Caitlyn",
+        "Elise",
+        "Sivir",
+        "Sentinel",
+        "Hecarim",
+        "Tristana",
+        "Vi",
+        "Rakan"
+      ],
+      "patch": "18.2b",
+      "stats": {
+        "averagePlacement": 6.01,
+        "top4Rate": 0.228,
+        "winRate": 0.035
+      }
+    }
+  ],
+  "groups": [
+    {
+      "id": "invoker-ahri",
+      "entries": [
+        "set-18-ahri-morgana",
+        "DA_18_Invoker-DA_18_Ahri"
+      ],
+      "guides": [
+        {
+          "sourceId": "tuding",
+          "id": "tuding-182-invoker-ahri",
+          "patch": "18.2b",
+          "units": [
+            "塔里克",
+            "拉露恩",
+            "瑟提",
+            "石甲虫",
+            "艾希",
+            "苍蓝哨戒",
+            "苍蓝雕像",
+            "莫甘娜",
+            "阿狸"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "draven-nine",
+      "entries": [
+        "set-18-elderwood-executioners-copy",
+        "DA_18_Inferno-DA_Draven18"
+      ],
+      "guides": [
+        {
+          "sourceId": "tuding",
+          "id": "tuding-182-draven-fast9",
+          "patch": "18.2b",
+          "units": [
+            "伊泽瑞尔",
+            "凯南",
+            "塔里克",
+            "德莱文",
+            "纳尔",
+            "艾翁",
+            "茂凯",
+            "阿利斯塔",
+            "阿木木"
+          ]
+        },
+        {
+          "sourceId": "opgg",
+          "id": "opgg-182-c5a44db118188c9565578d30c786b078",
+          "patch": "18.2",
+          "units": [
+            "Alistar",
+            "Amumu",
+            "Draven",
+            "Ezreal",
+            "Gnar",
+            "Ivern",
+            "Kennen",
+            "Maokai",
+            "Taric"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "primal-jungle",
+      "entries": [
+        "set-18-invoker-nidalee-copy",
+        "DA_18_Hunter-DA_18_Malphite"
+      ],
+      "guides": [
+        {
+          "sourceId": "tuding",
+          "id": "tuding-182-primal-double-carry",
+          "patch": "18.2b",
+          "units": [
+            "克格莫",
+            "塔里克",
+            "墨菲特",
+            "奈德丽",
+            "小绯红怪",
+            "希维尔",
+            "石甲虫",
+            "纳尔",
+            "艾希",
+            "蓝霸符",
+            "雷克塞"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aphelios-nidalee",
+      "entries": [
+        "set-18-aphelios-nidalee",
+        "DA_18_Lunar-DA_18_Aphelios-DA_Nidalee18_AP"
+      ],
+      "guides": [
+        {
+          "sourceId": "tuding",
+          "id": "tuding-182-nidalee-aphelios",
+          "patch": "18.2b",
+          "units": [
+            "克格莫",
+            "厄斐琉斯",
+            "奈德丽",
+            "拉露恩",
+            "蓝霸符",
+            "蔚",
+            "阿木木",
+            "韦鲁斯",
+            "黛安娜"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "executioner-zyra",
+      "entries": [
+        "set-18-soraka-flex",
+        "DA_18_Executioner-DA_18_Malphite"
+      ],
+      "guides": [
+        {
+          "sourceId": "tuding",
+          "id": "tuding-182b-executioner-zyra",
+          "patch": "18.2b",
+          "units": [
+            "凯南",
+            "墨菲特",
+            "婕拉",
+            "拉露恩",
+            "索拉卡",
+            "约里克",
+            "费德提克",
+            "阿兹尔",
+            "阿木木"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "juggernaut-zyra",
+      "entries": [
+        "set-18-6-juggernaut-ap",
+        "DA_Juggernaut18-DA_18_Zyra"
+      ],
+      "guides": [
+        {
+          "sourceId": "tuding",
+          "id": "tuding-182b-juggernaut-zyra",
+          "patch": "18.2b",
+          "units": [
+            "凯南",
+            "婕拉",
+            "拉露恩",
+            "瑟庄妮",
+            "约里克",
+            "茂凯",
+            "蔚",
+            "迅捷蟹",
+            "阿木木"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "caitlyn-hunters",
+      "entries": [
+        "set-18-caitlyn-hunters",
+        "DA_Juggernaut18-DA_18_Caitlyn"
+      ],
+      "guides": [
+        {
+          "sourceId": "opgg",
+          "id": "opgg-182-199fc60ef48d77b2b6e59fe673f58509",
+          "patch": "18.2",
+          "units": [
+            "Ashe",
+            "Caitlyn",
+            "Rakan",
+            "Scuttle Crab",
+            "Sejuani",
+            "Sivir",
+            "Tristana",
+            "Vi"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "invoker-morgana",
+      "entries": [
+        "set-18-cashout-morgana",
+        "DA_18_Invoker-DA_18_Morgana"
+      ],
+      "guides": [
+        {
+          "sourceId": "opgg",
+          "id": "opgg-182-b9c6def24ca3b0a91858604e62d280cd",
+          "patch": "18.2",
+          "units": [
+            "Alune",
+            "Blue Sentinel",
+            "Diana",
+            "Hecarim",
+            "Kog'Maw",
+            "Morgana",
+            "Pebbles",
+            "Red Brambleback",
+            "Taric"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solar-kayle",
+      "entries": [
+        "set-18-solar-kayle",
+        "DA_18_Rapidfire-DA_18_Kayle"
+      ],
+      "guides": [
+        {
+          "sourceId": "opgg",
+          "id": "opgg-182-d29ea90617cb45719e83f833fb98220d",
+          "patch": "18.2",
+          "units": [
+            "Aphelios",
+            "Hecarim",
+            "Kayle",
+            "Leona",
+            "Ornn",
+            "Rakan",
+            "Sejuani",
+            "Xayah"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solara-yunara",
+      "entries": [
+        "set-18-solara-yunara",
+        "DA_18_Blossom-DA_18_Yunara"
+      ],
+      "guides": [
+        {
+          "sourceId": "tuding",
+          "id": "tuding-182b-eclipse-yunara",
+          "patch": "18.2b",
+          "units": [
+            "乐芙兰",
+            "凯尔",
+            "卡尔玛",
+            "瑟庄妮",
+            "约里克",
+            "芸阿娜",
+            "蕾欧娜",
+            "阿兹尔"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hunter-nidalee",
+      "entries": [
+        "DA_18_Hunter-DA_Nidalee18_AP"
+      ],
+      "guides": [
+        {
+          "sourceId": "tuding",
+          "id": "tuding-182b-sivir-nidalee-flex",
+          "patch": "18.2b",
+          "units": [
+            "克格莫",
+            "凯南",
+            "塔里克",
+            "奈德丽",
+            "希维尔",
+            "绯红树怪",
+            "蓝霸符",
+            "迅捷蟹",
+            "阿木木"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "blossom-sett",
+      "entries": [
+        "DA_18_Blossom-DA_18_Sett"
+      ],
+      "guides": [
+        {
+          "sourceId": "tuding",
+          "id": "tuding-182-primal-lotus",
+          "patch": "18.2b",
+          "units": [
+            "卡尔玛",
+            "婕拉",
+            "希维尔",
+            "瑟提",
+            "约里克",
+            "纳尔",
+            "艾希",
+            "蔚",
+            "阿狸"
+          ]
+        },
+        {
+          "sourceId": "opgg",
+          "id": "opgg-182-b6a673e27487318cb9d61351edf6dd1b",
+          "patch": "18.2",
+          "units": [
+            "Ahri",
+            "Ashe",
+            "Gnar",
+            "Karma",
+            "Sett",
+            "Sivir",
+            "Vi",
+            "Yorick",
+            "Zyra"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "inferno-sivir",
+      "entries": [
+        "DA_18_Inferno-DA_18_Sivir"
+      ],
+      "guides": [
+        {
+          "sourceId": "opgg",
+          "id": "opgg-182-f2b9a00d55dd77ad40df47a20bf987ef",
+          "patch": "18.2",
+          "units": [
+            "Amumu",
+            "Ashe",
+            "Ivern",
+            "Kennen",
+            "Lillia",
+            "Shen",
+            "Sivir",
+            "Tristana",
+            "Vi"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "defender-cassio",
+      "entries": [
+        "DA_18_Defender-DA_18_Cassiopeia"
+      ],
+      "guides": [
+        {
+          "sourceId": "opgg",
+          "id": "opgg-182-744234e84d716f4b87a69a7d85888ea3",
+          "patch": "18.2",
+          "units": [
+            "Cassiopeia",
+            "Fiddlesticks",
+            "Leona",
+            "Lillia",
+            "Ornn",
+            "Rammus",
+            "Shen",
+            "Soraka"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "inferno-akali",
+      "entries": [
+        "DA_18_Inferno-DA_18_Akali_AD"
+      ],
+      "guides": [
+        {
+          "sourceId": "opgg",
+          "id": "opgg-182-f2d46d4c62c4357ae71e3fcf51cba08a",
+          "patch": "18.2",
+          "units": [
+            "Akali",
+            "Amumu",
+            "Camille",
+            "Kayle",
+            "Leona",
+            "Ornn",
+            "Sejuani",
+            "Varus"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elderwood-aphelios",
+      "entries": [
+        "DA_18_Elderwood-DA_18_Aphelios-DA_18_Lillia"
+      ],
+      "guides": [
+        {
+          "sourceId": "opgg",
+          "id": "opgg-182-8ff8472e05018239b3bb79e2a57cbf2a",
+          "patch": "18.2",
+          "units": [
+            "Alistar",
+            "Alune",
+            "Aphelios",
+            "Diana",
+            "Gnar",
+            "Hecarim",
+            "Lillia",
+            "Ornn",
+            "Xayah"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rival-rengar",
+      "entries": [
+        "DA_18_Rival-DA_18_Rengar"
+      ],
+      "guides": [
+        {
+          "sourceId": "opgg",
+          "id": "opgg-182-454706bba85535d10f9a73c6bca8da80",
+          "patch": "18.2",
+          "units": [
+            "Aphelios",
+            "Diana",
+            "Ezreal",
+            "Hecarim",
+            "Kha'Zix",
+            "LeBlanc",
+            "Rengar",
+            "Soraka"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dragon-morgana",
+      "entries": [
+        "set-18-dragon-princess",
+        "DA_18_Vanguard-DA_18_ElderDragon"
+      ],
+      "guides": []
+    },
+    {
+      "id": "flora-veigar",
+      "entries": [
+        "set-18-dark-mages"
+      ],
+      "guides": [
+        {
+          "sourceId": "tuding",
+          "id": "tuding-182-fae-veigar",
+          "patch": "18.2b",
+          "units": [
+            "凯南",
+            "可酷伯",
+            "拉莫斯",
+            "提莫",
+            "瑟提",
+            "索拉卡",
+            "纳尔",
+            "维迦",
+            "费德提克",
+            "阿狸",
+            "雷克塞"
+          ]
+        },
+        {
+          "sourceId": "opgg",
+          "id": "opgg-182-e63491d43d40f5cefe3a5f004342845a",
+          "patch": "18.2",
+          "units": [
+            "Fiddlesticks",
+            "Gnar",
+            "Kobuko",
+            "Rammus",
+            "Rek'Sai",
+            "Sett",
+            "Teemo",
+            "Veigar"
+          ]
+        }
+      ]
+    }
+  ]
+}

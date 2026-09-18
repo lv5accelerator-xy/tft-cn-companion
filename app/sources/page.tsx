@@ -5,6 +5,7 @@ import { useLocale } from "../components/LocaleProvider";
 import { liveMetaSnapshot } from "@/data/live-meta";
 import { metaSources, tftOnlyPolicy, type MetaSourceId } from "@/data/meta-sources";
 import { compsForSource } from "@/data/meta";
+import { rankingSources, rankingSnapshot } from "@/data/rankings";
 import styles from "./sources.module.css";
 
 function sourceState(sourceId: MetaSourceId) {
@@ -34,7 +35,7 @@ export default function SourcesPage() {
     <div className={styles.page}>
       <header className={styles.heading}>
         <div><h1>Live Meta Sources</h1><p>{tr("阵容来源同步状态 · 只收录 Teamfight Tactics，不接入金铲铲之战数据。", "Comp source status · Teamfight Tactics only; Golden Spatula data is not ingested.")}</p></div>
-        <div className={styles.summary}><span>{liveArticles} Articles</span><span>{liveRecords} Live Comps</span><span>{liveMetaSnapshot.generatedAt ? `${tr("同步", "Synced")} ${formatDate(liveMetaSnapshot.generatedAt)}` : tr("等待数据源", "Waiting for feeds")}</span></div>
+        <div className={styles.summary}><span>{liveArticles} Articles</span><span>{liveRecords} Live Comps</span><span>{rankingSnapshot.records.length} Ranking Entries</span><span>{liveMetaSnapshot.generatedAt ? `${tr("同步", "Synced")} ${formatDate(liveMetaSnapshot.generatedAt)}` : tr("等待数据源", "Waiting for feeds")}</span></div>
       </header>
 
       <section className={styles.policy}>
@@ -44,16 +45,17 @@ export default function SourcesPage() {
 
       <section className={styles.grid}>
         {metaSources.map((source) => {
-          const state = sourceState(source.id);
-          const compCount = compsForSource(source.id).length;
+          const ranking = rankingSources.find(item => item.id === source.id);
+          const state = ranking ? { status: "curated", lastCheckedAt: rankingSnapshot.capturedAt, lastChangedAt: null, message: locale === "zh" ? `已核验 ${ranking.recordCount} 条榜单记录；静态快照，来源更新时间仅提供相对文字。${ranking.scope}` : `Verified ${ranking.recordCount} ranking entries; static snapshot, source update is relative only. ${ranking.scopeEn}` } : sourceState(source.id);
+          const compCount = ranking?.recordCount ?? compsForSource(source.id).length;
           const articleCount = liveMetaSnapshot.articles.filter((article) => article.sourceId === source.id).length;
           return (
             <article className={styles.card} key={source.id}>
               <div className={styles.cardHead}><div><span className={styles.channel}>{source.channel}</span><h2>{source.name}</h2></div><span className={`${styles.status} ${styles[`status_${state?.status ?? "awaiting_feed"}`]}`}>{statusLabel(state?.status)}</span></div>
               <p className={styles.description}>{source.description}</p>
-              <div className={styles.metrics}><div><span>{tr("当前阵容", "Current comps")}</span><strong>{compCount}</strong></div><div><span>{tr("同步文章", "Articles")}</span><strong>{articleCount}</strong></div><div><span>{tr("优先级", "Priority")}</span><strong>P{source.priority}</strong></div></div>
+              <div className={styles.metrics}><div><span>{ranking ? tr("榜单记录", "Ranking entries") : tr("当前阵容", "Current comps")}</span><strong>{compCount}</strong></div><div><span>{tr("同步文章", "Articles")}</span><strong>{articleCount}</strong></div><div><span>{tr("优先级", "Priority")}</span><strong>P{source.priority}</strong></div></div>
               <dl className={styles.details}><div><dt>{tr("最近检查", "Last check")}</dt><dd>{formatDate(state?.lastCheckedAt ?? null)}</dd></div><div><dt>{tr("最近变化", "Last change")}</dt><dd>{formatDate(state?.lastChangedAt ?? null)}</dd></div><div><dt>{tr("状态说明", "Status")}</dt><dd>{state?.message ?? tr("等待同步状态", "Awaiting sync state")}</dd></div></dl>
-              <div className={styles.cardFoot}><Link href={`/comps?source=${source.id}`}>{tr("查看该来源阵容", "View source comps")}</Link><span>{source.game}</span></div>
+              <div className={styles.cardFoot}><Link href={ranking ? `/rankings?source=${source.id}` : `/comps?source=${source.id}`}>{tr("查看该来源阵容", "View source comps")}</Link><span>{source.game}</span></div>
             </article>
           );
         })}

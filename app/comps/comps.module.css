@@ -3,3 +3,5 @@
 .rankingStats { display: flex; flex-wrap: wrap; gap: 10px 20px; padding: 16px; border: 1px solid #354254; border-radius: 10px; font-size: 13px; }
 .rankingStats strong { color: #a4ddce; }
 .rankingStats p { flex-basis: 100%; margin: 0; color: #aab7c7; overflow-wrap: anywhere; }
+
+.sourceBar a{color:#c4b8ff;font-size:12px;padding:8px;text-decoration:none}

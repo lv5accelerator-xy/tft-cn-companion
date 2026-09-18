@@ -32,6 +32,7 @@ const coreNav: NavItem[] = [
 
 const metaNav: NavItem[] = [
   { href: "/comps", zh: "阵容", en: "Comps", glyph: "◆" },
+  { href: "/rankings", zh: "榜单对照", en: "Rankings", glyph: "≋" },
   { href: "/champions", zh: "英雄", en: "Champions", glyph: "♟" },
   { href: "/items", zh: "装备", en: "Items", glyph: "◈" },
   { href: "/traits", zh: "羁绊", en: "Traits", glyph: "✦" },

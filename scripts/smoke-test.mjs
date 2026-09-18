@@ -5,7 +5,7 @@ const startupTimeoutMs = Number(process.env.SMOKE_STARTUP_TIMEOUT_MS || 30000);
 const requestTimeoutMs = Number(process.env.SMOKE_REQUEST_TIMEOUT_MS || 10000);
 
 const requiredRoutes = [
-  "/api/health", "/api/meta-status", "/comps", "/sources", "/", "/demo", "/opening", "/coach", "/compare", "/focus", "/review", "/review/history", "/insights", "/preferences", "/share", "/builder", "/manifest.webmanifest", "/sw.js", "/opengraph-image", "/robots.txt", "/sitemap.xml",
+  "/api/health", "/api/meta-status", "/comps", "/rankings", "/sources", "/", "/demo", "/opening", "/coach", "/compare", "/focus", "/review", "/review/history", "/insights", "/preferences", "/share", "/builder", "/manifest.webmanifest", "/sw.js", "/opengraph-image", "/robots.txt", "/sitemap.xml",
 ];
 if (process.env.SMOKE_CHECK_TFT === "1") requiredRoutes.push("/api/tft");
 
@@ -38,6 +38,19 @@ for (const path of requiredRoutes) {
     if (path === "/api/health") {
       const payload = await response.json();
       if (payload?.status !== "ok" || payload?.app !== "tft-cn-companion" || payload?.version !== "1.6.9" || payload?.patch !== "18.2b" || payload?.compCount !== expectedCompCount) { console.error(`Smoke failed: ${path} returned an invalid V1.6.9 health payload.`); failed = true; continue; }
+    }
+    if (path === "/api/meta-status") {
+      const payload = await response.json();
+      const expected = JSON.parse(fs.readFileSync("data/rankings.generated.json", "utf8"));
+      if (payload.totals.rankingEntries !== expected.records.length || expected.sources.some(source => !payload.sources.some(actual => actual.id === source.id && actual.status === "curated" && actual.rankingCount === source.recordCount && actual.rankingPatch === source.patch))) {
+        console.error("Smoke failed: ranking source status/counts disagree with the snapshot."); failed = true; continue;
+      }
+    }
+    if (path === "/rankings") {
+      const html = await response.text();
+      if (!["TFT Academy", "MetaTFT", "6,667,725", "4.14", "Coven Caitlyn"].every(text => html.includes(text))) {
+        console.error("Smoke failed: ranking page did not render the full source snapshot."); failed = true; continue;
+      }
     }
     console.log(`Smoke OK: ${path} -> ${response.status}`);
   } catch (error) { console.error(`Smoke failed: ${path}: ${error instanceof Error ? error.message : String(error)}`); failed = true; }
