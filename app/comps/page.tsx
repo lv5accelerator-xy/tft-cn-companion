@@ -3,6 +3,8 @@
 import { fetchTftCatalog } from "@/lib/catalog-client";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useMemo, useState } from "react";
+import OriginalGuide from "./OriginalGuide";
+import { tudingOriginals } from "@/data/tuding-originals";
 import UnitIcon from "../components/UnitIcon";
 import BoardPreview from "../components/BoardPreview";
 import { useLocale } from "../components/LocaleProvider";
@@ -124,6 +126,7 @@ function CompRow({ comp, champions, favorite, onToggleFavorite }: { comp: Unifie
 
       {expanded ? <div className={styles.details} id={detailsId}>
         <div className={styles.sourceMeta}><span><b>{tr("来源", "Source")}</b> {comp.source}</span><span><b>{tr("更新", "Updated")}</b> {comp.sourceUpdatedAt} · {freshness.stale ? "⚠ " : ""}{freshness.label}</span><span><b>{tr("文章", "Article")}</b> {comp.sourceArticleTitle}</span>{comp.sourceUrl ? <a href={comp.sourceUrl} target="_blank" rel="noreferrer">{tr("查看原文", "Original")}</a> : null}</div>
+        {comp.sourceId === "tuding" ? <OriginalGuide guide={tudingOriginals[comp.id]?.patch === comp.patch ? tudingOriginals[comp.id] : undefined} name={locale === "zh" ? comp.nameZh : comp.name} /> : null}
         {comp.ranking ? <section className={styles.rankingStats} aria-label={tr("OP.GG 阵容统计", "OP.GG comp statistics")}>
           <strong>OP.GG {comp.ranking.sourceTier} · #{comp.ranking.sourceOrder}</strong>
           <span>{tr("平均名次", "Avg. place")} {comp.ranking.averagePlacement.toFixed(2)}</span>
