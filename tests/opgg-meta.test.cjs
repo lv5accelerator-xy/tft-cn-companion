@@ -43,8 +43,8 @@ test('coordinate conversion keeps Draven in the back and Maokai in front', () =>
 test('ranked comps appear in the shared catalog alongside all original guides', () => {
   const load = loader({ './live-meta.generated.json': { default: require('../data/live-meta.generated.json') }, './opgg-meta.generated.json': { default: snapshot } });
   const { metaComps, compsForSource } = load('data/meta.ts');
-  assert.equal(metaComps.length, 29);
+  assert.equal(metaComps.length, 32);
   assert.equal(compsForSource('opgg').length, 15);
-  assert.equal(compsForSource('tuding').length, 14);
+  assert.equal(compsForSource('tuding').length, 17);
   assert.equal(metaComps[0].ranking.sourceTier, 'OP');
 });

@@ -79,10 +79,10 @@ for (const article of snapshot.articles) {
   if (bad) throw new Error(`Blocked Golden Spatula signal '${bad}' found in article ${article.id}`);
 }
 
-if (snapshot.records.length !== 14) throw new Error(`Expected 14 reviewed Patch 18.2 comps, got ${snapshot.records.length}`);
-if (snapshot.articles.length !== 14) throw new Error(`Expected 14 reviewed source articles, got ${snapshot.articles.length}`);
-if (snapshot.records.some((record) => record.sourceId !== "tuding" || record.patch !== "18.2")) {
-  throw new Error("Reviewed baseline must contain only 兔顶之弈 Patch 18.2 records");
+if (snapshot.records.length !== 17) throw new Error(`Expected 17 reviewed Patch 18.2b comps, got ${snapshot.records.length}`);
+if (snapshot.articles.length !== 1) throw new Error(`Expected 1 reviewed source article, got ${snapshot.articles.length}`);
+if (snapshot.records.some((record) => record.sourceId !== "tuding" || record.patch !== "18.2b")) {
+  throw new Error("Reviewed baseline must contain only 兔顶之弈 Patch 18.2b records");
 }
 const dravenRecords = snapshot.records.filter((record) => record.nameZh === "德子九五" || /draven fast\s*9/i.test(record.name || ""));
 if (dravenRecords.length !== 1 || dravenRecords[0].id !== "tuding-182-draven-fast9") {
@@ -90,5 +90,5 @@ if (dravenRecords.length !== 1 || dravenRecords[0].id !== "tuding-182-draven-fas
 }
 
 console.log(`Live meta verified: sources=${snapshot.sourceStates.length}, articles=${snapshot.articles.length}, comps=${snapshot.records.length}`);
-console.log("Reviewed baseline verified: 14 × 兔顶之弈 Patch 18.2 comps; all have complete core/flex, Stage 2/3/4, unique board positions and opening rule coverage.");
+console.log("Reviewed baseline verified: 17 × 兔顶之弈 Patch 18.2b comps; all have complete core/flex, Stage 2/3/4, unique board positions and opening rule coverage.");
 console.log("德子九五 has one canonical record. Policy verified: Teamfight Tactics only; 金铲铲之战 data is blocked.");

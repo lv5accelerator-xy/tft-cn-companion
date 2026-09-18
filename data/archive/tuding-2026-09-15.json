@@ -1,0 +1,280 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-15T19:19:00.000Z",
+  "sourceStates": [
+    { "sourceId": "tuding", "status": "ready", "lastCheckedAt": "2026-09-15T19:19:00.000Z", "lastChangedAt": "2026-09-15T19:19:00.000Z", "message": "S18 18.2：已人工审核并重建 14 套兔顶之弈一图流阵容" },
+    { "sourceId": "shenchao", "status": "awaiting_feed", "lastCheckedAt": null, "lastChangedAt": null, "message": "等待配置公众号 Feed/API" },
+    { "sourceId": "lindo", "status": "awaiting_feed", "lastCheckedAt": null, "lastChangedAt": null, "message": "等待配置公众号 Feed/API" },
+    { "sourceId": "tft-academy", "status": "curated", "lastCheckedAt": null, "lastChangedAt": null, "message": "旧 curated 阵容已清空；当前主阵容库以兔顶之弈 18.2 人工审核数据为准" }
+  ],
+  "articles": [
+    { "id": "tuding-s18-182-01", "sourceId": "tuding", "title": "巨龙九五 一图看懂 · S18 18.2", "url": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-dragon-fast9-20260915", "status": "parsed", "gameMode": "TFT" },
+    { "id": "tuding-s18-182-02", "sourceId": "tuding", "title": "德子九五 一图看懂 · S18 18.2", "url": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-draven-fast9-20260915", "status": "parsed", "gameMode": "TFT" },
+    { "id": "tuding-s18-182-03", "sourceId": "tuding", "title": "豹女月男 一图看懂 · S18 18.2", "url": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-nidalee-aphelios-20260915", "status": "parsed", "gameMode": "TFT" },
+    { "id": "tuding-s18-182-04", "sourceId": "tuding", "title": "荆棘索拉卡 一图看懂 · S18 18.2", "url": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-thorn-soraka-20260915", "status": "parsed", "gameMode": "TFT" },
+    { "id": "tuding-s18-182-05", "sourceId": "tuding", "title": "峡谷小蓝 一图看懂 · S18 18.2", "url": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-rift-blue-20260915", "status": "parsed", "gameMode": "TFT" },
+    { "id": "tuding-s18-182-06", "sourceId": "tuding", "title": "神谕阿狸 一图看懂 · S18 18.2", "url": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-invoker-ahri-20260915", "status": "parsed", "gameMode": "TFT" },
+    { "id": "tuding-s18-182-07", "sourceId": "tuding", "title": "宝宝卡卡 一图看懂 · S18 18.2", "url": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-baby-akali-20260915", "status": "parsed", "gameMode": "TFT" },
+    { "id": "tuding-s18-182-08", "sourceId": "tuding", "title": "野兽双C 一图看懂 · S18 18.2", "url": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-primal-double-carry-20260915", "status": "parsed", "gameMode": "TFT" },
+    { "id": "tuding-s18-182-09", "sourceId": "tuding", "title": "野兽莲华 一图看懂 · S18 18.2", "url": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-primal-lotus-20260915", "status": "parsed", "gameMode": "TFT" },
+    { "id": "tuding-s18-182-10", "sourceId": "tuding", "title": "斗转剑圣 一图看懂 · S18 18.2", "url": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-brawler-yi-20260915", "status": "parsed", "gameMode": "TFT" },
+    { "id": "tuding-s18-182-11", "sourceId": "tuding", "title": "八星日蚀 一图看懂 · S18 18.2", "url": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-eclipse-reroll-20260915", "status": "parsed", "gameMode": "TFT" },
+    { "id": "tuding-s18-182-12", "sourceId": "tuding", "title": "主宰女警 一图看懂 · S18 18.2", "url": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-overlord-caitlyn-20260915", "status": "parsed", "gameMode": "TFT" },
+    { "id": "tuding-s18-182-13", "sourceId": "tuding", "title": "花妖小法 一图看懂 · S18 18.2", "url": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-fae-veigar-20260915", "status": "parsed", "gameMode": "TFT" },
+    { "id": "tuding-s18-182-14", "sourceId": "tuding", "title": "重装亚飞 一图看懂 · S18 18.2", "url": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-vanguard-aphelios-20260915", "status": "parsed", "gameMode": "TFT" }
+  ],
+  "records": [
+    {
+      "id": "tuding-182-dragon-fast9", "sourceId": "tuding", "articleId": "tuding-s18-182-01", "articleTitle": "巨龙九五 一图看懂 · S18 18.2", "articleUrl": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-dragon-fast9-20260915", "patch": "18.2", "name": "Dragon Fast 9", "nameZh": "巨龙九五", "tier": "S", "playstyle": "Fast 9", "difficulty": "HARD",
+      "coreUnits": ["远古巨龙", "阿木木", "德莱文"],
+      "flexUnits": ["茂凯", "蓝霸符", "凯南", "塔里克", "艾翁"],
+      "itemFocus": ["远古巨龙：主C装备优先", "阿木木：主坦肉装", "德莱文：剩余物理输出装"],
+      "traits": ["宝石骑士", "远古树精", "翠神", "赏金猎人", "顶级掠食者", "重装战士", "主宰", "地狱火"],
+      "whenToPlay": "炼狱大连胜、彩色强化或任何能稳定保血保经济并直接冲9的强势开局。",
+      "keyNotes": ["原图评级：S级", "CARRY: 远古巨龙", "TANK: 阿木木", "SECONDARY: 德莱文", "可用炼狱+森林、狮子狗打钱或野怪体系过渡；中期不为固定牌大搜。", "9级找两星远古巨龙、茂凯、塔里克、德莱文等高费卡完成换阵。", "峡谷 BUFF 优先给远古巨龙。"],
+      "stages": [
+        { "stage": "Stage 2", "text": "炼狱+森林或其他强势体系开局，优先连胜与经济。" },
+        { "stage": "Stage 3", "text": "继续用高质量过渡牌保血，不锁死体系，不为中期牌大量搜卡。" },
+        { "stage": "Stage 4", "text": "经济与血量允许时直接冲9，9级大搜高费巨龙框架并完成换阵。" }
+      ],
+      "board": [
+        { "unit": "塔里克", "row": 0, "col": 0 }, { "unit": "凯南", "row": 0, "col": 1 }, { "unit": "蓝霸符", "row": 0, "col": 2 }, { "unit": "阿木木", "row": 0, "col": 3 }, { "unit": "茂凯", "row": 0, "col": 4 }, { "unit": "远古巨龙", "row": 2, "col": 6 }, { "unit": "艾翁", "row": 3, "col": 0 }, { "unit": "德莱文", "row": 3, "col": 6 }
+      ],
+      "positioningNote": "前排高费单位集中吸收火力；远古巨龙与德莱文分侧，实战根据敌方主C方向镜像。", "gameMode": "TFT"
+    },
+    {
+      "id": "tuding-182-draven-fast9", "sourceId": "tuding", "articleId": "tuding-s18-182-02", "articleTitle": "德子九五 一图看懂 · S18 18.2", "articleUrl": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-draven-fast9-20260915", "patch": "18.2", "name": "Draven Fast 9", "nameZh": "德子九五", "tier": "S", "playstyle": "Fast 9", "difficulty": "HARD",
+      "coreUnits": ["德莱文", "阿木木", "伊泽瑞尔"],
+      "flexUnits": ["茂凯", "阿利斯塔", "纳尔", "艾翁", "塔里克", "凯南"],
+      "itemFocus": ["德莱文：Guinsoo's Rageblade / 羊刀优先", "阿木木：主坦肉装", "伊泽瑞尔：剩余物理输出装"],
+      "traits": ["宝石骑士", "远古树精", "翠神", "赏金猎人", "永恒之森", "斗士", "裁决使", "主宰"],
+      "whenToPlay": "羊刀开局且前中期质量足够连胜，经济与血量能支撑直接冲9时。",
+      "keyNotes": ["原图评级：S级", "CARRY: 德莱文 · Guinsoo's Rageblade", "TANK: 阿木木", "SECONDARY: 伊泽瑞尔", "8级可用永恒之森+伊泽瑞尔过渡，但EZ不是最终主C。", "核心是9级找到德莱文；德莱文做任务后显著抬高九五上限。"],
+      "stages": [
+        { "stage": "Stage 2", "text": "羊刀强势开局优先连胜，利用低费前排和输出过渡。" },
+        { "stage": "Stage 3", "text": "保持质量与经济，尽量少搜，准备快速升8/9。" },
+        { "stage": "Stage 4", "text": "8级用永森EZ稳血即可，尽快升9找德莱文并完成高费换阵。" }
+      ],
+      "board": [
+        { "unit": "阿木木", "row": 0, "col": 1 }, { "unit": "凯南", "row": 0, "col": 2 }, { "unit": "阿利斯塔", "row": 0, "col": 3 }, { "unit": "塔里克", "row": 0, "col": 4 }, { "unit": "茂凯", "row": 0, "col": 5 }, { "unit": "纳尔", "row": 1, "col": 3 }, { "unit": "艾翁", "row": 3, "col": 0 }, { "unit": "伊泽瑞尔", "row": 3, "col": 5 }, { "unit": "德莱文", "row": 3, "col": 6 }
+      ],
+      "positioningNote": "德莱文与伊泽瑞尔后排分侧，阿木木等高费前排拉开承伤；特殊召唤物不计入人口。", "gameMode": "TFT"
+    },
+    {
+      "id": "tuding-182-nidalee-aphelios", "sourceId": "tuding", "articleId": "tuding-s18-182-03", "articleTitle": "豹女月男 一图看懂 · S18 18.2", "articleUrl": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-nidalee-aphelios-20260915", "patch": "18.2", "name": "Nidalee Aphelios", "nameZh": "豹女月男", "tier": "S", "playstyle": "Fast 8 → 9", "difficulty": "MEDIUM",
+      "coreUnits": ["奈德丽", "阿木木", "厄斐琉斯"],
+      "flexUnits": ["韦鲁斯", "克格莫", "黛安娜", "蔚", "蓝霸符", "拉露恩"],
+      "itemFocus": ["奈德丽：第一主C装备优先", "阿木木：主坦肉装", "厄斐琉斯：副C物理输出装"],
+      "traits": ["帝王斑蝶", "魔战士", "迅捷射手", "重装战士", "主宰", "神谕", "地狱火", "野兽之灵"],
+      "whenToPlay": "迅捷射手过渡顺、奈德丽装备合适，并能在8人口搜核心二星时。",
+      "keyNotes": ["原图评级：S级", "CARRY: 奈德丽", "TANK: 阿木木", "SECONDARY: 厄斐琉斯", "8人口目标：奈德丽、阿木木、蓝BUFF相关核心全部二星。", "不额外优先做减疗/减抗；核心二星后再上9。", "9人口补月光拉克丝或拉露恩等高费Flex。"],
+      "stages": [
+        { "stage": "Stage 2", "text": "用迅捷射手体系过渡，能合主C装就尽早合，优先保血。" },
+        { "stage": "Stage 3", "text": "按2-3~3-7逐步升5/6/7，保持经济准备8级启动。" },
+        { "stage": "Stage 4", "text": "4-1~4-2升8搜核心二星；质量达标后停搜，5-2~6-1升9补高费Flex。" }
+      ],
+      "board": [
+        { "unit": "阿木木", "row": 0, "col": 3 }, { "unit": "蔚", "row": 1, "col": 2 }, { "unit": "黛安娜", "row": 1, "col": 3 }, { "unit": "蓝霸符", "row": 1, "col": 4 }, { "unit": "奈德丽", "row": 3, "col": 0 }, { "unit": "厄斐琉斯", "row": 3, "col": 1 }, { "unit": "克格莫", "row": 3, "col": 2 }, { "unit": "韦鲁斯", "row": 3, "col": 6 }
+      ],
+      "positioningNote": "阿木木居中承伤，射手分散后排；韦鲁斯可单独放另一侧，实战按切入方向镜像。", "gameMode": "TFT"
+    },
+    {
+      "id": "tuding-182-thorn-soraka", "sourceId": "tuding", "articleId": "tuding-s18-182-04", "articleTitle": "荆棘索拉卡 一图看懂 · S18 18.2", "articleUrl": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-thorn-soraka-20260915", "patch": "18.2", "name": "Thorn Soraka", "nameZh": "荆棘索拉卡", "tier": "S", "playstyle": "Fast 8 → 9", "difficulty": "MEDIUM",
+      "coreUnits": ["索拉卡", "墨菲特", "婕拉"],
+      "flexUnits": ["约里克", "阿兹尔", "费德提克", "阿木木", "凯南", "拉露恩"],
+      "itemFocus": ["索拉卡：第一主C装备优先", "墨菲特：主坦肉装", "婕拉：副C法系装备"],
+      "traits": ["裁决使", "召唤师", "绝命花妖", "魔岩巨兽", "荆棘之兴", "主宰", "地狱火", "黑荆棘"],
+      "whenToPlay": "斗士+法师/永森过渡顺，能在8级找到索拉卡、婕拉、墨菲特二星时。",
+      "keyNotes": ["原图评级：S级", "CARRY: 索拉卡", "TANK: 墨菲特", "SECONDARY: 婕拉", "8人口搜索拉卡、婕拉、墨菲特全二星。", "全二星后停止大搜，9人口挂高费法师或裁决单位抬上限。"],
+      "stages": [
+        { "stage": "Stage 2", "text": "斗士配法师或永恒之森过渡，优先用强势两星牌保血。" },
+        { "stage": "Stage 3", "text": "3-5~3-7升7，保持经济，准备4-1~4-2上8。" },
+        { "stage": "Stage 4", "text": "8级主搜索拉卡、婕拉、墨菲特二星；质量达标后5-2~5-5升9补法师/裁决。" }
+      ],
+      "board": [
+        { "unit": "墨菲特", "row": 0, "col": 3 }, { "unit": "约里克", "row": 1, "col": 2 }, { "unit": "凯南", "row": 1, "col": 4 }, { "unit": "索拉卡", "row": 3, "col": 0 }, { "unit": "阿木木", "row": 3, "col": 1 }, { "unit": "婕拉", "row": 3, "col": 2 }, { "unit": "费德提克", "row": 3, "col": 3 }, { "unit": "阿兹尔", "row": 3, "col": 6 }
+      ],
+      "positioningNote": "墨菲特单顶主承伤，索拉卡与婕拉后排分散；9级新增单位按对局放入安全位。", "gameMode": "TFT"
+    },
+    {
+      "id": "tuding-182-rift-blue-reroll", "sourceId": "tuding", "articleId": "tuding-s18-182-05", "articleTitle": "峡谷小蓝 一图看懂 · S18 18.2", "articleUrl": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-rift-blue-20260915", "patch": "18.2", "name": "Rift Blue Reroll", "nameZh": "峡谷小蓝", "tier": "A", "playstyle": "Level 5 Reroll", "difficulty": "EASY",
+      "coreUnits": ["苍蓝哨戒", "石甲虫", "暗影狼"],
+      "flexUnits": ["蓝霸符", "绯红树怪", "迅捷蟹", "克格莫", "红霸符", "塔里克", "远古巨龙"],
+      "itemFocus": ["苍蓝哨戒：核心三星主C装备", "前排：河蟹/石甲虫/蓝系单位灵活吃肉装", "暗影狼：副C装备"],
+      "traits": ["峡谷野怪", "帝王斑蝶", "宝石骑士", "顶级掠食者", "神谕", "魔战士", "狂战士", "重装战士"],
+      "whenToPlay": "开局苍蓝哨戒数量多且装备合适，能在5人口稳定慢D三星时。",
+      "keyNotes": ["原图评级：A+级（系统Tier映射为A）", "CARRY: 苍蓝哨戒", "TANK: 石甲虫", "SECONDARY: 暗影狼", "前期直接升人口挂峡谷体系，5人口慢D三星小蓝。", "前排可在迅捷蟹、石甲虫或蓝系前排中灵活选择。", "小蓝三星后继续升人口，副C可用暗影狼；9级上限可找两星远古巨龙。"],
+      "stages": [
+        { "stage": "Stage 2", "text": "开局小蓝多就围绕峡谷体系过渡，正常升到5并攒经济。" },
+        { "stage": "Stage 3", "text": "5人口慢D三星苍蓝哨戒，同时补前排质量；不要过早拉人口。" },
+        { "stage": "Stage 4", "text": "小蓝三星后停止D牌并快速升人口，后期补暗影狼/高费野怪，9级可上两星远古巨龙。" }
+      ],
+      "board": [
+        { "unit": "红霸符", "row": 0, "col": 0 }, { "unit": "石甲虫", "row": 0, "col": 1 }, { "unit": "塔里克", "row": 0, "col": 2 }, { "unit": "迅捷蟹", "row": 0, "col": 3 }, { "unit": "蓝霸符", "row": 0, "col": 4 }, { "unit": "暗影狼", "row": 1, "col": 0 }, { "unit": "远古巨龙", "row": 1, "col": 4 }, { "unit": "绯红树怪", "row": 3, "col": 0 }, { "unit": "克格莫", "row": 3, "col": 5 }, { "unit": "苍蓝哨戒", "row": 3, "col": 6 }
+      ],
+      "positioningNote": "峡谷前排横向铺开，小蓝放安全后排；大龙是后期上限位，按敌方威胁侧调整。", "gameMode": "TFT"
+    },
+    {
+      "id": "tuding-182-invoker-ahri", "sourceId": "tuding", "articleId": "tuding-s18-182-06", "articleTitle": "神谕阿狸 一图看懂 · S18 18.2", "articleUrl": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-invoker-ahri-20260915", "patch": "18.2", "name": "Invoker Ahri", "nameZh": "神谕阿狸", "tier": "A", "playstyle": "Fast 8 → 9", "difficulty": "MEDIUM",
+      "coreUnits": ["阿狸", "瑟提", "莫甘娜"],
+      "flexUnits": ["苍蓝哨戒", "石甲虫", "苍蓝雕像", "塔里克", "艾希", "拉露恩"],
+      "itemFocus": ["阿狸：主C法系装备", "瑟提：主坦装备", "莫甘娜：副C法系/功能装备"],
+      "traits": ["宝石骑士", "月华神女", "神谕", "灵魂莲华", "峡谷野怪", "法师", "斗士", "重装战士"],
+      "whenToPlay": "法系装备数量充足，尤其是多C装备局；魔女开局也可以作为过渡入口。",
+      "keyNotes": ["原图评级：A+级（系统Tier映射为A）", "CARRY: 阿狸", "TANK: 瑟提", "SECONDARY: 莫甘娜", "多C阵容很吃装备，装备不足时强度会明显下降。", "8人口先把关键装备数量做起来，再搜阿狸、莫甘娜和核心前排二星。", "最后升9找两星拉露恩抬上限。"],
+      "stages": [
+        { "stage": "Stage 2", "text": "有魔女开局可走魔女，否则用法师/莲华等强势法系过渡。" },
+        { "stage": "Stage 3", "text": "优先补装备量与前排质量，正常升7并保经济。" },
+        { "stage": "Stage 4", "text": "4-1~4-2上8搜阿狸、莫甘娜和核心前排二星；稳定后5-2~5-5上9找拉露恩。" }
+      ],
+      "board": [
+        { "unit": "塔里克", "row": 0, "col": 0 }, { "unit": "苍蓝雕像", "row": 0, "col": 1 }, { "unit": "石甲虫", "row": 0, "col": 2 }, { "unit": "瑟提", "row": 0, "col": 4 }, { "unit": "莫甘娜", "row": 1, "col": 0 }, { "unit": "艾希", "row": 3, "col": 0 }, { "unit": "阿狸", "row": 3, "col": 3 }, { "unit": "苍蓝哨戒", "row": 3, "col": 5 }, { "unit": "拉露恩", "row": 3, "col": 6 }
+      ],
+      "positioningNote": "瑟提和高质量前排分散承伤，阿狸保持安全输出位；莫甘娜根据对手站位调整技能覆盖。", "gameMode": "TFT"
+    },
+    {
+      "id": "tuding-182-baby-akali", "sourceId": "tuding", "articleId": "tuding-s18-182-07", "articleTitle": "宝宝卡卡 一图看懂 · S18 18.2", "articleUrl": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-baby-akali-20260915", "patch": "18.2", "name": "Baby Akali Reroll", "nameZh": "宝宝卡卡", "tier": "A", "playstyle": "Level 5 Multi-3★ Reroll", "difficulty": "MEDIUM",
+      "coreUnits": ["阿卡丽", "奥恩", "卡蜜尔", "韦鲁斯", "凯尔"],
+      "flexUnits": ["蕾欧娜", "瑟庄妮", "阿木木", "艾翁", "凯南"],
+      "itemFocus": ["阿卡丽：核心输出装备", "奥恩/卡蜜尔：前排装备", "韦鲁斯或凯尔：剩余输出装"],
+      "traits": ["日蚀骑士", "地狱火", "狂战士", "迅捷射手", "护卫", "主宰", "魔战士", "永恒之森"],
+      "whenToPlay": "低费体系牌特别多，或拿到适合多张追三的经济/门票类强化时。",
+      "keyNotes": ["原图评级：A级", "CARRY: 阿卡丽", "TANK: 奥恩", "SECONDARY: 韦鲁斯", "目标不是只追一个三星，而是一次追多个低费三星。", "约5个三星后立即停止D牌，转升人口。", "8级找阿木木，9级可补艾翁、凯南等高质量单位提高上限。"],
+      "stages": [
+        { "stage": "Stage 2", "text": "低费对子多时保留体系牌，控制经验，为多三星做准备。" },
+        { "stage": "Stage 3", "text": "低人口集中D牌，优先完成阿卡丽和多张低费三星。" },
+        { "stage": "Stage 4", "text": "达到约5个三星后立刻停D拉人口；8级补阿木木，9级补高质量永森/主宰单位。" }
+      ],
+      "board": [
+        { "unit": "阿卡丽", "row": 0, "col": 0 }, { "unit": "蕾欧娜", "row": 0, "col": 1 }, { "unit": "卡蜜尔", "row": 0, "col": 2 }, { "unit": "瑟庄妮", "row": 0, "col": 3 }, { "unit": "奥恩", "row": 0, "col": 4 }, { "unit": "阿木木", "row": 1, "col": 3 }, { "unit": "韦鲁斯", "row": 3, "col": 0 }, { "unit": "凯尔", "row": 3, "col": 1 }
+      ],
+      "positioningNote": "多三星前排横排承伤，阿卡丽根据对手后排位置调整切入侧，射手保持安全距离。", "gameMode": "TFT"
+    },
+    {
+      "id": "tuding-182-primal-double-carry", "sourceId": "tuding", "articleId": "tuding-s18-182-08", "articleTitle": "野兽双C 一图看懂 · S18 18.2", "articleUrl": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-primal-double-carry-20260915", "patch": "18.2", "name": "Primal Double Carry", "nameZh": "野兽双C", "tier": "A", "playstyle": "Fast 8 → 9", "difficulty": "MEDIUM",
+      "coreUnits": ["奈德丽", "希维尔", "墨菲特"],
+      "flexUnits": ["雷克塞", "小绯红怪", "克格莫", "石甲虫", "蓝霸符", "塔里克", "艾希", "纳尔"],
+      "itemFocus": ["奈德丽：第一主C物理输出装", "希维尔：第二主C物理输出装", "墨菲特：主坦肉装"],
+      "traits": ["帝王斑蝶", "魔岩巨兽", "宝石骑士", "峡谷野怪", "魔战士", "主宰", "猎人", "重装战士"],
+      "whenToPlay": "AD装备尤其大剑较多，前中期能用狂战/魔战+主宰或斗士稳定过渡时。",
+      "keyNotes": ["原图评级：A+级（系统Tier映射为A）", "CARRY: 奈德丽", "TANK: 墨菲特", "SECONDARY: 希维尔", "8人口找两星奈德丽、希维尔和石甲虫/核心前排。", "奈德丽注意从敌方弱势侧切入。", "9级找两星塔里克、艾希、纳尔等高费，逐步替换低费野兽。"],
+      "stages": [
+        { "stage": "Stage 2", "text": "用狂战/魔战搭配主宰或斗士过渡，经济强化优先级高。" },
+        { "stage": "Stage 3", "text": "尽量补大剑与通用AD装备，保持连胜或健康血量。" },
+        { "stage": "Stage 4", "text": "8级搜奈德丽、希维尔与核心前排二星；稳定后上9补高费并淘汰低费野兽。" }
+      ],
+      "board": [
+        { "unit": "墨菲特", "row": 0, "col": 3 }, { "unit": "奈德丽", "row": 1, "col": 0 }, { "unit": "石甲虫", "row": 1, "col": 2 }, { "unit": "塔里克", "row": 1, "col": 3 }, { "unit": "蓝霸符", "row": 1, "col": 4 }, { "unit": "雷克塞", "row": 1, "col": 5 }, { "unit": "希维尔", "row": 3, "col": 0 }, { "unit": "克格莫", "row": 3, "col": 1 }, { "unit": "小绯红怪", "row": 3, "col": 6 }
+      ],
+      "positioningNote": "奈德丽从敌方较弱一侧切入，希维尔后排安全输出；前排分散避免同时吃范围控制。", "gameMode": "TFT"
+    },
+    {
+      "id": "tuding-182-primal-lotus", "sourceId": "tuding", "articleId": "tuding-s18-182-09", "articleTitle": "野兽莲华 一图看懂 · S18 18.2", "articleUrl": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-primal-lotus-20260915", "patch": "18.2", "name": "Primal Soul Lotus", "nameZh": "野兽莲华", "tier": "A", "playstyle": "Fast 8 → 9", "difficulty": "MEDIUM",
+      "coreUnits": ["阿狸", "瑟提", "希维尔"],
+      "flexUnits": ["卡尔玛", "约里克", "蔚", "婕拉", "纳尔", "艾希"],
+      "itemFocus": ["阿狸：主C法系装备", "瑟提：主坦肉装", "希维尔：副C物理输出装"],
+      "traits": ["荆棘之兴", "灵魂莲华", "法师", "斗士", "猎人", "召唤师", "主宰", "野兽之灵"],
+      "whenToPlay": "莲华法师过渡顺、阿狸装备合适，并能在8级找到阿狸与瑟提二星时。",
+      "keyNotes": ["原图评级：A+级（系统Tier映射为A）", "CARRY: 阿狸", "TANK: 瑟提", "SECONDARY: 希维尔", "8人口搜两星阿狸和瑟提；前排没二可先用蔚/石甲虫顶住。", "连胜且质量接近成型时可以少搜直接上9。", "9级找艾希、纳尔；特殊条件有拉克丝时可替换婕拉。"],
+      "stages": [
+        { "stage": "Stage 2", "text": "莲华配法师过渡，优先做阿狸通用法装与前排装。" },
+        { "stage": "Stage 3", "text": "补莲华和前排质量，保经济准备8级搜核心。" },
+        { "stage": "Stage 4", "text": "8级搜阿狸、瑟提二星；质量够则停手升9，补艾希、纳尔等高费上限。" }
+      ],
+      "board": [
+        { "unit": "瑟提", "row": 0, "col": 3 }, { "unit": "纳尔", "row": 1, "col": 3 }, { "unit": "艾希", "row": 3, "col": 0 }, { "unit": "希维尔", "row": 3, "col": 1 }, { "unit": "蔚", "row": 3, "col": 2 }, { "unit": "阿狸", "row": 3, "col": 3 }, { "unit": "约里克", "row": 3, "col": 4 }, { "unit": "卡尔玛", "row": 3, "col": 5 }, { "unit": "婕拉", "row": 3, "col": 6 }
+      ],
+      "positioningNote": "瑟提前排独立承伤，阿狸居中安全位；后排左右分散，按切入方向调整希维尔与艾希位置。", "gameMode": "TFT"
+    },
+    {
+      "id": "tuding-182-brawler-yi", "sourceId": "tuding", "articleId": "tuding-s18-182-10", "articleTitle": "斗转剑圣 一图看懂 · S18 18.2", "articleUrl": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-brawler-yi-20260915", "patch": "18.2", "name": "Brawler Yi Reroll", "nameZh": "斗转剑圣", "tier": "A", "playstyle": "Level 7 Reroll", "difficulty": "MEDIUM",
+      "coreUnits": ["易", "石甲虫", "克格莫"],
+      "flexUnits": ["魔沼蛙", "阿狸", "奈德丽", "瑟提", "纳尔"],
+      "itemFocus": ["易：三星主C装备", "石甲虫：主坦装备", "克格莫：副C输出装备"],
+      "traits": ["魔战士", "帝王斑蝶", "斗士", "灵魂莲华", "峡谷野怪", "法师", "神谕", "约德尔人和朋友"],
+      "whenToPlay": "有斗士转职，且易、石甲虫、克格莫来牌集中时。",
+      "keyNotes": ["原图评级：A级", "CARRY: 易", "TANK: 石甲虫", "SECONDARY: 克格莫", "斗转开局先开高斗士，阿狸/奈德丽来了可替换低费斗士。", "7人口先搜易、石甲虫、克格莫二星，再追三星。", "核心三星后上8，用四费二星补齐整体质量。"],
+      "stages": [
+        { "stage": "Stage 2", "text": "斗士转职开局先堆斗士，围绕易保留核心牌。" },
+        { "stage": "Stage 3", "text": "升到7前以经济为主，来阿狸/奈德丽可替换低费斗士。" },
+        { "stage": "Stage 4", "text": "7级主搜易、石甲虫、克格莫二星并追三星；核心三星后再升8补四费二星。" }
+      ],
+      "board": [
+        { "unit": "瑟提", "row": 0, "col": 0 }, { "unit": "石甲虫", "row": 0, "col": 4 }, { "unit": "纳尔", "row": 1, "col": 0 }, { "unit": "易", "row": 2, "col": 5 }, { "unit": "魔沼蛙", "row": 3, "col": 0 }, { "unit": "阿狸", "row": 3, "col": 1 }, { "unit": "奈德丽", "row": 3, "col": 5 }, { "unit": "克格莫", "row": 3, "col": 6 }
+      ],
+      "positioningNote": "剑圣放第二/第三排寻找切入角度，主坦前排承伤；大嘴与远程副C放安全侧。", "gameMode": "TFT"
+    },
+    {
+      "id": "tuding-182-eclipse-reroll", "sourceId": "tuding", "articleId": "tuding-s18-182-11", "articleTitle": "八星日蚀 一图看懂 · S18 18.2", "articleUrl": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-eclipse-reroll-20260915", "patch": "18.2", "name": "Eight-Star Eclipse Reroll", "nameZh": "八星日蚀", "tier": "A", "playstyle": "Level 5 Multi-3★ Reroll", "difficulty": "HARD",
+      "coreUnits": ["凯尔", "奥恩", "霞"],
+      "flexUnits": ["蕾欧娜", "洛", "瑟庄妮", "乐芙兰", "伊莉丝"],
+      "itemFocus": ["凯尔：Guinsoo's Rageblade / 羊刀优先", "奥恩：主坦装备", "霞：三星后主C/副C输出装"],
+      "traits": ["日蚀骑士", "永恒之森", "迅捷射手", "狂战士", "护卫", "主宰", "魔战士"],
+      "whenToPlay": "前期低费对子非常多，并有羊刀或适合D牌的强化时。",
+      "keyNotes": ["原图评级：A+级（系统Tier映射为A）", "CARRY: 凯尔 · Guinsoo's Rageblade", "TANK: 奥恩", "SECONDARY: 霞", "前期慢D多张1费三星，三星霞成型后接管输出。", "约5个三星已经有明显战斗力；更多三星是高上限。", "如果一直追不到，不要死卡低人口，转升8/9补更多羁绊与高费质量。"],
+      "stages": [
+        { "stage": "Stage 2", "text": "低费对子多时保留核心牌，羊刀能做就做，控制经验准备慢D。" },
+        { "stage": "Stage 3", "text": "低人口慢D多张一费三星，优先凯尔体系和霞的质量。" },
+        { "stage": "Stage 4", "text": "三星数量达标后转升人口；追牌不顺则及时止损，上8/9用更多羁绊和高费补强。" }
+      ],
+      "board": [
+        { "unit": "奥恩", "row": 0, "col": 3 }, { "unit": "伊莉丝", "row": 1, "col": 2 }, { "unit": "蕾欧娜", "row": 1, "col": 3 }, { "unit": "瑟庄妮", "row": 1, "col": 4 }, { "unit": "洛", "row": 1, "col": 5 }, { "unit": "凯尔", "row": 3, "col": 0 }, { "unit": "霞", "row": 3, "col": 1 }, { "unit": "乐芙兰", "row": 3, "col": 5 }
+      ],
+      "positioningNote": "多三星前排分摊火力，凯尔/霞分侧输出；根据敌方切入侧调整后排。", "gameMode": "TFT"
+    },
+    {
+      "id": "tuding-182-overlord-caitlyn", "sourceId": "tuding", "articleId": "tuding-s18-182-12", "articleTitle": "主宰女警 一图看懂 · S18 18.2", "articleUrl": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-overlord-caitlyn-20260915", "patch": "18.2", "name": "Overlord Caitlyn", "nameZh": "主宰女警", "tier": "A", "playstyle": "Lose-streak Reroll", "difficulty": "HARD",
+      "coreUnits": ["凯特琳", "迅捷蟹", "伊莉丝"],
+      "flexUnits": ["洛", "蔚", "崔丝塔娜", "阿木木", "希维尔", "艾希", "瑟庄妮"],
+      "itemFocus": ["凯特琳：三星主C装备", "迅捷蟹/瑟庄妮：三星前排装备", "希维尔：8人口副C装备"],
+      "traits": ["猎人", "主宰", "重装战士", "花仙子", "野兽之灵", "魔女", "灵魂莲华", "地狱火"],
+      "whenToPlay": "魔女开局、反曲弓较多，并能接受前期连败收菜节奏时。",
+      "keyNotes": ["原图评级：A+级（系统Tier映射为A）", "CARRY: 凯特琳", "TANK: 迅捷蟹", "SECONDARY: 希维尔", "前期目标约6连败，按图示在85~130层附近收取装备和蜘蛛价值。", "收菜后赌三星凯特琳、伊莉丝，以及迅捷蟹或瑟庄妮等三星前排。", "三星前排+女警完成后立刻速冲人口；8级找两星希维尔并根据来牌开4重装或4主宰。"],
+      "stages": [
+        { "stage": "Stage 2", "text": "控制质量走连败，围绕魔女/女警保留核心牌，不提前破坏收菜节奏。" },
+        { "stage": "Stage 3", "text": "完成约6连败并在合适层数收菜后开始集中D三星女警和前排。" },
+        { "stage": "Stage 4", "text": "女警与三星前排完成后停止D牌，快速升8找两星希维尔，补4重装或4主宰。" }
+      ],
+      "board": [
+        { "unit": "洛", "row": 0, "col": 0 }, { "unit": "阿木木", "row": 0, "col": 2 }, { "unit": "迅捷蟹", "row": 0, "col": 4 }, { "unit": "伊莉丝", "row": 1, "col": 1 }, { "unit": "蔚", "row": 1, "col": 3 }, { "unit": "艾希", "row": 3, "col": 0 }, { "unit": "崔丝塔娜", "row": 3, "col": 1 }, { "unit": "希维尔", "row": 3, "col": 5 }, { "unit": "凯特琳", "row": 3, "col": 6 }
+      ],
+      "positioningNote": "三星前排集中承伤，凯特琳放最安全后排角；希维尔与其他远程分侧，防止同时吃AOE。", "gameMode": "TFT"
+    },
+    {
+      "id": "tuding-182-fae-veigar", "sourceId": "tuding", "articleId": "tuding-s18-182-13", "articleTitle": "花妖小法 一图看懂 · S18 18.2", "articleUrl": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-fae-veigar-20260915", "patch": "18.2", "name": "Fae Veigar Reroll", "nameZh": "花妖小法", "tier": "S", "playstyle": "Level 5 Reroll", "difficulty": "MEDIUM",
+      "coreUnits": ["维迦", "雷克塞", "提莫"],
+      "flexUnits": ["可酷伯", "费德提克", "拉莫斯", "瑟提", "纳尔", "索拉卡", "凯南", "阿狸"],
+      "itemFocus": ["维迦：三星主C法系装备", "雷克塞：主坦装备", "提莫：三星副C装备"],
+      "traits": ["约德尔人和朋友", "斗士", "护卫", "黑荆棘", "绝命花妖", "神谕", "灵魂莲华"],
+      "whenToPlay": "开局维迦数量多、装备合适，并有花妖相关强化时。",
+      "keyNotes": ["原图评级：S级", "CARRY: 维迦", "TANK: 雷克塞", "SECONDARY: 提莫", "5人口慢D三星维迦，同时顺带追提莫、雷克塞。", "维迦三星后立刻升人口，不继续卡5。", "后期很需要范围伤害副C；优先三星提莫，也可用索拉卡、凯南、阿狸等补AOE。"],
+      "stages": [
+        { "stage": "Stage 2", "text": "小法多且装备对时保留体系牌，正常到5人口后停留。" },
+        { "stage": "Stage 3", "text": "5人口慢D三星维迦，顺便追提莫与雷克塞；保持经济节奏。" },
+        { "stage": "Stage 4", "text": "维迦三星后立刻拉人口，补斗士与范围副C；雷克塞不三时用更高质量前排替换。" }
+      ],
+      "board": [
+        { "unit": "雷克塞", "row": 0, "col": 3 }, { "unit": "可酷伯", "row": 2, "col": 3 }, { "unit": "维迦", "row": 3, "col": 0 }, { "unit": "提莫", "row": 3, "col": 1 }, { "unit": "纳尔", "row": 3, "col": 2 }, { "unit": "费德提克", "row": 3, "col": 3 }, { "unit": "瑟提", "row": 3, "col": 4 }, { "unit": "拉莫斯", "row": 3, "col": 5 }
+      ],
+      "positioningNote": "雷克塞与斗士前排承伤，小法放安全后排；提莫/后期AOE副C与小法分侧站位。", "gameMode": "TFT"
+    },
+    {
+      "id": "tuding-182-vanguard-aphelios", "sourceId": "tuding", "articleId": "tuding-s18-182-14", "articleTitle": "重装亚飞 一图看懂 · S18 18.2", "articleUrl": "", "publishedAt": "2026-09-15", "updatedAt": "2026-09-15", "contentHash": "tuding-182-vanguard-aphelios-20260915", "patch": "18.2", "name": "Vanguard Aphelios", "nameZh": "重装亚飞", "tier": "A", "playstyle": "Fast 8 / 3★ cap", "difficulty": "MEDIUM",
+      "coreUnits": ["厄斐琉斯", "蓝霸符", "红霸符"],
+      "flexUnits": ["黛安娜", "锋喙鸟", "赫卡里姆", "婕拉", "塔里克", "艾翁"],
+      "itemFocus": ["厄斐琉斯：主C物理输出装备", "蓝霸符：主坦装备", "红霸符：副坦/功能装备"],
+      "traits": ["宝石骑士", "荆棘之兴", "翠神", "重装战士", "峡谷野怪", "狂战士", "迅捷射手", "召唤师"],
+      "whenToPlay": "开局厄斐琉斯装备合适，护卫+射手过渡顺，并能在8级启动时。",
+      "keyNotes": ["原图评级：A级", "CARRY: 厄斐琉斯", "TANK: 蓝霸符", "SECONDARY: 红霸符", "前期护卫配射手过渡，8人口搜两星厄斐琉斯与蓝BUFF核心。", "锋喙鸟/野怪组合可以帮助厄斐琉斯快速穿甲突破前排。", "8人口牌特别顺时可以继续追三星厄斐琉斯及关键野怪，但不是强制。"],
+      "stages": [
+        { "stage": "Stage 2", "text": "护卫配射手过渡，优先合厄斐琉斯可用的物理装备。" },
+        { "stage": "Stage 3", "text": "补重装与峡谷野怪质量，尽量保血上8。" },
+        { "stage": "Stage 4", "text": "8级搜厄斐琉斯、蓝霸符等核心二星；牌顺且经济足时可在8级追三星上限。" }
+      ],
+      "board": [
+        { "unit": "赫卡里姆", "row": 0, "col": 0 }, { "unit": "塔里克", "row": 0, "col": 1 }, { "unit": "黛安娜", "row": 0, "col": 2 }, { "unit": "蓝霸符", "row": 0, "col": 3 }, { "unit": "红霸符", "row": 1, "col": 2 }, { "unit": "婕拉", "row": 3, "col": 0 }, { "unit": "艾翁", "row": 3, "col": 2 }, { "unit": "锋喙鸟", "row": 3, "col": 4 }, { "unit": "厄斐琉斯", "row": 3, "col": 5 }
+      ],
+      "positioningNote": "重装前排集中承伤，厄斐琉斯放安全后排；锋喙鸟与输出侧协同，按敌方前排位置微调。", "gameMode": "TFT"
+    }
+  ]
+}

@@ -157,4 +157,4 @@ for (const url of portraitUrls.filter(Boolean).slice(0, 3)) {
   const response = await fetch(url, { method: "HEAD" });
   if (!response.ok) throw new Error(`Missing TFT shop portrait: ${response.status} ${url}`);
 }
-console.log("Riot TFT catalog verification passed, including all 14 reviewed comp unit references and Rift portraits.");
+console.log("Riot TFT catalog verification passed, including all reviewed comp unit references and Rift portraits.");

@@ -396,7 +396,7 @@ export default function FocusPage() {
       <header className={styles.heading}>
         <div>
           <div className={styles.titleMeta}><span className={styles.focusBadge}>STAGE BOARD</span><span>Patch {comp.patch}</span><span>{comp.source}</span><span>{freshness?.stale ? "⚠ " : ""}{freshness?.label}</span></div>
-          <div className={styles.titleLine}><span className={`${styles.tier} ${styles[`tier${comp.tier}`]}`}>{comp.tier === "ACTIVE" ? "·" : comp.tier}</span><div><h1>{locale === "zh" ? comp.nameZh : comp.name}</h1><p>{locale === "zh" ? comp.name : comp.nameZh} · {comp.playstyle}</p></div></div>
+          <div className={styles.titleLine}><span className={`${styles.tier} ${styles[`tier${comp.tier}`]}`}>{comp.sourceTier ?? (comp.tier === "ACTIVE" ? "·" : comp.tier)}</span><div><h1>{locale === "zh" ? comp.nameZh : comp.name}</h1><p>{locale === "zh" ? comp.name : comp.nameZh} · {comp.playstyle}</p></div></div>
         </div>
         <div className={styles.headingActions}>
           <button className={compact ? styles.compactActive : ""} onClick={() => setCompact((value) => !value)} title={tr("快捷键 C", "Shortcut C")}>{compact ? tr("紧凑 HUD", "Compact HUD") : tr("标准 HUD", "Standard HUD")} <kbd>C</kbd></button>

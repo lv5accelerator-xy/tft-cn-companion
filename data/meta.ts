@@ -6,6 +6,7 @@ export type UnifiedCompTier = "S" | "A" | "B" | "ACTIVE";
 
 export type UnifiedMetaComp = Omit<MetaComp, "tier"> & {
   tier: UnifiedCompTier;
+  sourceTier?: "S" | "A+" | "A";
   ranking?: CompRanking;
   sourceId: MetaSourceId;
   sourcePublishedAt: string;
@@ -60,6 +61,7 @@ const live: UnifiedMetaComp[] = liveMetaSnapshot.records
       name: record.name,
       nameZh: record.nameZh,
       tier: record.tier,
+      sourceTier: record.sourceTier,
       patch: record.patch,
       playstyle: record.playstyle,
       difficulty: record.difficulty,

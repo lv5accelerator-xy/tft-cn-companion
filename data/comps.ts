@@ -32,8 +32,8 @@ export type MetaComp = {
   sourceUrl: string;
 };
 
-// Curated catalog intentionally remains empty after the 2026-09-15 reset.
-// The reviewed Set 18 Patch 18.2 comp baseline now lives in live-meta.generated.json.
-export const metaUpdatedAt = "2026-09-15";
-export const metaPatch = "18.2";
+// Curated catalog intentionally remains empty after the 2026-09-17 reset.
+// The reviewed Set 18 Patch 18.2b comp baseline now lives in live-meta.generated.json.
+export const metaUpdatedAt = "2026-09-17";
+export const metaPatch = "18.2b";
 export const metaComps: MetaComp[] = [];

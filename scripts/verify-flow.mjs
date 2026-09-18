@@ -1,20 +1,23 @@
 import fs from "node:fs";
 
 const requiredCompIds = [
+  "tuding-182-invoker-ahri",
   "tuding-182-dragon-fast9",
   "tuding-182-draven-fast9",
-  "tuding-182-nidalee-aphelios",
-  "tuding-182-thorn-soraka",
-  "tuding-182-rift-blue-reroll",
-  "tuding-182-invoker-ahri",
-  "tuding-182-baby-akali",
+  "tuding-182b-juggernaut-zyra",
+  "tuding-182b-ashe-fast9",
   "tuding-182-primal-double-carry",
+  "tuding-182b-executioner-zyra",
+  "tuding-182b-swiftshot-aphelios",
+  "tuding-182b-juggernaut-sivir",
   "tuding-182-primal-lotus",
-  "tuding-182-brawler-yi",
-  "tuding-182-eclipse-reroll",
-  "tuding-182-overlord-caitlyn",
+  "tuding-182-nidalee-aphelios",
+  "tuding-182b-sivir-nidalee-flex",
   "tuding-182-fae-veigar",
-  "tuding-182-vanguard-aphelios",
+  "tuding-182b-faerie-rengar-tristana",
+  "tuding-182b-eclipse-yunara",
+  "tuding-182-overlord-caitlyn",
+  "tuding-182-brawler-yi"
 ];
 
 const checks = [
@@ -87,4 +90,4 @@ if (!pkg.scripts?.["verify:flow"] || !pkg.scripts?.["release:check"]?.includes("
 }
 
 if (failed) process.exit(1);
-console.log("V1.6.9 flow contract verified: exact 14-comp 18.2 baseline, opening guidance, explicit Focus → Review capture, per-comp Insights, cloud-synced five-game practice goals, offline shell and release version wiring are present.");
+console.log("V1.6.9 flow contract verified: exact 17-comp 18.2b baseline, opening guidance, explicit Focus → Review capture, per-comp Insights, cloud-synced five-game practice goals, offline shell and release version wiring are present.");

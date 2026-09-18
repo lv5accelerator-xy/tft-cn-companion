@@ -30,6 +30,7 @@ export type CompRanking = {
 };
 
 export type LiveMetaRecord = {
+  sourceTier?: "S" | "A+" | "A";
   ranking?: CompRanking;
   id: string;
   sourceId: MetaSourceId;

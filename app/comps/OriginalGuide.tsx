@@ -31,7 +31,7 @@ export default function OriginalGuide({ guide, name }: { guide?: OriginalGuideIm
         <button className={styles.button} onClick={() => dialog.current?.close()} autoFocus>{tr("关闭", "Close")}</button>
       </header>
       <div className={styles.toolbar}>
-        <span>{tr("兔顶之弈 · 图示版本", "Tuding · Image patch")} {guide.patch} · {guide.publishedAt}</span>
+        <span>{tr("兔顶之弈 · 图示版本", "Tuding · Image patch")} {guide.imagePatch ?? guide.patch} · {guide.publishedAt} {guide.imagePatch && guide.imagePatch !== guide.patch ? tr(`（${guide.patch}文章配图）`, `(${guide.patch} article)`) : ""}</span>
         <button className={styles.button} disabled={failed} onClick={() => setZoomed((value) => !value)}>{zoomed ? tr("适应屏幕", "Fit to screen") : tr("放大查看", "Zoom in")}</button>
         <a href={guide.url} target="_blank" rel="noreferrer">{tr("新窗口查看原图", "Open original in new tab")}</a>
         <a href={guide.articleUrl} target="_blank" rel="noreferrer">{tr("图片来源", "Image source")}</a>

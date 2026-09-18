@@ -37,7 +37,7 @@ for (const path of requiredRoutes) {
     if (!ok) { console.error(`Smoke failed: ${path} returned HTTP ${response.status}`); failed = true; continue; }
     if (path === "/api/health") {
       const payload = await response.json();
-      if (payload?.status !== "ok" || payload?.app !== "tft-cn-companion" || payload?.version !== "1.6.9" || payload?.patch !== "18.2" || payload?.compCount !== expectedCompCount) { console.error(`Smoke failed: ${path} returned an invalid V1.6.9 health payload.`); failed = true; continue; }
+      if (payload?.status !== "ok" || payload?.app !== "tft-cn-companion" || payload?.version !== "1.6.9" || payload?.patch !== "18.2b" || payload?.compCount !== expectedCompCount) { console.error(`Smoke failed: ${path} returned an invalid V1.6.9 health payload.`); failed = true; continue; }
     }
     console.log(`Smoke OK: ${path} -> ${response.status}`);
   } catch (error) { console.error(`Smoke failed: ${path}: ${error instanceof Error ? error.message : String(error)}`); failed = true; }

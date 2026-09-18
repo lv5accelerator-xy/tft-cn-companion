@@ -30,6 +30,14 @@ export const REVIEWED_OPENING_RULE_IDS = [
   "tuding-182-overlord-caitlyn",
   "tuding-182-fae-veigar",
   "tuding-182-vanguard-aphelios",
+  "tuding-182b-juggernaut-zyra",
+  "tuding-182b-ashe-fast9",
+  "tuding-182b-executioner-zyra",
+  "tuding-182b-swiftshot-aphelios",
+  "tuding-182b-juggernaut-sivir",
+  "tuding-182b-sivir-nidalee-flex",
+  "tuding-182b-faerie-rengar-tristana",
+  "tuding-182b-eclipse-yunara",
 ] as const;
 
 function normalize(value: string) {
@@ -83,6 +91,47 @@ export function scoreSourceOpeningRule(comp: Pick<UnifiedMetaComp, "id">, contex
   const lowCopies = lowCostCopyCount(context);
 
   switch (comp.id) {
+    case "tuding-182b-juggernaut-zyra": {
+      if (unitCopies(context, "婕拉") > 0) add(8, "已拿到婕拉，命中目标主C。", "The target carry is already available.");
+      warn("法系装备开局，主宰召唤或莲华过渡，能在8级稳血后继续上9。 开局助手不读取实时经济或强化选择。", "Check the source opening conditions; live economy and augments are not read by this assistant.");
+      break;
+    }
+    case "tuding-182b-ashe-fast9": {
+      if (unitCopies(context, "艾希") > 0) add(8, "已拿到艾希，命中目标主C。", "The target carry is already available.");
+      warn("彩色经济或高质量连胜，有足够血量和经济上9时。 开局助手不读取实时经济或强化选择。", "Check the source opening conditions; live economy and augments are not read by this assistant.");
+      break;
+    }
+    case "tuding-182b-executioner-zyra": {
+      if (unitCopies(context, "婕拉") > 0) add(8, "已拿到婕拉，命中目标主C。", "The target carry is already available.");
+      warn("有裁决转或合适强化更佳，法系装备配前排质量。 开局助手不读取实时经济或强化选择。", "Check the source opening conditions; live economy and augments are not read by this assistant.");
+      break;
+    }
+    case "tuding-182b-swiftshot-aphelios": {
+      if (unitCopies(context, "厄斐琉斯") > 0) add(8, "已拿到厄斐琉斯，命中目标主C。", "The target carry is already available.");
+      warn("有迅捷转、雪莲转或对应特殊条件时考虑。 开局助手不读取实时经济或强化选择。", "Check the source opening conditions; live economy and augments are not read by this assistant.");
+      break;
+    }
+    case "tuding-182b-juggernaut-sivir": {
+      if (unitCopies(context, "希维尔") > 0) add(8, "已拿到希维尔，命中目标主C。", "The target carry is already available.");
+      warn("物理装备合适、希维尔来牌多，或正好白嫖艾希。 开局助手不读取实时经济或强化选择。", "Check the source opening conditions; live economy and augments are not read by this assistant.");
+      break;
+    }
+    case "tuding-182b-sivir-nidalee-flex": {
+      if (unitCopies(context, "奈德丽") > 0) add(8, "已拿到奈德丽，命中目标主C。", "The target carry is already available.");
+      warn("战士装备起手能连胜，豹女和前排质量较好时。 开局助手不读取实时经济或强化选择。", "Check the source opening conditions; live economy and augments are not read by this assistant.");
+      break;
+    }
+    case "tuding-182b-faerie-rengar-tristana": {
+      if (unitCopies(context, "雷恩加尔") > 0) add(8, "已拿到雷恩加尔，命中目标主C。", "The target carry is already available.");
+      warn("开局有仙灵转或狮子狗来牌好，装备适合物理战士。 开局助手不读取实时经济或强化选择。", "Check the source opening conditions; live economy and augments are not read by this assistant.");
+      break;
+    }
+    case "tuding-182b-eclipse-yunara": {
+      if (unitCopies(context, "芸阿娜") > 0) add(8, "已拿到芸阿娜，命中目标主C。", "The target carry is already available.");
+      warn("开局至少两张芸阿娜、装备契合，并有合适强化时考虑。 开局助手不读取实时经济或强化选择。", "Check the source opening conditions; live economy and augments are not read by this assistant.");
+      break;
+    }
+
     case "tuding-182-dragon-fast9": {
       if (unitCopies(context, "Elder Dragon", "远古巨龙") > 0) add(12, "已直接拿到远古巨龙，和最终主C完全一致。", "You already have Elder Dragon, the final primary carry.");
       warn("这套更依赖连胜、血量和经济质量；开局助手不会读取这些实时状态。", "This line depends heavily on streak, HP and economy quality, which Opening Assistant does not read live.");
