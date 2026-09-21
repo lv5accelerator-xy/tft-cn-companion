@@ -20,3 +20,11 @@ Data was read from the rendered public pages. Source update labels were relative
 6. Run `npm test` and `npm run release:check`; verify `/rankings`, source/tier/search controls, and links back to `/comps?source=...&comp=...`.
 
 Do not average source grades. Older OP.GG 18.2 statistics are explicitly labeled alongside 18.2b sources; regional/rank/mode differences remain visible. No automatic polling, private API or paid data access is configured.
+
+## Navigation and freshness
+
+Academy and MetaTFT links on `/comps` open their complete `/rankings?source=...` lists with snapshot record counts. The combined guide count reflects grouped guides, while native source counts retain each source's individual guides.
+
+Ranking filters (`source`, `tier`, `q`) and guide filters (`source`, `style`, `q`, `comp`) are reflected in the URL. Source/style changes create a history entry; text edits replace the current entry. A small Suspense-bound URL reader synchronizes refresh/back/forward navigation without removing the server-rendered page.
+
+The capture notice calculates age on the client and flags snapshots 48 hours or older for rechecking. This threshold indicates review is needed, not that a source has published a newer list. The original capture timestamp is never rewritten by UI maintenance.

@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { UnifiedMetaComp } from "@/data/meta";
 import { comparisonsForComp, relatedGuides, rankingSnapshot, rankingSources, type RankingEntry } from "@/data/rankings";
 import { useLocale } from "../components/LocaleProvider";
+import SnapshotNotice from "./SnapshotNotice";
 import styles from "./comparison.module.css";
 
 export function ExternalRanking({ entry }: { entry: RankingEntry }) {
@@ -27,7 +28,7 @@ export default function SourceComparison({ comp }: { comp: UnifiedMetaComp }) {
   const guides = relatedGuides(comp);
   if (!entries.length) return null;
   return <section className={styles.section} aria-label={tr("多来源评级对照", "Source comparison")}>
-    <h3>{tr("多来源评级对照", "Source comparison")}</h3>
+    <h3>{tr("多来源评级对照", "Source comparison")}</h3><SnapshotNotice />
     <p>{tr("同体系的已核验构筑集中展示，具体单位与装备以各来源为准。评级独立保留，不计算综合分；不同补丁的数据不可直接比较。", "Reviewed builds in this archetype are grouped; units and items follow each source. Tiers remain independent. Different patches are not directly comparable.")}</p>
     <div className={styles.grid}>
       {guides.map(guide => <article className={styles.card} key={`${guide.sourceId}:${guide.id}`}><strong>{guide.source} · {guide.sourceTier ?? guide.ranking?.sourceTier ?? guide.tier}</strong><p>{guide.nameZh} · Patch {guide.patch}</p><p>{tr("来源更新", "Source updated")}: {guide.ranking?.sourceUpdatedLabel ?? guide.sourceUpdatedAt}</p>{guide.ranking && <p>{tr("平均名次", "Avg. place")} {guide.ranking.averagePlacement.toFixed(2)} · {tr("前四率", "Top 4")} {(guide.ranking.top4Rate * 100).toFixed(1)}% · {tr("全服／全段位／ALL 模式", "All servers / all ranks / ALL modes")}</p>}<a href={guide.sourceUrl} target="_blank" rel="noreferrer">{tr("查看来源", "Original")} ↗</a>{guide.id !== comp.id && <a href={`/comps?source=${guide.sourceId}&comp=${encodeURIComponent(guide.id)}`}>{tr("查看该来源攻略", "View this guide")}</a>}</article>)}

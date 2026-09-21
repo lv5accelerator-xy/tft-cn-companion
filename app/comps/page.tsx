@@ -2,10 +2,13 @@
 
 import { fetchTftCatalog } from "@/lib/catalog-client";
 import { useRouter } from "next/navigation";
-import { useEffect, useId, useMemo, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import Link from "next/link";
 import SourceComparison from "./SourceComparison";
-import { comparisonsForComp, groupCompGuides } from "@/data/rankings";
+import SnapshotNotice from "./SnapshotNotice";
+import PageQuerySync from "../components/PageQuerySync";
+import { updatePageQuery } from "@/lib/page-query";
+import { comparisonsForComp, groupCompGuides, rankingSources } from "@/data/rankings";
 import OriginalGuide from "./OriginalGuide";
 import { tudingOriginals } from "@/data/tuding-originals";
 import UnitIcon from "../components/UnitIcon";
@@ -165,7 +168,30 @@ export default function CompsPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>("all");
 
-  useEffect(() => { const params = new URLSearchParams(window.location.search); const source = params.get("source"); if (metaSources.some(item => item.id === source)) setSourceFilter(source as MetaSourceId); setSelectedId(params.get("comp")); }, []);
+  const syncQuery = useCallback((query: string) => {
+    const params = new URLSearchParams(query);
+    const source = params.get("source");
+    setSourceFilter(metaSources.some(item => item.id === source) ? source as MetaSourceId : "all");
+    setSelectedId(params.get("comp"));
+    setQuery(params.get("q") ?? "");
+    const style = params.get("style");
+    setFilter(style === "FAST8" || style === "REROLL" || style === "FAVORITES" ? style : "ALL");
+  }, []);
+
+  function chooseSource(source: SourceFilter) {
+    setSelectedId(null); setSourceFilter(source);
+    updatePageQuery({ source, comp: null });
+  }
+
+  function chooseStyle(style: typeof filter) {
+    setSelectedId(null); setFilter(style);
+    updatePageQuery({ style: style === "ALL" ? null : style, comp: null });
+  }
+
+  function clearFilters() {
+    setSelectedId(null); setSourceFilter("all"); setFilter("ALL"); setQuery("");
+    updatePageQuery({ source: null, comp: null, style: null, q: null });
+  }
 
   useEffect(() => { fetchTftCatalog().then((response) => response.ok ? response.json() as Promise<TftCatalogPayload> : Promise.reject()).then(setCatalog).catch(() => setCatalog(null)); }, []);
   useEffect(() => {
@@ -178,7 +204,7 @@ export default function CompsPage() {
 
   const favoriteKeys = useMemo(() => new Set(favorites.map(compRefKey)), [favorites]);
   const allComps = useMemo(() => { const seen = new Set<string>(); return [...localComps, ...metaComps].filter((comp) => { const key = `${comp.sourceId}:${comp.id}:${comp.patch}`; if (seen.has(key)) return false; seen.add(key); return true; }); }, [localComps]);
-  const sourceCounts = useMemo(() => { const counts = new Map<MetaSourceId, number>(); for (const source of metaSources) counts.set(source.id, 0); for (const comp of allComps) { counts.set(comp.sourceId, (counts.get(comp.sourceId) ?? 0) + 1); for (const entry of comparisonsForComp(comp)) counts.set(entry.sourceId, (counts.get(entry.sourceId) ?? 0) + 1); } return counts; }, [allComps]);
+  const sourceCounts = useMemo(() => { const counts = new Map<MetaSourceId, number>(); for (const source of metaSources) counts.set(source.id, 0); for (const comp of allComps) { counts.set(comp.sourceId, (counts.get(comp.sourceId) ?? 0) + 1); } return counts; }, [allComps]);
   const filtered = useMemo(() => {
     const q = normalize(query);
     const matches = allComps.filter((comp) => {
@@ -188,7 +214,7 @@ export default function CompsPage() {
       const searchText = normalize([comp.name, comp.nameZh, comp.source, comp.sourceArticleTitle, ...comp.coreUnits, ...comp.flexUnits, ...comp.traits, ...comp.itemFocus].join(" "));
       return (!selectedId || comp.id === selectedId) && sourceMatch && styleMatch && (!q || searchText.includes(q));
     });
-    return sourceFilter === "all" && filter !== "FAVORITES" ? groupCompGuides(matches) : matches;
+    return (sourceFilter === "all" || rankingSources.some(source => source.id === sourceFilter)) && filter !== "FAVORITES" ? groupCompGuides(matches) : matches;
   }, [allComps, favoriteKeys, filter, query, sourceFilter, selectedId]);
 
   function toggleFavorite(comp: UnifiedMetaComp) {
@@ -201,5 +227,5 @@ export default function CompsPage() {
     });
   }
 
-  return <div className={styles.page}><header className={styles.heading}><div><h1>Live Meta Team Comps</h1><p>{tr("已接入 Academy 与 MetaTFT 评级对照；综合列表合并已核验的同体系攻略。兔顶17套附原图；OP.GG仍为18.2快照。", "Academy and MetaTFT comparisons are available. Reviewed archetypes are grouped. Tuding has 17 original guides; OP.GG remains on 18.2.")}</p></div><div className={styles.meta}><span>Patch {metaPatch}</span><span>Reviewed {metaUpdatedAt}</span><span>{filtered.length} Comps</span></div></header><section className={styles.sourceBar}><Link href="/rankings">{tr("多来源榜单 · Academy / MetaTFT", "Rankings · Academy / MetaTFT")} ↗</Link>{selectedId && <button onClick={() => { setSelectedId(null); setSourceFilter("all"); }}>{tr("查看全部阵容", "Show all comps")}</button>}<button className={sourceFilter === "all" ? styles.sourceActive : ""} onClick={() => { setSelectedId(null); setSourceFilter("all"); }}>{tr("综合", "All Sources")} <span>{allComps.length}</span></button>{metaSources.map((source) => <button key={source.id} className={sourceFilter === source.id ? styles.sourceActive : ""} onClick={() => { setSelectedId(null); setSourceFilter(source.id); }}>{source.name} <span>{sourceCounts.get(source.id) ?? 0}</span></button>)}<span className={styles.tftOnly}>TFT ONLY</span></section><section className={styles.toolbar}><input value={query} onChange={(event) => { setSelectedId(null); setQuery(event.target.value); }} placeholder={tr("搜索阵容、英雄、羁绊或来源", "Search comps, champions, traits or sources")} /><div className={styles.filters}><button className={filter === "ALL" ? styles.active : ""} onClick={() => setFilter("ALL")}>All</button><button className={filter === "FAVORITES" ? styles.active : ""} onClick={() => setFilter("FAVORITES")}>♥ {tr("收藏", "Saved")}</button><button className={filter === "FAST8" ? styles.active : ""} onClick={() => setFilter("FAST8")}>Fast 8/9</button><button className={filter === "REROLL" ? styles.active : ""} onClick={() => setFilter("REROLL")}>Reroll</button></div><span className={styles.note}>{tr("展开阵容可按“什么时候玩 → 核心装备 → 搜牌/运营 → 9级上限 → 最终站位”快速阅读。", "Expand a comp for When to play → Core items → Roll/tempo → Level-9 ceiling → Final positioning.")}</span></section><section className={styles.list}><div className={styles.headerRow}><span>Tier</span><span>Comp / Source</span><span>Core / Units</span><span>Synergy</span><span>{tr("操作", "Actions")}</span></div>{filtered.map((comp) => <CompRow key={`${comp.sourceId}-${comp.id}-${comp.patch}-${selectedId === comp.id}`} openByDefault={selectedId === comp.id} comp={comp} champions={catalog?.champions ?? []} favorite={favoriteKeys.has(compRefKey(comp))} onToggleFavorite={() => toggleFavorite(comp)} />)}{!filtered.length && <div className={styles.empty}>{filter === "FAVORITES" ? tr("还没有收藏阵容。", "No favorite comps yet.") : tr("没有匹配阵容。", "No matching comps.")}</div>}</section></div>;
+  return <div className={styles.page}><PageQuerySync onChange={syncQuery} /><SnapshotNotice /><header className={styles.heading}><div><h1>Live Meta Team Comps</h1><p>{tr("已接入 Academy 与 MetaTFT 评级对照；综合列表合并已核验的同体系攻略。兔顶17套附原图；OP.GG仍为18.2快照。", "Academy and MetaTFT comparisons are available. Reviewed archetypes are grouped. Tuding has 17 original guides; OP.GG remains on 18.2.")}</p></div><div className={styles.meta}><span>Patch {metaPatch}</span><span>Reviewed {metaUpdatedAt}</span><span>{filtered.length} Comps</span></div></header><section className={styles.sourceBar}><Link href="/rankings">{tr("多来源榜单 · Academy / MetaTFT", "Rankings · Academy / MetaTFT")} ↗</Link>{selectedId && <button onClick={clearFilters}>{tr("查看全部阵容", "Show all comps")}</button>}<button className={sourceFilter === "all" ? styles.sourceActive : ""} onClick={() => chooseSource("all")}>{tr("综合", "All Sources")} <span>{groupCompGuides(allComps).length}</span></button>{rankingSources.map(source => <Link key={source.id} href={`/rankings?source=${source.id}`}>{source.name} · {source.recordCount} {tr("条榜单", "rankings")} ↗</Link>)}{metaSources.filter(source => !rankingSources.some(ranking => ranking.id === source.id)).map((source) => <button key={source.id} className={sourceFilter === source.id ? styles.sourceActive : ""} onClick={() => chooseSource(source.id)}>{source.name} <span>{sourceCounts.get(source.id) ?? 0}</span></button>)}<span className={styles.tftOnly}>TFT ONLY</span></section><section className={styles.toolbar}><input value={query} onChange={(event) => { setSelectedId(null); setQuery(event.target.value); updatePageQuery({ q: event.target.value, comp: null }, true); }} placeholder={tr("搜索阵容、英雄、羁绊或来源", "Search comps, champions, traits or sources")} /><div className={styles.filters}><button className={filter === "ALL" ? styles.active : ""} onClick={() => chooseStyle("ALL")}>All</button><button className={filter === "FAVORITES" ? styles.active : ""} onClick={() => chooseStyle("FAVORITES")}>♥ {tr("收藏", "Saved")}</button><button className={filter === "FAST8" ? styles.active : ""} onClick={() => chooseStyle("FAST8")}>Fast 8/9</button><button className={filter === "REROLL" ? styles.active : ""} onClick={() => chooseStyle("REROLL")}>Reroll</button></div><span className={styles.note}>{tr("展开阵容可按“什么时候玩 → 核心装备 → 搜牌/运营 → 9级上限 → 最终站位”快速阅读。", "Expand a comp for When to play → Core items → Roll/tempo → Level-9 ceiling → Final positioning.")}</span></section><section className={styles.list}><div className={styles.headerRow}><span>Tier</span><span>Comp / Source</span><span>Core / Units</span><span>Synergy</span><span>{tr("操作", "Actions")}</span></div>{filtered.map((comp) => <CompRow key={`${comp.sourceId}-${comp.id}-${comp.patch}-${selectedId === comp.id}`} openByDefault={selectedId === comp.id} comp={comp} champions={catalog?.champions ?? []} favorite={favoriteKeys.has(compRefKey(comp))} onToggleFavorite={() => toggleFavorite(comp)} />)}{!filtered.length && <div className={styles.empty}>{filter === "FAVORITES" ? tr("还没有收藏阵容。", "No favorite comps yet.") : tr("没有匹配阵容。", "No matching comps.")} <button type="button" onClick={clearFilters}>{tr("清除筛选", "Clear filters")}</button></div>}</section></div>;
 }
