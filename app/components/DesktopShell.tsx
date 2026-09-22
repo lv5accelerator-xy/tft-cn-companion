@@ -44,6 +44,7 @@ const toolNav: NavItem[] = [
   { href: "/stats", zh: "属性实验室", en: "Stat Lab", glyph: "Σ" },
   { href: "/import", zh: "一图流导入", en: "Image Import", glyph: "▧" },
   { href: "/share", zh: "分享中心", en: "Share", glyph: "↗" },
+  { href: "/fortune", zh: "今日运势", en: "Daily Fortune", glyph: "☼" },
   { href: "/preferences", zh: "个人偏好", en: "Preferences", glyph: "⚙" },
   { href: "/account", zh: "云同步", en: "Cloud Sync", glyph: "☁" },
 ];
