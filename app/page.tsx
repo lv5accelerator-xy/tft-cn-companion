@@ -107,6 +107,7 @@ export default function HomePage() {
         <div className={styles.moduleGrid}>
           <Link className={styles.moduleCard} href="/opening"><b>◇ {tr("开局助手", "Opening Assistant")}</b><span>{tr("按英雄对子、散件合成和攻略装备匹配候选。", "Match candidates from unit pairs, component crafts and guide items.")}</span></Link>
           <Link className={styles.moduleCard} href="/comps"><b>◆ {tr("阵容库", "Comps")}</b><span>{tr("收藏阵容、手动加入候选并查看新鲜度。", "Favorite comps, pin candidates and inspect freshness.")}</span></Link>
+          <Link className={styles.moduleCard} href="/fortune"><b>☼ {tr("今日上分运势", "Daily Fortune")}</b><span>{tr("算今天适不适合打 TFT，并从当前版本阵容里给出今日推荐。", "Get a playful daily TFT read plus comp picks from the current meta.")}</span></Link>
           <Link className={styles.moduleCard} href="/builder"><b>+ Builder Pro</b><span>{tr("站位、装备、角色标记与分享码。", "Positioning, items, roles and share codes.")}</span></Link>
           <Link className={styles.moduleCard} href="/review"><b>◎ {tr("赛后复盘", "Review")}</b><span>{tr("保存名次、问题标签和实际最终棋盘。", "Save placement, issue tags and final board.")}</span></Link>
         </div>
