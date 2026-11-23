@@ -1,17 +1,12 @@
-# TFT CN Companion
+# 云顶中文助手：TFT CN Companion
+
+[![CI](https://github.com/lv5accelerator-xy/tft-cn-companion/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/lv5accelerator-xy/tft-cn-companion/actions/workflows/ci.yml)
 
 美服《Teamfight Tactics / 云顶之弈》中文副屏助手。默认中文显示，同时保留 Riot NA 英文名称，面向英文客户端玩家快速查询英雄、装备、羁绊、强化、阵容、站位与运营资料。
 
-## V1.0
+**[▶ 在线使用](https://tft-cn-companion-web.vercel.app)**
 
-- Set 18 · Enchanted Wilds
-- Patch 18.2
-- Next.js 16 + React 19 + TypeScript
-- Riot Data Dragon + CommunityDragon
-- OpenAI 图片一图流分析
-- Supabase Auth + Postgres workspace sync
-
-## V1.0 核心功能
+## 功能
 
 ### OP.GG 风格资料区
 
@@ -59,29 +54,12 @@
 
 ### 云同步
 
-V1.0 使用 Supabase：
+- Supabase Magic Link 邮箱登录，每个用户独立 `tft_workspaces` 记录，PostgreSQL Row Level Security。
+- 同步 Builder、图片导入阵容和语言偏好；支持智能同步、本机 → 云端、云端 → 本机和自动同步。
+- 冲突时保留双方版本并提示选择方向，覆盖前在本机保留最近 5 份恢复备份。
 
-- Magic Link 邮箱登录
-- 每个用户独立 `tft_workspaces` 记录
-- PostgreSQL Row Level Security
-- 同步 Builder、图片导入阵容和语言偏好
-- 支持智能同步、本机 → 云端、云端 → 本机和自动同步
+### 页面
 
-数据库迁移：
-
-```text
-supabase/migrations/001_workspace.sql
-```
-
-需要的 Vercel 环境变量：
-
-```text
-OPENAI_API_KEY=
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-```
-
-## 页面
 
 ```text
 /            概览
@@ -96,64 +74,73 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 /sources     数据来源状态
 ```
 
+
+## 当前版本
+
+<!-- CURRENT_VERSION_START -->
+**V1.0** · Set 18 · Enchanted Wilds · Patch 18.2
+阵容库合并 14 套兔顶攻略与 15 套 OP.GG 18.2 排行榜快照（抓取于 2026-09-17，见[快照说明](docs/OPGG_SNAPSHOT.md)）。
+<!-- CURRENT_VERSION_END -->
+
+技术栈：Next.js 16 + React 19 + TypeScript；Riot Data Dragon + CommunityDragon；OpenAI 图片分析；Supabase Auth + Postgres。
+
 ## 本地运行
+
+需要 Node.js 24。
 
 ```bash
 npm ci
 npm run dev
 ```
 
-生产构建：
+生产构建：`npm run verify:data && npm run verify:meta && npm run build && npm start`。
 
-```bash
-npm run verify:data
-npm run verify:meta
-npm run build
-npm start
-```
-
-## 发布流程
-
-`dev` 分支只通过 GitHub Actions 做数据校验和 Next.js Production Build，不触发 Vercel Preview；完整功能通过 CI 后合并到 `main`，由 Vercel 只执行一次 Production Deployment，避免 Hobby 方案 build-rate-limit。
-
-## Riot 使用边界
-
-Live 模式以赛前已存在的静态资料、公开攻略摘要、用户主动保存的阵容规划和快速查询为主。AI 图片模块用于用户主动上传的攻略图与训练/复盘工作流，不自动扫描对手棋盘，也不替用户执行游戏操作。
-
-## Disclaimer
-
-TFT CN Companion is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
-
-## 安全修复与部署配置
-
-- 使用 Node.js 24 和 `npm ci`，依赖版本及 `package-lock.json` 一起提交。
-- `npm test` 执行同步冲突、导入数据保留、AI 访问控制和缓存的行为回归测试；CI 会运行这些测试。
-- 自动同步通过服务端 `updated_at` 条件更新检查冲突，不再把上传时间当成内容修改时间。不需要数据库迁移。
-- 首次在已有云端数据的设备同步，或两台设备都修改后，智能同步会保留双方版本并提示选择方向。手动覆盖和冲突处理前保留最近 5 份本机恢复备份，可在账号页导出。备份位于当前浏览器，不是额外的远程备份；无法保存备份时停止覆盖。
-- 用户手动导入的阵容不再因名称、日期或补丁版本被自动删除。
-
-AI 图片分析现在需要已登录的非匿名 Supabase 用户，以及 Upstash Redis REST 配置：
+### 环境变量
 
 ```text
+OPENAI_API_KEY=
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
 UPSTASH_REDIS_REST_URL=
 UPSTASH_REDIS_REST_TOKEN=
 ```
 
-这两个值仅供服务端使用，不要加 `NEXT_PUBLIC_` 前缀，也不要提交真实值。原有 `OPENAI_API_KEY` 和 Supabase 公开配置仍然需要。
+Upstash 两项只供服务端使用，不要加 `NEXT_PUBLIC_` 前缀，也不要提交真实值；缺少时图片分析保持不可用。数据库迁移在 `supabase/migrations/001_workspace.sql`。AI 图片分析的登录要求与限额见[安全与部署配置](docs/SECURITY_AND_DEPLOY.md)。
 
-限额为每位用户每 60 秒 2 次、每 24 小时 10 次、全站每 24 小时 100 次；窗口从第一次调用开始。Redis 脚本原子检查并扣除额度，多个服务实例共享额度。失败请求也计入额度，每次最多调用主模型及一次备用模型。配置缺失或额度服务故障时停止付费调用并返回 503；超额返回 429 和 `Retry-After`。上线前需要配置上述 Redis 环境变量，否则图片分析保持不可用。
+## 仓库结构
 
-本地测试使用模拟的 Supabase/Auth/Redis/OpenAI 响应，不会消耗 AI 额度，也不会写入生产数据库。
+| 路径 | 内容 |
+| --- | --- |
+| `app/` | Next.js 页面与 API 路由 |
+| `lib/` | 同步、开局助手、复盘、计算器等业务逻辑 |
+| `data/` | 英雄、装备、羁绊、强化、阵容与排行榜快照数据 |
+| `public/` | 静态图片 |
+| `scripts/` | 数据校验、发布检查与 OP.GG 快照导入 |
+| `supabase/` | 数据库迁移 |
+| `tests/` | Node 行为回归测试（模拟 Supabase/Auth/Redis/OpenAI，不消耗额度） |
+| `docs/` | V1.0 计划、状态、检查清单与数据来源说明 |
+| `.github/` | CI 与阵容数据同步工作流 |
 
-## OP.GG 18.2 排行榜快照
+## 开发与测试
 
-`data/opgg-meta.generated.json` 收录 15 套 OP/S/A 阵容，与原有 14 套兔顶攻略合并展示；公众号同步脚本不会覆盖此独立快照。
+```bash
+npm test                  # 同步冲突、导入数据保留、AI 访问控制和缓存的行为回归
+npm run release:check     # 测试 + 全部数据/界面/发布校验 + 生产构建
+```
 
-- 来源：https://op.gg/tft/meta-trends/comps
-- 版本核对：https://teamfighttactics.leagueoflegends.com/en-us/news/game-updates/teamfight-tactics-patch-18-2/
-- 范围：全服务器、全段位、ALL 模式。采用来源页面展示的 `stat.label` 统计，不混用 `stat.deck`。
-- 抓取于 2026-09-17；来源只标注约一周前更新，无法确认覆盖 9月14日热修。抓取时间不作为来源更新时间，不能视为实时或 NA 专属排行榜。
-- 保留来源 OP/S/A 评级、平均名次、吃鸡率、前四率、登场率、阵容样本量、阵容码、装备和实际提供的站位。5 套来源缺少最终站位，明确提示并保留空棋盘，可在 Builder 手动摆放。
-- 过渡阵容仅在来源人口与人数一致且英雄可解析时展示；来源没有回合/经济说明的，不编造固定运营要求。
+## 发布
 
-再次人工更新：先保存公开页面 HTML，再运行 `python scripts/import-opgg.py <saved-page.html>`，检查版本、统计范围与数据后运行 `npm run release:check`。此导入器不会在构建时联网抓取。
+`dev` 分支只通过 GitHub Actions 做数据校验和 Next.js 生产构建，不触发 Vercel Preview；功能通过 CI 后合并到 `main`，由 Vercel 只执行一次 Production Deployment，避免 Hobby 方案 build-rate-limit。
+
+## 文档
+
+- [V1.0 状态](docs/V1.0-STATUS.md) · [V1.0 计划](docs/V1.0-PLAN.md) · [V1.0 检查清单](docs/V1.0-CHECKLIST.md) · [V1.0 说明](docs/V1.0-NOTES.md)
+- [排行榜来源](docs/ranking-sources.md) · [OP.GG 18.2 快照](docs/OPGG_SNAPSHOT.md) · [发布安全](docs/release-safety.md) · [安全与部署配置](docs/SECURITY_AND_DEPLOY.md)
+
+## Riot 使用边界与授权
+
+Live 模式以赛前已存在的静态资料、公开攻略摘要、用户主动保存的阵容规划和快速查询为主。AI 图片模块用于用户主动上传的攻略图与训练/复盘工作流，不自动扫描对手棋盘，也不替用户执行游戏操作。
+
+TFT CN Companion is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc.
+
+仓库当前未附带开源许可证。仓库公开可见不代表代码可被任意复制、修改或再发布；如需使用，请先联系仓库所有者取得授权。
